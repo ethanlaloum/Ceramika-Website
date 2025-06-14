@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { auth } from "@/auth"
 import { getOrderById } from "@/lib/db/order-service"
 import { OrderDetail } from "@/components/dashboard/order-detail"
+import { type Metadata } from "next"
 
 export default async function OrderDetailPage({
   params,
@@ -74,5 +75,17 @@ export default async function OrderDetailPage({
         </div>
       </div>
     )
+  }
+}
+
+// Si vous avez une fonction generateMetadata, assurez-vous qu'elle a le même type de paramètre
+export async function generateMetadata({
+  params
+}: {
+  params: { id: string }
+}): Promise<Metadata> {
+  return {
+    title: `Commande #${params.id} | Ceramika`,
+    // ...
   }
 }
