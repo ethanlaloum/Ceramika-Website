@@ -3,12 +3,12 @@ import { redirect } from "next/navigation"
 import { auth } from "@/auth"
 import { getOrderById } from "@/lib/db/order-service"
 import { OrderDetail } from "@/components/dashboard/order-detail"
-import { type Metadata } from "next"
+import type { Metadata } from "next"
 
 export default async function OrderDetailPage({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
   const session = await auth()
 
@@ -16,8 +16,11 @@ export default async function OrderDetailPage({
     redirect("/customer/login")
   }
 
+  // Await params pour Next.js 15
+  const { id } = await params
+
   try {
-    const order = await getOrderById(params.id)
+    const order = await getOrderById(id)
 
     if (!order) {
       throw new Error("Order not found")
@@ -78,14 +81,14 @@ export default async function OrderDetailPage({
   }
 }
 
-// Si vous avez une fonction generateMetadata, assurez-vous qu'elle a le même type de paramètre
+// Correction pour generateMetadata aussi
 export async function generateMetadata({
-  params
+  params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }): Promise<Metadata> {
+  const { id } = await params
   return {
-    title: `Commande #${params.id} | Ceramika`,
-    // ...
+    title: `Commande #${id} | Ceramika`,
   }
 }
