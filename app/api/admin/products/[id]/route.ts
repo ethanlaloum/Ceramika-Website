@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 
+// Modification : utiliser un type correct pour le contexte
 export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
+  request: Request,
+  context: { params: { id: string } }
 ) {
   try {
     const session = await auth()
@@ -13,7 +14,7 @@ export async function PUT(
       return NextResponse.json({ error: "Accès non autorisé" }, { status: 401 })
     }
 
-    const { id } = params
+    const { id } = context.params
 
     const body = await request.json()
     const {
