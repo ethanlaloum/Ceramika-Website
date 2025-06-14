@@ -1,14 +1,19 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { auth } from "@/auth" // Modifié: importer auth au lieu de authOptions et getServerSession
+import { NextRequest, NextResponse } from "next/server"
+import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
-    const session = await auth() // Modifié: utiliser auth() directement
+    const session = await auth()
 
-    if (!session || session.user?.role !== "ADMIN") { // Ajout de l'opérateur optionnel ?.
+    if (!session || session.user?.role !== "ADMIN") {
       return NextResponse.json({ error: "Accès non autorisé" }, { status: 401 })
     }
+
+    const { id } = params
 
     const body = await request.json()
     const {
@@ -45,7 +50,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
     // Vérifier que le produit existe
     const productExists = await prisma.product.findUnique({
-      where: { id: params.id },
+      where: { id: id },
     })
 
     if (!productExists) {
@@ -83,7 +88,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     }
 
     const product = await prisma.product.update({
-      where: { id: params.id },
+      where: { id: id },
       data: {
         name,
         description: description || null,
@@ -120,17 +125,22 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
-    const session = await auth() // Modifié: utiliser auth() directement
+    const session = await auth()
 
-    if (!session || session.user?.role !== "ADMIN") { // Ajout de l'opérateur optionnel ?.
+    if (!session || session.user?.role !== "ADMIN") {
       return NextResponse.json({ error: "Accès non autorisé" }, { status: 401 })
     }
 
+    const { id } = params
+
     // Vérifier que le produit existe
     const productExists = await prisma.product.findUnique({
-      where: { id: params.id },
+      where: { id: id },
     })
 
     if (!productExists) {
@@ -139,7 +149,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 
     // Supprimer le produit
     await prisma.product.delete({
-      where: { id: params.id },
+      where: { id: id },
     })
 
     return NextResponse.json({ message: "Produit supprimé avec succès" })
