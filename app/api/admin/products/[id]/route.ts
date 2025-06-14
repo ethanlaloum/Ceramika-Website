@@ -1,12 +1,9 @@
-import { NextRequest, NextResponse } from "next/server"
+import { type NextRequest, NextResponse } from "next/server"
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 
-// Modification : utiliser un type correct pour le contexte
-export async function PUT(
-  request: Request,
-  context: { params: { id: string } }
-) {
+// Correction pour Next.js 15 : params est maintenant une Promise
+export async function PUT(request: Request, context: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth()
 
@@ -14,7 +11,8 @@ export async function PUT(
       return NextResponse.json({ error: "Accès non autorisé" }, { status: 401 })
     }
 
-    const { id } = context.params
+    // Await params pour Next.js 15
+    const { id } = await context.params
 
     const body = await request.json()
     const {
@@ -126,10 +124,7 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth()
 
@@ -137,7 +132,8 @@ export async function DELETE(
       return NextResponse.json({ error: "Accès non autorisé" }, { status: 401 })
     }
 
-    const { id } = params
+    // Await params pour Next.js 15
+    const { id } = await params
 
     // Vérifier que le produit existe
     const productExists = await prisma.product.findUnique({
