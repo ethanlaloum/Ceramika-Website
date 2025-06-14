@@ -6,7 +6,8 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const featured = searchParams.get("featured")
 
-    const where: any = {}
+    // Amélioration : typage plus strict
+    const where: { featured?: boolean } = {}
 
     if (featured === "true") {
       where.featured = true
