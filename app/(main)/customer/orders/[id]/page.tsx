@@ -4,7 +4,11 @@ import { auth } from "@/auth"
 import { getOrderById } from "@/lib/db/order-service"
 import { OrderDetail } from "@/components/dashboard/order-detail"
 
-export default async function OrderDetailPage({ params }: { params: { id: string } }) {
+export default async function OrderDetailPage({
+  params,
+}: {
+  params: { id: string }
+}) {
   const session = await auth()
 
   if (!session?.user) {
