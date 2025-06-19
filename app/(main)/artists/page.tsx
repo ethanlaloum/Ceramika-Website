@@ -5,11 +5,9 @@ import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { MapPin, Calendar } from "lucide-react"
-import { useLanguage } from "@/components/providers"
 import { FadeIn, Stagger, HoverScale } from "@/components/animations"
 
 export default function ArtistsPage() {
-  const { t } = useLanguage()
 
   const artists = [
     {
@@ -101,12 +99,12 @@ export default function ArtistsPage() {
         <div className="relative text-center max-w-4xl mx-auto px-4">
           <FadeIn>
             <h1 className="font-playfair text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-stone-800 dark:text-stone-100 mb-4 sm:mb-6">
-              {t("artists.page.title")}
+              Nos Artistes
             </h1>
           </FadeIn>
           <FadeIn delay={0.2}>
             <p className="text-base sm:text-lg md:text-xl text-stone-600 dark:text-stone-300 max-w-2xl mx-auto leading-relaxed">
-              {t("artists.page.subtitle")}
+              Rencontrez les artisans talentueux qui donnent vie à l'argile avec leurs mains habiles et leur vision créative
             </p>
           </FadeIn>
         </div>
@@ -118,10 +116,10 @@ export default function ArtistsPage() {
           <FadeIn>
             <div className="text-center mb-8 sm:mb-12">
               <h2 className="font-playfair text-2xl sm:text-3xl md:text-4xl font-bold text-stone-800 dark:text-stone-100 mb-3 sm:mb-4">
-                {t("artists.featured.title")}
+                Artistes Vedettes
               </h2>
               <p className="text-stone-600 dark:text-stone-300 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
-                {t("artists.featured.subtitle")}
+                Artistes Vedettes
               </p>
             </div>
           </FadeIn>
@@ -145,7 +143,7 @@ export default function ArtistsPage() {
                             className="object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                           <Badge className="absolute top-3 sm:top-4 left-3 sm:left-4 bg-stone-800 dark:bg-stone-100 text-white dark:text-stone-900 text-xs sm:text-sm">
-                            {t("common.featured")}
+                            Vedette
                           </Badge>
                         </div>
                         <div className="p-4 sm:p-6">
@@ -193,7 +191,7 @@ export default function ArtistsPage() {
           <FadeIn>
             <div className="text-center mb-8 sm:mb-12">
               <h2 className="font-playfair text-2xl sm:text-3xl md:text-4xl font-bold text-stone-800 dark:text-stone-100 mb-4">
-                {t("artists.all.title")}
+                Tous les Artistes
               </h2>
             </div>
           </FadeIn>
@@ -213,7 +211,7 @@ export default function ArtistsPage() {
                         />
                         {artist.featured && (
                           <Badge className="absolute top-3 sm:top-4 left-3 sm:left-4 bg-stone-800 dark:bg-stone-100 text-white dark:text-stone-900 text-xs sm:text-sm">
-                            {t("common.featured")}
+                            Vedette
                           </Badge>
                         )}
                       </div>
@@ -261,12 +259,12 @@ export default function ArtistsPage() {
         <div className="container mx-auto px-4 text-center">
           <FadeIn>
             <h2 className="font-playfair text-2xl sm:text-3xl font-bold text-stone-800 dark:text-stone-100 mb-4">
-              {t("artists.interested")}
+              Intéressé à devenir un Artiste Partenaire ?
             </h2>
           </FadeIn>
           <FadeIn delay={0.2}>
             <p className="text-stone-600 dark:text-stone-300 mb-6 sm:mb-8 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
-              {t("artists.looking")}
+              Nous recherchons toujours des artistes céramistes talentueux pour rejoindre notre communauté. Partagez votre travail avec des passionnés de céramique du monde entier.
             </p>
           </FadeIn>
           <FadeIn delay={0.4}>
@@ -274,7 +272,7 @@ export default function ArtistsPage() {
               href="/contact"
               className="inline-flex items-center justify-center px-6 sm:px-8 py-3 border border-transparent text-sm sm:text-base font-medium rounded-md text-white bg-stone-800 hover:bg-stone-700 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-stone-200 transition-all duration-300 hover:scale-105"
             >
-              {t("artists.apply")}
+              Postuler pour Rejoindre
             </Link>
           </FadeIn>
         </div>

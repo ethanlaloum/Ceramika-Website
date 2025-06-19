@@ -6,8 +6,8 @@ import { OrdersTab } from "@/components/dashboard/orders-tab"
 import { WishlistTab } from "@/components/dashboard/wishlist-tab"
 import { ProfileTab } from "@/components/dashboard/profile-tab"
 import { SettingsTab } from "@/components/dashboard/settings-tab"
-import { useCart } from "@/components/providers"
 import { removeProductFromWishlist } from "@/app/actions/wishlist-actions"
+import { useCart } from "@/hooks/use-cart"
 
 interface CustomerDashboardProps {
   user: {
@@ -56,15 +56,16 @@ interface CustomerDashboardProps {
 
 export function CustomerDashboard({ user, orders, wishlist, address, preferences }: CustomerDashboardProps) {
   const [activeTab, setActiveTab] = useState("orders")
-  const { addItem } = useCart()
+  const { addToCart } = useCart()  // Correction ici: addItem -> addToCart
 
   const handleAddToCart = (item: any) => {
-    addItem({
+    addToCart({  // Correction ici: addItem -> addToCart
       id: item.id,
       name: item.name,
       artist: item.artist,
       price: item.price,
       image: item.image,
+      quantity: 1  // Ajout de la quantité par défaut
     })
   }
 
