@@ -4,7 +4,6 @@ import Link from "next/link"
 import { ArrowLeft, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { FadeIn, Floating } from "@/components/animations"
-import { useLanguage } from "@/components/providers"
 
 interface ComingSoonProps {
   title?: string
@@ -14,12 +13,11 @@ interface ComingSoonProps {
 }
 
 export function ComingSoon({ title, description, backLink = "/", backLabel }: ComingSoonProps) {
-  const { t } = useLanguage()
 
   const defaultTitle = title || "Bientôt Disponible"
   const defaultDescription =
     description || "Nous travaillons dur pour vous apporter cette fonctionnalité. Restez à l'écoute !"
-  const defaultBackLabel = backLabel || t("common.back.home")
+  const defaultBackLabel = backLabel || "Retour à l'accueil"
 
   return (
     <div className="min-h-screen bg-stone-50 dark:bg-stone-900 pt-20 transition-colors duration-300">

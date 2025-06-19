@@ -3,10 +3,8 @@
 import Link from "next/link"
 import { Instagram, Facebook, Twitter, Mail, Phone, Smartphone, MapPin } from "lucide-react"
 import { FadeIn, Stagger } from "@/components/animations"
-import { useLanguage } from "@/components/providers"
 
 export function Footer() {
-  useLanguage()
 
   const footerSections = [
     {
@@ -146,7 +144,7 @@ export function Footer() {
         <FadeIn delay={0.8}>
           <div className="border-t border-stone-200 dark:border-stone-700 mt-8 pt-8 text-center">
             <p className="text-sm text-stone-600 dark:text-stone-400">
-              &copy; 2025 Céramique. All rights reserved. |
+              &copy; 2025 Céramika. All rights reserved. |
               <Link href="/privacy" className="hover:text-stone-800 dark:hover:text-stone-200 ml-1">
                 Privacy Policy
               </Link>{" "}

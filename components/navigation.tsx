@@ -13,11 +13,12 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
-import { useCart } from "@/components/providers"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/hooks/use-auth"
 import { signOut } from "next-auth/react"
 import Image from "next/image"
+import { useCart } from "@/hooks/use-cart"
+import { useRouter } from "next/navigation"
 
 export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -25,8 +26,9 @@ export function Navigation() {
   const [isVisible, setIsVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
   const [showSearch, setShowSearch] = useState(false)
-  const { itemCount, setIsOpen } = useCart()
+  const { itemCount } = useCart()
   const { user, isLoading } = useAuth()
+  const router = useRouter()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -121,7 +123,7 @@ export function Navigation() {
               variant="ghost"
               size="sm"
               className="relative p-2 hover:bg-gray-100 rounded-full"
-              onClick={() => setIsOpen(true)}
+              onClick={() => router.push('/cart')}
             >
               <ShoppingCart className="h-4 w-4 text-gray-600" />
               {itemCount > 0 && (

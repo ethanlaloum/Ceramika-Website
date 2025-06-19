@@ -24,8 +24,27 @@ model User {
   orders        Order[]
   preferences   UserPreferences?
   wishlistItems WishlistItem[]
+  cartItems     CartItem[]       // Nouvelle relation
 
   @@map("users")
+}
+
+// Nouvelle table Cart dédiée
+model CartItem {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  // Un utilisateur peut avoir le même produit plusieurs fois avec des quantités différentes
+  @@unique([userId, productId])
+  @@map("cart_items")
 }
 
 model Artist {
@@ -75,6 +94,7 @@ model Product {
   artist        Artist         @relation(fields: [artistId], references: [id])
   collection    Collection?    @relation(fields: [collectionId], references: [id])
   wishlistItems WishlistItem[]
+  cartItems     CartItem[]     // Nouvelle relation
 
   @@map("products")
 }
@@ -95,6 +115,9 @@ model Order {
   id         String      @id @default(cuid())
   userId     String
   total      Float
+  subtotal   Float       // Nouveau champ
+  tax        Float       // Nouveau champ
+  shipping   Float       @default(0)
   status     String      @default("pending")
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt

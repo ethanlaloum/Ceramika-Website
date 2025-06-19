@@ -99,18 +99,18 @@ export function AnalyticsComponent() {
 
   if (loading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6">
         <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
-          <div className="h-4 bg-gray-200 rounded w-1/2 mb-6"></div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+          <div className="h-6 md:h-8 bg-gray-200 rounded w-3/4 md:w-1/4 mb-2 md:mb-4"></div>
+          <div className="h-3 md:h-4 bg-gray-200 rounded w-full md:w-1/2 mb-4 md:mb-6"></div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-4 md:mb-6">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-32 bg-gray-200 rounded-lg"></div>
+              <div key={i} className="h-24 md:h-32 bg-gray-200 rounded-lg"></div>
             ))}
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="h-64 bg-gray-200 rounded-lg"></div>
-            <div className="h-64 bg-gray-200 rounded-lg"></div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+            <div className="h-48 md:h-64 bg-gray-200 rounded-lg"></div>
+            <div className="h-48 md:h-64 bg-gray-200 rounded-lg"></div>
           </div>
         </div>
       </div>
@@ -119,23 +119,23 @@ export function AnalyticsComponent() {
 
   if (!analytics) {
     return (
-      <div className="text-center py-12">
-        <p className="text-gray-600">Impossible de charger les données d'analyse</p>
+      <div className="text-center py-8 md:py-12">
+        <p className="text-sm md:text-base text-gray-600">Impossible de charger les données d'analyse</p>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 md:space-y-6">
+      {/* Header - Responsive */}
+      <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Analytics & Rapports</h1>
-          <p className="text-gray-600">Analyses détaillées et métriques de performance</p>
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900">Analytics & Rapports</h1>
+          <p className="text-sm md:text-base text-gray-600">Analyses détaillées et métriques de performance</p>
         </div>
-        <div className="flex items-center space-x-3">
+        <div className="flex flex-col space-y-2 md:flex-row md:items-center md:space-y-0 md:space-x-3">
           <Select value={timeRange} onValueChange={setTimeRange}>
-            <SelectTrigger className="w-40">
+            <SelectTrigger className="w-full md:w-40">
               <SelectValue placeholder="Période" />
             </SelectTrigger>
             <SelectContent>
@@ -145,29 +145,29 @@ export function AnalyticsComponent() {
               <SelectItem value="1y">1 an</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" onClick={exportReport}>
+          <Button variant="outline" onClick={exportReport} className="w-full md:w-auto">
             <Download className="h-4 w-4 mr-2" />
-            Exporter
+            <span className="md:inline">Exporter</span>
           </Button>
         </div>
       </div>
 
-      {/* KPIs */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* KPIs - Responsive Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-3 md:p-6">
             <div className="flex items-center justify-between">
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-gray-600">Revenus</p>
-                <p className="text-2xl font-bold">€{analytics.revenue.total.toLocaleString()}</p>
+              <div className="space-y-1 md:space-y-2 min-w-0 flex-1">
+                <p className="text-xs md:text-sm font-medium text-gray-600 truncate">Revenus</p>
+                <p className="text-lg md:text-2xl font-bold truncate">€{analytics.revenue.total.toLocaleString()}</p>
                 <div className="flex items-center space-x-1">
                   {analytics.revenue.trend === "up" ? (
-                    <TrendingUp className="h-4 w-4 text-green-600" />
+                    <TrendingUp className="h-3 w-3 md:h-4 md:w-4 text-green-600 flex-shrink-0" />
                   ) : (
-                    <TrendingDown className="h-4 w-4 text-red-600" />
+                    <TrendingDown className="h-3 w-3 md:h-4 md:w-4 text-red-600 flex-shrink-0" />
                   )}
                   <span
-                    className={`text-sm font-medium ${
+                    className={`text-xs md:text-sm font-medium truncate ${
                       analytics.revenue.trend === "up" ? "text-green-600" : "text-red-600"
                     }`}
                   >
@@ -176,27 +176,27 @@ export function AnalyticsComponent() {
                   </span>
                 </div>
               </div>
-              <div className="p-3 bg-green-100 rounded-full">
-                <DollarSign className="h-6 w-6 text-green-600" />
+              <div className="p-2 md:p-3 bg-green-100 rounded-full flex-shrink-0">
+                <DollarSign className="h-4 w-4 md:h-6 md:w-6 text-green-600" />
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-3 md:p-6">
             <div className="flex items-center justify-between">
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-gray-600">Commandes</p>
-                <p className="text-2xl font-bold">{analytics.orders.total.toLocaleString()}</p>
+              <div className="space-y-1 md:space-y-2 min-w-0 flex-1">
+                <p className="text-xs md:text-sm font-medium text-gray-600 truncate">Commandes</p>
+                <p className="text-lg md:text-2xl font-bold truncate">{analytics.orders.total.toLocaleString()}</p>
                 <div className="flex items-center space-x-1">
                   {analytics.orders.trend === "up" ? (
-                    <TrendingUp className="h-4 w-4 text-green-600" />
+                    <TrendingUp className="h-3 w-3 md:h-4 md:w-4 text-green-600 flex-shrink-0" />
                   ) : (
-                    <TrendingDown className="h-4 w-4 text-red-600" />
+                    <TrendingDown className="h-3 w-3 md:h-4 md:w-4 text-red-600 flex-shrink-0" />
                   )}
                   <span
-                    className={`text-sm font-medium ${
+                    className={`text-xs md:text-sm font-medium truncate ${
                       analytics.orders.trend === "up" ? "text-green-600" : "text-red-600"
                     }`}
                   >
@@ -205,27 +205,27 @@ export function AnalyticsComponent() {
                   </span>
                 </div>
               </div>
-              <div className="p-3 bg-blue-100 rounded-full">
-                <ShoppingCart className="h-6 w-6 text-blue-600" />
+              <div className="p-2 md:p-3 bg-blue-100 rounded-full flex-shrink-0">
+                <ShoppingCart className="h-4 w-4 md:h-6 md:w-6 text-blue-600" />
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-3 md:p-6">
             <div className="flex items-center justify-between">
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-gray-600">Clients</p>
-                <p className="text-2xl font-bold">{analytics.customers.total.toLocaleString()}</p>
+              <div className="space-y-1 md:space-y-2 min-w-0 flex-1">
+                <p className="text-xs md:text-sm font-medium text-gray-600 truncate">Clients</p>
+                <p className="text-lg md:text-2xl font-bold truncate">{analytics.customers.total.toLocaleString()}</p>
                 <div className="flex items-center space-x-1">
                   {analytics.customers.trend === "up" ? (
-                    <TrendingUp className="h-4 w-4 text-green-600" />
+                    <TrendingUp className="h-3 w-3 md:h-4 md:w-4 text-green-600 flex-shrink-0" />
                   ) : (
-                    <TrendingDown className="h-4 w-4 text-red-600" />
+                    <TrendingDown className="h-3 w-3 md:h-4 md:w-4 text-red-600 flex-shrink-0" />
                   )}
                   <span
-                    className={`text-sm font-medium ${
+                    className={`text-xs md:text-sm font-medium truncate ${
                       analytics.customers.trend === "up" ? "text-green-600" : "text-red-600"
                     }`}
                   >
@@ -234,27 +234,27 @@ export function AnalyticsComponent() {
                   </span>
                 </div>
               </div>
-              <div className="p-3 bg-purple-100 rounded-full">
-                <Users className="h-6 w-6 text-purple-600" />
+              <div className="p-2 md:p-3 bg-purple-100 rounded-full flex-shrink-0">
+                <Users className="h-4 w-4 md:h-6 md:w-6 text-purple-600" />
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-3 md:p-6">
             <div className="flex items-center justify-between">
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-gray-600">Produits</p>
-                <p className="text-2xl font-bold">{analytics.products.total.toLocaleString()}</p>
+              <div className="space-y-1 md:space-y-2 min-w-0 flex-1">
+                <p className="text-xs md:text-sm font-medium text-gray-600 truncate">Produits</p>
+                <p className="text-lg md:text-2xl font-bold truncate">{analytics.products.total.toLocaleString()}</p>
                 <div className="flex items-center space-x-1">
                   {analytics.products.trend === "up" ? (
-                    <TrendingUp className="h-4 w-4 text-green-600" />
+                    <TrendingUp className="h-3 w-3 md:h-4 md:w-4 text-green-600 flex-shrink-0" />
                   ) : (
-                    <TrendingDown className="h-4 w-4 text-red-600" />
+                    <TrendingDown className="h-3 w-3 md:h-4 md:w-4 text-red-600 flex-shrink-0" />
                   )}
                   <span
-                    className={`text-sm font-medium ${
+                    className={`text-xs md:text-sm font-medium truncate ${
                       analytics.products.trend === "up" ? "text-green-600" : "text-red-600"
                     }`}
                   >
@@ -263,35 +263,38 @@ export function AnalyticsComponent() {
                   </span>
                 </div>
               </div>
-              <div className="p-3 bg-orange-100 rounded-full">
-                <Package className="h-6 w-6 text-orange-600" />
+              <div className="p-2 md:p-3 bg-orange-100 rounded-full flex-shrink-0">
+                <Package className="h-4 w-4 md:h-6 md:w-6 text-orange-600" />
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Charts Section - Responsive */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         {/* Top Products */}
         <Card>
-          <CardHeader>
-            <CardTitle>Produits les plus vendus</CardTitle>
-            <CardDescription>Performance des produits sur la période sélectionnée</CardDescription>
+          <CardHeader className="pb-3 md:pb-6">
+            <CardTitle className="text-base md:text-lg">Produits les plus vendus</CardTitle>
+            <CardDescription className="text-xs md:text-sm">
+              Performance des produits sur la période sélectionnée
+            </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
+          <CardContent className="p-3 md:p-6 pt-0">
+            <div className="space-y-3 md:space-y-4">
               {analytics.topProducts.map((product, index) => (
                 <div key={product.id} className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                      <span className="text-sm font-medium">{index + 1}</span>
+                  <div className="flex items-center space-x-2 md:space-x-3 min-w-0 flex-1">
+                    <div className="w-6 h-6 md:w-8 md:h-8 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
+                      <span className="text-xs md:text-sm font-medium">{index + 1}</span>
                     </div>
-                    <div>
-                      <p className="font-medium">{product.name}</p>
-                      <p className="text-sm text-gray-600">{product.sales} ventes</p>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm md:text-base font-medium truncate">{product.name}</p>
+                      <p className="text-xs md:text-sm text-gray-600">{product.sales} ventes</p>
                     </div>
                   </div>
-                  <p className="font-bold">€{product.revenue.toLocaleString()}</p>
+                  <p className="text-sm md:text-base font-bold flex-shrink-0">€{product.revenue.toLocaleString()}</p>
                 </div>
               ))}
             </div>
@@ -300,21 +303,23 @@ export function AnalyticsComponent() {
 
         {/* Orders by Status */}
         <Card>
-          <CardHeader>
-            <CardTitle>Répartition des commandes</CardTitle>
-            <CardDescription>Statut des commandes sur la période</CardDescription>
+          <CardHeader className="pb-3 md:pb-6">
+            <CardTitle className="text-base md:text-lg">Répartition des commandes</CardTitle>
+            <CardDescription className="text-xs md:text-sm">Statut des commandes sur la période</CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
+          <CardContent className="p-3 md:p-6 pt-0">
+            <div className="space-y-3 md:space-y-4">
               {analytics.ordersByStatus.map((item) => (
                 <div key={item.status} className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
-                    <span className="capitalize">{item.status}</span>
+                  <div className="flex items-center space-x-2 md:space-x-3 min-w-0 flex-1">
+                    <div className="w-3 h-3 md:w-4 md:h-4 bg-blue-500 rounded-full flex-shrink-0"></div>
+                    <span className="text-sm md:text-base capitalize truncate">{item.status}</span>
                   </div>
-                  <div className="text-right">
-                    <p className="font-bold">{item.count}</p>
-                    <p className="text-sm text-gray-600">{((item.count / analytics.orders.total) * 100).toFixed(1)}%</p>
+                  <div className="text-right flex-shrink-0">
+                    <p className="text-sm md:text-base font-bold">{item.count}</p>
+                    <p className="text-xs md:text-sm text-gray-600">
+                      {((item.count / analytics.orders.total) * 100).toFixed(1)}%
+                    </p>
                   </div>
                 </div>
               ))}
@@ -323,18 +328,18 @@ export function AnalyticsComponent() {
         </Card>
       </div>
 
-      {/* Revenue Chart Placeholder */}
+      {/* Revenue Chart Placeholder - Responsive */}
       <Card>
-        <CardHeader>
-          <CardTitle>Évolution du chiffre d'affaires</CardTitle>
-          <CardDescription>Revenus mensuels sur la période sélectionnée</CardDescription>
+        <CardHeader className="pb-3 md:pb-6">
+          <CardTitle className="text-base md:text-lg">Évolution du chiffre d'affaires</CardTitle>
+          <CardDescription className="text-xs md:text-sm">Revenus mensuels sur la période sélectionnée</CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="h-64 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg">
+        <CardContent className="p-3 md:p-6 pt-0">
+          <div className="h-48 md:h-64 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg">
             <div className="text-center">
-              <TrendingUp className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600">Graphique des revenus</p>
-              <p className="text-sm text-gray-500">Intégration Chart.js à venir</p>
+              <TrendingUp className="h-8 w-8 md:h-12 md:w-12 text-gray-400 mx-auto mb-2 md:mb-4" />
+              <p className="text-sm md:text-base text-gray-600">Graphique des revenus</p>
+              <p className="text-xs md:text-sm text-gray-500">Intégration Chart.js à venir</p>
             </div>
           </div>
         </CardContent>

@@ -4,7 +4,6 @@ import { LoginForm } from "@/components/login-form"
 import Link from "next/link"
 import { Shield } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { useLanguage } from "@/components/providers"
 
 export default function AdminLoginPage() {
   const { t } = useLanguage()

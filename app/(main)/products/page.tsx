@@ -13,12 +13,12 @@ import { Slider } from "@/components/ui/slider"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { useProducts } from "@/hooks/use-products"
 import { useArtists } from "@/hooks/use-artists"
-import { useCart } from "@/components/providers"
 import { ProductCardSkeleton } from "@/components/loading-states"
 import { ErrorDisplay } from "@/components/error-boundary"
 import { FadeIn, Stagger, HoverScale } from "@/components/animations"
 import Image from "next/image"
 import Link from "next/link"
+import { useCart } from "@/hooks/use-cart"
 
 const CATEGORIES = ["Bols", "Assiettes", "Vases", "Mugs", "Plateaux", "Sets", "Décoratif"]
 
@@ -32,7 +32,7 @@ const SORT_OPTIONS = [
 ]
 
 export default function ProductsPage() {
-  const { addItem } = useCart()
+  const { addToCart } = useCart()
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [selectedArtists, setSelectedArtists] = useState<string[]>([])
@@ -398,13 +398,7 @@ export default function ProductsPage() {
                                   size="sm"
                                   onClick={(e) => {
                                     e.preventDefault()
-                                    addItem({
-                                      id: parseInt(product.id),
-                                      name: product.name,
-                                      artist: product.artist.name,
-                                      price: product.price,
-                                      image: product.images[0],
-                                    })
+                                    addToCart(product.id)
                                   }}
                                   className="opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 bg-stone-800 dark:bg-stone-100 text-white dark:text-stone-900 hover:bg-stone-700 dark:hover:bg-stone-200 text-xs sm:text-sm px-3 sm:px-4"
                                 >

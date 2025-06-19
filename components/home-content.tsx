@@ -7,14 +7,14 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { FadeIn, Stagger, HoverScale, Magnetic, Reveal } from "@/components/animations"
 import { Particles } from "@/components/magicui/particles"
-import { useCart } from "@/components/providers"
 import { useProducts } from "@/hooks/use-products"
 import { useCollections } from "@/hooks/use-collections"
 import { ProductCardSkeleton, CollectionCardSkeleton } from "@/components/loading-states"
 import { ErrorDisplay } from "@/components/error-boundary"
+import { useCart } from "@/hooks/use-cart"
 
 export function HomeContent() {
-  const { addItem } = useCart()
+  const { addToCart } = useCart()
 
   // Récupération des données depuis l'API
   const {
@@ -148,7 +148,7 @@ export function HomeContent() {
                               <Button
                                 size="sm"
                                 onClick={() =>
-                                  addItem({
+                                  addToCart({
                                     id: product.id,
                                     name: product.name,
                                     artist: product.artist.name,

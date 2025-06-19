@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
-import type { Product } from "./types"
+import type { Product } from "@/types"
 
 interface ProductCardProps {
   product: Product
