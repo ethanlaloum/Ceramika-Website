@@ -1,11 +1,11 @@
 "use client"
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loader2, CreditCard, Shield, Lock } from 'lucide-react'
 
-export default function CheckoutIntegratedPage() {
+function CheckoutContent() {
   const searchParams = useSearchParams()
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
@@ -139,5 +139,28 @@ export default function CheckoutIntegratedPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+function CheckoutLoading() {
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <Card className="max-w-2xl mx-auto">
+        <CardHeader className="text-center">
+          <CardTitle className="flex items-center justify-center gap-2">
+            <Loader2 className="w-5 h-5 animate-spin" />
+            Chargement...
+          </CardTitle>
+        </CardHeader>
+      </Card>
+    </div>
+  )
+}
+
+export default function CheckoutIntegratedPage() {
+  return (
+    <Suspense fallback={<CheckoutLoading />}>
+      <CheckoutContent />
+    </Suspense>
   )
 }
