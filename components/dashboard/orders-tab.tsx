@@ -23,6 +23,9 @@ interface OrdersTabProps {
 }
 
 export function OrdersTab({ orders }: OrdersTabProps) {
+  // Protection contre les données undefined/null
+  const safeOrders = orders || []
+  
   const getStatusColor = (status: string) => {
     switch (status) {
       case "DELIVERED":
@@ -64,7 +67,7 @@ export function OrdersTab({ orders }: OrdersTabProps) {
         <p className="text-stone-600">Suivez et gérez vos achats de céramiques</p>
       </div>
 
-      {orders.length === 0 ? (
+      {safeOrders.length === 0 ? (
         <Card>
           <CardContent className="p-6 text-center">
             <p className="text-stone-600">Vous n avez pas encore de commandes.</p>
@@ -72,7 +75,7 @@ export function OrdersTab({ orders }: OrdersTabProps) {
         </Card>
       ) : (
         <div className="space-y-4">
-          {orders.map((order) => (
+          {safeOrders.map((order) => (
             <Card key={order.id}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
@@ -89,7 +92,7 @@ export function OrdersTab({ orders }: OrdersTabProps) {
                 </div>
 
                 <div className="flex items-center space-x-4 overflow-x-auto pb-2">
-                  {order.orderItems.map((item, index) => (
+                  {order.items.map((item, index) => (
                     <div key={index} className="flex items-center space-x-3 flex-shrink-0">
                       <div className="relative w-16 h-16 rounded-lg overflow-hidden">
                         <Image src={item.image || "/placeholder.svg"} alt={item.name} fill className="object-cover" />

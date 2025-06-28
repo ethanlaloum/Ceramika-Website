@@ -39,3 +39,23 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
   }
 }
+
+export async function DELETE() {
+  try {
+    const session = await auth()
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Non autorisé" }, { status: 401 })
+    }
+
+    const result = await CartService.clearCart(session.user.id)
+
+    return NextResponse.json({ 
+      success: true, 
+      message: `${result.count} articles supprimés`,
+      userId: session.user.id
+    })
+  } catch (error) {
+    console.error("Erreur lors du vidage du panier:", error)
+    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
+  }
+}

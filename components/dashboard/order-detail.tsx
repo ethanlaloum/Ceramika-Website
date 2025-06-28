@@ -73,7 +73,7 @@ export function OrderDetail({ order }: OrderDetailProps) {
   }
 
   return (
-    <div className="min-h-screen bg-stone-50 pt-20">
+    <div className="min-h-screen bg-stone-50">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-6">
           <Button variant="outline" asChild>

@@ -32,6 +32,8 @@ export default async function OrderDetailPage({
     }
 
     // Format order for the UI
+    const orderItems = order.orderItems || []
+    
     const formattedOrder = {
       id: order.id,
       date: order.createdAt.toISOString(),
@@ -40,7 +42,7 @@ export default async function OrderDetailPage({
       subtotal: order.subtotal,
       tax: order.tax,
       shipping: order.shipping,
-      items: order.items.map((item) => ({
+      items: orderItems.map((item) => ({
         id: item.id,
         name: item.product.name,
         artist: item.product.artist.name,
@@ -48,25 +50,14 @@ export default async function OrderDetailPage({
         price: item.price,
         quantity: item.quantity,
       })),
-      address: order.address
-        ? {
-            firstName: order.address.firstName,
-            lastName: order.address.lastName,
-            addressLine1: order.address.addressLine1,
-            addressLine2: order.address.addressLine2,
-            city: order.address.city,
-            state: order.address.state,
-            zipCode: order.address.zipCode,
-            country: order.address.country,
-          }
-        : null,
+      address: null, // Pas d'adresse pour l'instant
     }
 
     return <OrderDetail order={formattedOrder} />
   } catch (error) {
     console.error("Error loading order:", error)
     return (
-      <div className="min-h-screen bg-stone-50 pt-20">
+      <div className="min-h-screen bg-stone-50">
         <div className="container mx-auto px-4 py-8">
           <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-md">
             <h2 className="text-lg font-semibold">Error Loading Order</h2>

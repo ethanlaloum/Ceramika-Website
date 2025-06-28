@@ -14,7 +14,7 @@ export default function CollectionsPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-white dark:bg-stone-900 pt-16">
+      <div className="min-h-screen bg-white dark:bg-stone-900">
         <div className="container mx-auto px-4 py-16">
           <ErrorDisplay message={error} onRetry={refetch} />
         </div>

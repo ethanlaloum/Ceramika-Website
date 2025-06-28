@@ -12,7 +12,7 @@ export function SessionCleaner() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-stone-50 pt-20">
+    <div className="min-h-screen bg-stone-50">
       <div className="container mx-auto px-4 py-8">
         <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 p-4 rounded-md">
           <h2 className="text-lg font-semibold">Session expirée</h2>

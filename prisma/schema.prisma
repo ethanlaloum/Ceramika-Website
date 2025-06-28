@@ -95,6 +95,7 @@ model Product {
   collection    Collection?    @relation(fields: [collectionId], references: [id])
   wishlistItems WishlistItem[]
   cartItems     CartItem[]     // Nouvelle relation
+  polarId  String?  @unique // ID du produit sur Polar
 
   @@map("products")
 }
@@ -112,17 +113,18 @@ model WishlistItem {
 }
 
 model Order {
-  id         String      @id @default(cuid())
-  userId     String
-  total      Float
-  subtotal   Float       // Nouveau champ
-  tax        Float       // Nouveau champ
-  shipping   Float       @default(0)
-  status     String      @default("pending")
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  orderItems OrderItem[]
-  user       User        @relation(fields: [userId], references: [id])
+  id               String      @id @default(cuid())
+  userId           String
+  total            Float
+  subtotal         Float       // Nouveau champ
+  tax              Float       // Nouveau champ
+  shipping         Float       @default(0)
+  status           String      @default("pending")
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  orderItems       OrderItem[]
+  user             User        @relation(fields: [userId], references: [id])
+  polarCheckoutId  String?     // ID du checkout Polar pour récupérer la facture
 
   @@map("orders")
 }

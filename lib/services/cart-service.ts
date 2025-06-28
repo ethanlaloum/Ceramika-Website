@@ -10,6 +10,7 @@ export interface CartItem {
     name: string
     price: number
     images: string[]
+    polarId: string | null
     artist: {
       name: string
     }
@@ -35,8 +36,17 @@ export class CartService {
         data: { quantity: existingItem.quantity + quantity },
         include: {
           product: {
-            include: {
-              artist: true,
+            select: {
+              id: true,
+              name: true,
+              price: true,
+              images: true,
+              polarId: true,
+              artist: {
+                select: {
+                  name: true,
+                },
+              },
             },
           },
         },
@@ -51,8 +61,17 @@ export class CartService {
         },
         include: {
           product: {
-            include: {
-              artist: true,
+            select: {
+              id: true,
+              name: true,
+              price: true,
+              images: true,
+              polarId: true,
+              artist: {
+                select: {
+                  name: true,
+                },
+              },
             },
           },
         },
@@ -66,8 +85,17 @@ export class CartService {
       where: { userId },
       include: {
         product: {
-          include: {
-            artist: true,
+          select: {
+            id: true,
+            name: true,
+            price: true,
+            images: true,
+            polarId: true,
+            artist: {
+              select: {
+                name: true,
+              },
+            },
           },
         },
       },
@@ -91,8 +119,17 @@ export class CartService {
       data: { quantity },
       include: {
         product: {
-          include: {
-            artist: true,
+          select: {
+            id: true,
+            name: true,
+            price: true,
+            images: true,
+            polarId: true,
+            artist: {
+              select: {
+                name: true,
+              },
+            },
           },
         },
       },

@@ -1,6 +1,6 @@
 "use server"
 
-import { KoalaWelcomeEmail } from '@/emails/welcome'
+import { CeramikaWelcomeEmail } from '@/emails/welcome'
 import { resend } from '@/lib/resend'
 
 interface WelcomeEmailParams {
@@ -11,10 +11,10 @@ interface WelcomeEmailParams {
 export async function sendWelcomeEmail({ email, userFirstname }: WelcomeEmailParams) {
   try {
     const { data, error } = await resend.emails.send({
-      from: 'ethan.laloum@epitech.eu',
+      from: 'Ceramika <contact@cerami-ka.com>',
       to: email,
       subject: 'Bienvenue sur Ceramika !',
-      react: KoalaWelcomeEmail({ userFirstname }),
+      react: CeramikaWelcomeEmail({ userFirstname }),
     })
 
     if (error) {

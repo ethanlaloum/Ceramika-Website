@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma"
 import type { Order, OrderItem } from "@prisma/client"
 
 export type OrderWithItems = Order & {
-  items: (OrderItem & {
+  orderItems: (OrderItem & {
     product: {
       name: string
       images: string[]
@@ -11,6 +11,11 @@ export type OrderWithItems = Order & {
       }
     }
   })[]
+  user: {
+    id: string
+    firstName: string | null
+    lastName: string | null
+  }
 }
 
 export async function getUserOrders(userId: string): Promise<OrderWithItems[]> {
@@ -31,6 +36,13 @@ export async function getUserOrders(userId: string): Promise<OrderWithItems[]> {
                 },
               },
             },
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
           },
         },
       },
@@ -61,6 +73,13 @@ export async function getOrderById(orderId: string): Promise<OrderWithItems | nu
                 },
               },
             },
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
           },
         },
       },

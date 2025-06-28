@@ -1,80 +1,53 @@
-import {
-  Body,
-  Button,
-  Container,
-  Head,
-  Hr,
-  Html,
-  Img,
-  Preview,
-  Section,
-  Text,
-} from '@react-email/components';
-import { Tailwind } from '@react-email/tailwind';
+import { Button, Section, Text } from "@react-email/components"
+import { CeramikaLayout } from "./components/ceramika-layout"
 
-interface KoalaWelcomeEmailProps {
-  userFirstname: string;
+interface WelcomeEmailProps {
+  userFirstname: string
 }
 
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : '';
+export const CeramikaWelcomeEmail = ({ userFirstname }: WelcomeEmailProps) => (
+  <CeramikaLayout preview="Bienvenue dans l'univers de la céramique artisanale">
+    <Text className="text-2xl font-bold text-ceramika-primary mb-6 text-center">
+      Bienvenue chez Céramique Studio, {userFirstname} !
+    </Text>
 
-export const KoalaWelcomeEmail = ({
-  userFirstname,
-}: KoalaWelcomeEmailProps) => (
-    <Tailwind
-      config={{
-        theme: {
-          extend: {
-            colors: {
-              brand: "#007291",
-            },
-          },
-        },
-      }}
-    >
-  <Html>
-    <Head />
-    <Body className="bg-white font-sans">
-      <Preview>
-        The sales intelligence platform that helps you uncover qualified leads.
-      </Preview>
-      <Container className="mx-auto py-5 pb-12">
-        <Img
-          src={`${baseUrl}/static/koala-logo.png`}
-          width="170"
-          height="50"
-          alt="Koala"
-          className="mx-auto"
-        />
-        <Text className="text-base leading-relaxed">Hi {userFirstname},</Text>
-        <Text className="text-base leading-relaxed">
-          Welcome to Koala, the sales intelligence platform that helps you
-          uncover qualified leads and close deals faster.
-        </Text>
-        <Section className="text-center">
-          <Button className="bg-[#5F51E8] rounded text-white text-base no-underline text-center block p-3" href="https://getkoala.com">
-            Get started
-          </Button>
-        </Section>
-        <Text className="text-base leading-relaxed">
-          Best,
-          <br />
-          The Koala team
-        </Text>
-        <Hr className="border-gray-300 my-5" />
-        <Text className="text-gray-400 text-xs">
-          470 Noor Ave STE B #1148, South San Francisco, CA 94080
-        </Text>
-      </Container>
-    </Body>
-  </Html>
-</Tailwind>
-);
+    <Text className="text-base leading-relaxed text-gray-700 mb-4">Chère {userFirstname},</Text>
 
-KoalaWelcomeEmail.PreviewProps = {
-  userFirstname: 'Alan',
-} as KoalaWelcomeEmailProps;
+    <Text className="text-base leading-relaxed text-gray-700 mb-4">
+      Nous sommes ravis de vous accueillir dans notre communauté d'amateurs d'art céramique. Chez Céramique Studio,
+      chaque pièce raconte une histoire, façonnée avec passion par nos artisans talentueux.
+    </Text>
 
-export default KoalaWelcomeEmail;
+    <Text className="text-base leading-relaxed text-gray-700 mb-6">
+      Découvrez notre collection exclusive de céramiques artisanales, des pièces uniques qui apporteront beauté et
+      authenticité à votre quotidien.
+    </Text>
+
+    <Section className="text-center mb-6">
+      <Button
+        className="bg-ceramika-primary hover:bg-ceramika-dark rounded-lg text-white text-base font-semibold no-underline px-8 py-4 inline-block transition-colors"
+        href="https://ceramique-studio.com/collections"
+      >
+        Découvrir nos créations
+      </Button>
+    </Section>
+
+    <div className="bg-ceramika-light p-4 rounded-lg mb-6">
+      <Text className="text-sm text-ceramika-dark font-semibold mb-2">🎁 Offre de bienvenue</Text>
+      <Text className="text-sm text-gray-600">
+        Profitez de <strong>10% de réduction</strong> sur votre première commande avec le code{" "}
+        <strong>BIENVENUE10</strong>
+      </Text>
+    </div>
+
+    <Text className="text-base leading-relaxed text-gray-700 mb-2">Avec toute notre gratitude,</Text>
+    <Text className="text-base text-ceramika-primary font-semibold">L'équipe Céramique Studio</Text>
+  </CeramikaLayout>
+)
+
+CeramikaWelcomeEmail.PreviewProps = {
+  userFirstname: "Marie",
+  userEmail: "marie@example.com",
+} as WelcomeEmailProps
+
+export default CeramikaWelcomeEmail

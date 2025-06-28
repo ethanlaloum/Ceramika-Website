@@ -91,7 +91,7 @@ export default async function DashboardPage() {
   } catch (error) {
     console.error("Error loading dashboard data:", error)
     return (
-      <div className="min-h-screen bg-stone-50 pt-20">
+      <div className="min-h-screen bg-stone-50">
         <div className="container mx-auto px-4 py-8">
           <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-md">
             <h2 className="text-lg font-semibold">Error Loading Dashboard</h2>

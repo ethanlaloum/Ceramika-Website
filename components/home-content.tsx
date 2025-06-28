@@ -32,7 +32,7 @@ export function HomeContent() {
   } = useCollections({ featured: true, limit: 3 })
 
   return (
-    <div className="min-h-screen pt-16">
+    <div className="min-h-screen">
       {/* Hero Section with Particles and Gradient */}
       <section className="relative h-[80vh] sm:h-[90vh] flex items-center justify-center overflow-hidden">
         {/* Gradient Background */}

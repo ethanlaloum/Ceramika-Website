@@ -203,14 +203,14 @@ export default function ProductsPage() {
 
   if (productsError) {
     return (
-      <div className="min-h-screen pt-16 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <ErrorDisplay message={productsError} onRetry={refetch} />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen pt-16">
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <FadeIn>

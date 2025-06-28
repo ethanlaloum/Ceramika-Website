@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { useCart } from "@/hooks/use-cart"
 import { FadeIn, Stagger, HoverScale } from "@/components/animations"
+import { PolarCheckoutButton } from '@/components/polar-checkout-button'
 
 export default function CartPage() {
   const { items, removeFromCart, updateQuantity, subtotal, tax, shipping, total, itemCount, addToCart } = useCart()
@@ -77,7 +78,7 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-stone-50 dark:bg-stone-900 pt-20">
+      <div className="min-h-screen bg-stone-50 dark:bg-stone-900">
         <div className="container mx-auto px-4 py-16">
           <FadeIn>
             <div className="text-center max-w-md mx-auto">
@@ -99,7 +100,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-stone-50 dark:bg-stone-900 pt-20">
+    <div className="min-h-screen bg-stone-50 dark:bg-stone-900">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <FadeIn>
@@ -147,7 +148,7 @@ export default function CartPage() {
                             par {item.product.artist.name}
                           </p>
                           <p className="font-bold text-xl text-stone-800 dark:text-stone-100">
-                            {item.product.price.toFixed(2)}€
+                            {item.product.price.toFixed(2)}€ <span className="text-sm font-normal text-stone-600 dark:text-stone-400">HT</span>
                           </p>
                         </div>
 
@@ -208,7 +209,7 @@ export default function CartPage() {
 
                           {/* Item Total */}
                           <p className="font-bold text-lg text-stone-800 dark:text-stone-100">
-                            {(item.product.price * item.quantity).toFixed(2)}€
+                            {(item.product.price * item.quantity).toFixed(2)}€ <span className="text-sm font-normal text-stone-600 dark:text-stone-400">HT</span>
                           </p>
                         </div>
                       </div>
@@ -229,7 +230,7 @@ export default function CartPage() {
                   {/* Price Breakdown */}
                   <div className="space-y-3 mb-6">
                     <div className="flex justify-between text-stone-600 dark:text-stone-300">
-                      <span>Sous-total</span>
+                      <span>Sous-total (HT)</span>
                       <span>{subtotal.toFixed(2)}€</span>
                     </div>
                     <div className="flex justify-between text-stone-600 dark:text-stone-300">
@@ -238,25 +239,22 @@ export default function CartPage() {
                         {shipping.toFixed(2)}€
                       </span>
                     </div>
-                    {/* La TVA est retirée de l'affichage comme demandé */}
                     <div className="border-t border-stone-200 dark:border-stone-700 pt-3">
                       <div className="flex justify-between text-lg font-bold text-stone-800 dark:text-stone-100">
-                        <span>Total</span>
+                        <span>Total (HT)</span>
                         <span>{finalTotal.toFixed(2)}€</span>
                       </div>
+                      <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
+                        * Les taxes seront calculées par Polar lors du paiement
+                      </p>
                     </div>
                   </div>
 
                   {/* Checkout Button */}
-                  <Button
-                    className="w-full mb-4 bg-stone-800 dark:bg-stone-100 text-white dark:text-stone-900 hover:bg-stone-700 dark:hover:bg-stone-200 hover:scale-105 transition-all duration-300"
-                    size="lg"
-                  >
-                    Procéder au Paiement
-                  </Button>
+                  <PolarCheckoutButton />
 
                   {/* Trust Badges */}
-                  <div className="grid grid-cols-3 gap-2 text-xs text-stone-600 dark:text-stone-400">
+                  <div className="grid grid-cols-3 gap-2 text-xs text-stone-600 dark:text-stone-400 mt-6">
                     <div className="flex flex-col items-center text-center">
                       <Truck className="h-4 w-4 mb-1" />
                       <span>Livraison Gratuite</span>
@@ -300,7 +298,9 @@ export default function CartPage() {
                         <h3 className="font-semibold text-stone-800 dark:text-stone-100 mb-1">{product.name}</h3>
                         <p className="text-stone-600 dark:text-stone-400 text-sm mb-2">par {product.artist}</p>
                         <div className="flex items-center justify-between">
-                          <p className="font-bold text-stone-800 dark:text-stone-100">{product.price}€</p>
+                          <p className="font-bold text-stone-800 dark:text-stone-100">
+                            {product.price}€ <span className="text-xs font-normal text-stone-600 dark:text-stone-400">HT</span>
+                          </p>
                           <Button
                             size="sm"
                             className="opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0"

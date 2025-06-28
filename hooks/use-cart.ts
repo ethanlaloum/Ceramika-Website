@@ -177,6 +177,45 @@ export function useCart() {
     }
   }
 
+  // Vider le panier complètement
+  const clearCart = async () => {
+    try {
+      // Appel à l'API pour vider tout le panier
+      const response = await fetch("/api/cart", { 
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" }
+      })
+      
+      if (response.ok) {
+        // Mettre à jour l'état local immédiatement
+        setItems([])
+        setTotals({
+          subtotal: 0,
+          tax: 0,
+          shipping: 0,
+          total: 0,
+          itemCount: 0,
+        })
+        
+        // Forcer un refresh pour être sûr
+        await fetchCart()
+        
+        toast({
+          title: "Panier vidé",
+          description: "Votre panier a été vidé avec succès",
+        })
+      } else {
+        throw new Error('Échec de la suppression')
+      }
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de vider le panier",
+        variant: "destructive",
+      })
+    }
+  }
+
   useEffect(() => {
     fetchCart()
   }, [session])
@@ -190,6 +229,7 @@ export function useCart() {
     addToCart,
     updateQuantity,
     removeFromCart,
+    clearCart,
     refreshCart: fetchCart,
   }
 }

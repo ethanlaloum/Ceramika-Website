@@ -108,3 +108,11 @@ export interface CartItem {
   image: string
   quantity: number
 }
+
+export interface OrderSummary {
+  id: string
+  total: number
+  status: string
+  createdAt: string
+  itemCount: number
+}
