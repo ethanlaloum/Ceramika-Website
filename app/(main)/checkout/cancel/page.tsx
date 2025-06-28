@@ -1,40 +1,17 @@
 "use client"
 
+import { Suspense } from 'react'
 import { XCircle, AlertTriangle, CreditCard } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
 
-export default function CheckoutCancel() {
+function CheckoutCancelContent() {
   const searchParams = useSearchParams()
   const error = searchParams?.get('error')
   const errorCode = searchParams?.get('error_code')
-  const tempProductId = searchParams?.get('temp_product_id')
-
-  // Nettoyer le produit temporaire si présent
-  useEffect(() => {
-    const cleanupTempProduct = async () => {
-      if (tempProductId) {
-        console.log('🗑️ Nettoyage du produit temporaire après annulation:', tempProductId)
-        try {
-          await fetch('/api/cleanup/temp-product', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ productId: tempProductId })
-          })
-          console.log('✅ Produit temporaire nettoyé après annulation')
-        } catch (error) {
-          console.warn('⚠️ Erreur lors du nettoyage du produit temporaire:', error)
-          // Ne pas faire échouer la page pour ça
-        }
-      }
-    }
-
-    cleanupTempProduct()
-  }, [tempProductId])
 
   // Messages d'erreur spécifiques selon le code d'erreur Stripe
   const getErrorMessage = (code: string | null) => {
@@ -115,5 +92,24 @@ export default function CheckoutCancel() {
         </Card>
       </div>
     </div>
+  )
+}
+
+export default function CheckoutCancel() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-md mx-auto">
+          <Card>
+            <CardContent className="p-8 text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-stone-600 mx-auto"></div>
+              <p className="mt-4 text-stone-600">Chargement...</p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    }>
+      <CheckoutCancelContent />
+    </Suspense>
   )
 }

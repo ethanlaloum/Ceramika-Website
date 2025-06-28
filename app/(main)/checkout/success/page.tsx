@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { CheckCircle } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -9,7 +9,7 @@ import { useCart } from '@/hooks/use-cart'
 import { useSearchParams } from 'next/navigation'
 import { OrderSummary } from '@/types'
 
-export default function CheckoutSuccess() {
+function CheckoutSuccessContent() {
   const { clearCart } = useCart()
   const [hasCleared, setHasCleared] = useState(false)
   const [isProcessing, setIsProcessing] = useState(true)
@@ -218,5 +218,24 @@ export default function CheckoutSuccess() {
         </Card>
       </div>
     </div>
+  )
+}
+
+export default function CheckoutSuccess() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-md mx-auto">
+          <Card>
+            <CardContent className="p-8 text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-stone-600 mx-auto"></div>
+              <p className="mt-4 text-stone-600">Traitement de votre commande...</p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    }>
+      <CheckoutSuccessContent />
+    </Suspense>
   )
 }
