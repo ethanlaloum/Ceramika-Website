@@ -39,10 +39,10 @@ export function ProductForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="name">Nom du produit *</Label>
+        <div className="space-y-2">
+          <Label htmlFor="name" className="text-sm font-medium">Nom du produit *</Label>
           <Input
             id="name"
             value={formData.name}
@@ -51,8 +51,8 @@ export function ProductForm({
             required
           />
         </div>
-        <div>
-          <Label htmlFor="category">Catégorie</Label>
+        <div className="space-y-2">
+          <Label htmlFor="category" className="text-sm font-medium">Catégorie</Label>
           <Input
             id="category"
             value={formData.category}
@@ -62,20 +62,24 @@ export function ProductForm({
         </div>
       </div>
 
-      <div>
-        <Label htmlFor="description">Description</Label>
+      <div className="space-y-2">
+        <Label htmlFor="description" className="text-sm font-medium">Description</Label>
         <Textarea
           id="description"
           value={formData.description}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          placeholder="Description du produit"
-          rows={3}
+          placeholder="Description détaillée du produit..."
+          rows={4}
+          className="min-h-[100px] resize-y"
         />
+        <p className="text-xs text-muted-foreground">
+          Décrivez les caractéristiques, matériaux et particularités de ce produit.
+        </p>
       </div>
 
       <div className="grid grid-cols-3 gap-4">
-        <div>
-          <Label htmlFor="price">Prix (€) *</Label>
+        <div className="space-y-2">
+          <Label htmlFor="price" className="text-sm font-medium">Prix (€) *</Label>
           <Input
             id="price"
             type="number"
@@ -86,8 +90,8 @@ export function ProductForm({
             required
           />
         </div>
-        <div>
-          <Label htmlFor="originalPrice">Prix original (€)</Label>
+        <div className="space-y-2">
+          <Label htmlFor="originalPrice" className="text-sm font-medium">Prix original (€)</Label>
           <Input
             id="originalPrice"
             type="number"
@@ -97,8 +101,8 @@ export function ProductForm({
             placeholder="Prix original"
           />
         </div>
-        <div>
-          <Label htmlFor="stock">Stock *</Label>
+        <div className="space-y-2">
+          <Label htmlFor="stock" className="text-sm font-medium">Stock *</Label>
           <Input
             id="stock"
             type="number"
@@ -111,8 +115,8 @@ export function ProductForm({
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="artist">Artiste *</Label>
+        <div className="space-y-2">
+          <Label htmlFor="artist" className="text-sm font-medium">Artiste *</Label>
           <Select
             value={formData.artistId}
             onValueChange={(value) => setFormData({ ...formData, artistId: value })}
@@ -136,8 +140,8 @@ export function ProductForm({
             </SelectContent>
           </Select>
         </div>
-        <div>
-          <Label htmlFor="collection">Collection (optionnel)</Label>
+        <div className="space-y-2">
+          <Label htmlFor="collection" className="text-sm font-medium">Collection (optionnel)</Label>
           <Select
             value={formData.collectionId}
             onValueChange={(value) => setFormData({ ...formData, collectionId: value })}
@@ -157,19 +161,24 @@ export function ProductForm({
         </div>
       </div>
 
-      <div>
-        <Label htmlFor="features">Caractéristiques (séparées par des virgules)</Label>
+      <div className="space-y-2">
+        <Label htmlFor="features" className="text-sm font-medium">Caractéristiques (séparées par des virgules)</Label>
         <Input
           id="features"
           value={formData.features}
           onChange={(e) => setFormData({ ...formData, features: e.target.value })}
           placeholder="Fait main, Résistant au lave-vaisselle, etc."
         />
+        <p className="text-xs text-muted-foreground">
+          Listez les caractéristiques importantes séparées par des virgules.
+        </p>
       </div>
 
-      <Button type="submit" className="w-full" disabled={isSubmitting}>
-        {isSubmitting ? "En cours..." : submitLabel}
-      </Button>
+      <div className="pt-4">
+        <Button type="submit" className="w-full" disabled={isSubmitting}>
+          {isSubmitting ? "En cours..." : submitLabel}
+        </Button>
+      </div>
     </form>
   )
 }

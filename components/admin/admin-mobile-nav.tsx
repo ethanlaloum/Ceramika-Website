@@ -27,10 +27,10 @@ export function AdminMobileNav({ isOpen, onClose }: AdminMobileNavProps) {
   return (
     <>
       {/* Overlay */}
-      <div className="fixed inset-0 bg-black bg-opacity-50 z-[10001] md:hidden" onClick={onClose} />
+      <div className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden" onClick={onClose} />
 
       {/* Sidebar */}
-      <aside className="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 z-[10002] md:hidden transform transition-transform duration-300 ease-in-out">
+      <aside className="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 z-50 md:hidden transform transition-transform duration-300 ease-in-out">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div className="flex items-center space-x-2">

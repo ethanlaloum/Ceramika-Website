@@ -28,9 +28,9 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="admin-container fixed inset-0 bg-gray-50 z-[9999] overflow-hidden">
+    <div className="admin-container fixed inset-0 bg-gray-50">
       {/* Admin Header */}
-      <header className="bg-white border-b border-gray-200 px-4 md:px-6 py-4 relative z-[10000]">
+      <header className="bg-white border-b border-gray-200 px-4 md:px-6 py-4 relative z-30">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             {/* Mobile menu button */}
@@ -65,9 +65,9 @@ export default function AdminLayout({
         </div>
       </header>
 
-      <div className="flex h-[calc(100vh-73px)] overflow-hidden">
+      <div className="flex h-[calc(100vh-73px)]">
         {/* Desktop Sidebar */}
-        <div className="hidden md:block relative z-[9999]">
+        <div className="hidden md:block relative z-20">
           <AdminSidebar />
         </div>
 
@@ -75,7 +75,7 @@ export default function AdminLayout({
         <AdminMobileNav isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 relative z-[9998]">{children}</main>
+        <main className="flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
       </div>
     </div>
   )

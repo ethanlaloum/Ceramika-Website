@@ -96,18 +96,20 @@ export function EditProductDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Modifier le Produit</DialogTitle>
+      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+        <DialogHeader className="pb-4">
+          <DialogTitle className="text-xl font-semibold">Modifier le Produit</DialogTitle>
         </DialogHeader>
-        <ProductForm
-          initialData={formData}
-          artists={artists}
-          collections={collections}
-          onSubmit={handleSubmit}
-          isSubmitting={isSubmitting}
-          submitLabel="Modifier le Produit"
-        />
+        <div className="space-y-6">
+          <ProductForm
+            initialData={formData}
+            artists={artists}
+            collections={collections}
+            onSubmit={handleSubmit}
+            isSubmitting={isSubmitting}
+            submitLabel="Modifier le Produit"
+          />
+        </div>
       </DialogContent>
     </Dialog>
   )

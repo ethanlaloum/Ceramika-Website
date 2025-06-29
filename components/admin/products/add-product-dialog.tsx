@@ -81,18 +81,20 @@ export function AddProductDialog({ isOpen, onClose, artists, collections, onSucc
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Ajouter un Nouveau Produit</DialogTitle>
+      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+        <DialogHeader className="pb-4">
+          <DialogTitle className="text-xl font-semibold">Ajouter un Nouveau Produit</DialogTitle>
         </DialogHeader>
-        <ProductForm
-          initialData={initialFormData}
-          artists={artists}
-          collections={collections}
-          onSubmit={handleSubmit}
-          isSubmitting={isSubmitting}
-          submitLabel="Ajouter le Produit"
-        />
+        <div className="space-y-6">
+          <ProductForm
+            initialData={initialFormData}
+            artists={artists}
+            collections={collections}
+            onSubmit={handleSubmit}
+            isSubmitting={isSubmitting}
+            submitLabel="Ajouter le Produit"
+          />
+        </div>
       </DialogContent>
     </Dialog>
   )

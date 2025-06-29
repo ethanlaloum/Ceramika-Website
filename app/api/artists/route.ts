@@ -16,10 +16,9 @@ export async function GET(request: NextRequest) {
       where,
       include: {
         products: {
-          take: 3,
-          orderBy: {
-            createdAt: "desc",
-          },
+          take: 3,      orderBy: {
+        name: "asc",
+      },
         },
         collections: true,
         _count: {
@@ -29,7 +28,7 @@ export async function GET(request: NextRequest) {
         },
       },
       orderBy: {
-        createdAt: "desc",
+        name: "asc",
       },
     })
 
@@ -43,19 +42,13 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, email, bio, specialty, location, experience, image, featured, awards } = body
+    const { name, bio, image } = body
 
     const artist = await prisma.artist.create({
       data: {
         name,
-        email,
         bio,
-        specialty,
-        location,
-        experience,
         image,
-        featured,
-        awards,
       },
     })
 

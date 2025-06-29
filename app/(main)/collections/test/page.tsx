@@ -1,32 +1,73 @@
 "use client"
 
+import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { FadeIn, Stagger, HoverScale } from "@/components/animations"
-import { useCollections } from "@/hooks/use-collections"
 import { CollectionCardSkeleton } from "@/components/loading-states"
-import { ErrorDisplay } from "@/components/error-boundary"
-import { EmptyState } from "@/components/empty-states"
-import { CollectionStatus } from "@/components/collection-status"
+import { EmptyState, UpcomingPreview } from "@/components/empty-states"
 
-export default function CollectionsPage() {
-  const { collections, loading, error, refetch } = useCollections()
+// Données de test pour simuler des collections
+const mockCollections = [
+  {
+    id: "1",
+    name: "Collection Terre & Mer",
+    description: "Une exploration poétique de l'union entre la terre et l'océan, où chaque pièce capture l'essence des éléments naturels.",
+    image: "/placeholder.svg?height=400&width=600",
+    featured: true,
+    artist: {
+      id: "1",
+      name: "Marie Dubois"
+    }
+  },
+  {
+    id: "2", 
+    name: "Éléments Bruts",
+    description: "Des formes organiques qui célèbrent la beauté brute de l'argile, dans sa forme la plus authentique et expressive.",
+    image: "/placeholder.svg?height=400&width=600",
+    featured: false,
+    artist: {
+      id: "2",
+      name: "Pierre Martin"
+    }
+  }
+]
 
-  if (error) {
-    return (
-      <div className="min-h-screen bg-white dark:bg-stone-900">
-        <div className="container mx-auto px-4 py-16">
-          <ErrorDisplay message={error} onRetry={refetch} />
-        </div>
-      </div>
-    )
+export default function CollectionsTestPage() {
+  const [showCollections, setShowCollections] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+  const collections = showCollections ? mockCollections : []
+  const error = null
+
+  const toggleLoading = () => {
+    setLoading(true)
+    setTimeout(() => setLoading(false), 2000)
   }
 
   return (
     <div className="min-h-screen bg-white dark:bg-stone-900 transition-colors duration-300">
+      {/* Controls de test */}
+      <div className="bg-yellow-100 dark:bg-yellow-900 p-4 text-center">
+        <div className="flex gap-4 justify-center">
+          <Button 
+            onClick={() => setShowCollections(!showCollections)}
+            variant={showCollections ? "default" : "outline"}
+          >
+            {showCollections ? "Masquer" : "Afficher"} Collections
+          </Button>
+          <Button onClick={toggleLoading} variant="outline">
+            Test Loading
+          </Button>
+        </div>
+        <p className="text-sm mt-2 text-yellow-800 dark:text-yellow-200">
+          État actuel: {loading ? "Chargement" : showCollections ? `${collections.length} collections` : "Aucune collection"}
+        </p>
+      </div>
+
       {/* Hero Section */}
       <section className="relative h-[50vh] sm:h-[60vh] flex items-center justify-center bg-gradient-to-br from-stone-100 to-stone-200 dark:from-stone-800 dark:to-stone-900">
         <div className="absolute inset-0">
@@ -40,17 +81,12 @@ export default function CollectionsPage() {
         <div className="relative text-center max-w-4xl mx-auto px-4">
           <FadeIn>
             <h1 className="font-playfair text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-stone-800 dark:text-stone-100 mb-4 sm:mb-6">
-              {loading ? "Nos Collections" : collections.length === 0 ? "Collections" : "Nos Collections"}
+              Nos Collections - Test
             </h1>
           </FadeIn>
           <FadeIn delay={0.2}>
             <p className="text-base sm:text-lg md:text-xl text-stone-600 dark:text-stone-300 max-w-2xl mx-auto leading-relaxed">
-              {loading 
-                ? "Explorez nos collections uniques, chacune racontant une histoire différente à travers l'art de la céramique"
-                : collections.length === 0 
-                  ? "Découvrez l'art de la céramique à travers nos créations uniques"
-                  : "Explorez nos collections uniques, chacune racontant une histoire différente à travers l'art de la céramique"
-              }
+              Page de test pour les différents états des collections
             </p>
           </FadeIn>
         </div>
@@ -59,8 +95,6 @@ export default function CollectionsPage() {
       {/* Collections Grid */}
       <section className="py-8 sm:py-12 md:py-16">
         <div className="container mx-auto px-4">
-          <CollectionStatus count={collections.length} loading={loading} />
-          
           {loading ? (
             <Stagger staggerDelay={0.1} className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
               {Array.from({ length: 6 }).map((_, index) => (
@@ -98,7 +132,7 @@ export default function CollectionsPage() {
                               variant="outline"
                               className="bg-white/90 dark:bg-stone-800/90 text-stone-800 dark:text-stone-100 border-white dark:border-stone-600 text-xs sm:text-sm"
                             >
-                              {(collection as any)._count?.products || 0} pièces
+                              5 pièces
                             </Badge>
                           </div>
 
@@ -112,9 +146,7 @@ export default function CollectionsPage() {
                                 Par {collection.artist.name}
                               </p>
                             )}
-                            {(collection as any).priceRange && (
-                              <p className="text-xs sm:text-sm font-medium">{(collection as any).priceRange}</p>
-                            )}
+                            <p className="text-xs sm:text-sm font-medium">À partir de 45€</p>
                           </div>
                         </div>
 
@@ -158,34 +190,38 @@ export default function CollectionsPage() {
         </section>
       )}
 
-      {/* Section alternative quand pas de collections - Invitation à découvrir */}
+      {/* Section alternative quand pas de collections - Newsletter et nouveautés */}
       {!loading && collections.length === 0 && (
         <section className="py-12 sm:py-16 bg-stone-50 dark:bg-stone-800">
           <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <FadeIn>
-                <div>
-                  <h2 className="font-playfair text-2xl sm:text-3xl font-bold text-stone-800 dark:text-stone-100 mb-4">
-                    Découvrez Notre Savoir-Faire
-                  </h2>
-                  <p className="text-stone-600 dark:text-stone-300 mb-8 leading-relaxed max-w-2xl mx-auto">
-                    Explorez notre gamme de produits uniques et découvrez le travail exceptionnel 
-                    de nos artistes céramistes.
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Button asChild className="bg-stone-800 hover:bg-stone-700 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-stone-200">
-                      <Link href="/products">
-                        Voir Tous les Produits
-                      </Link>
-                    </Button>
-                    <Button asChild variant="outline" className="border-stone-300 dark:border-stone-600">
-                      <Link href="/artists">
-                        Découvrir Nos Artistes
-                      </Link>
-                    </Button>
+            <div className="max-w-4xl mx-auto">
+              <div className="grid md:grid-cols-2 gap-8 items-center">
+                <FadeIn>
+                  <div>
+                    <h2 className="font-playfair text-2xl sm:text-3xl font-bold text-stone-800 dark:text-stone-100 mb-4">
+                      Restez Informé des Nouveautés
+                    </h2>
+                    <p className="text-stone-600 dark:text-stone-300 mb-6 leading-relaxed">
+                      Soyez le premier à découvrir nos nouvelles collections et pièces exceptionnelles. 
+                      Inscrivez-vous à notre newsletter pour recevoir les dernières actualités de nos artistes.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <Button asChild className="bg-stone-800 hover:bg-stone-700 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-stone-200">
+                        <Link href="/contact">
+                          S'inscrire à la Newsletter
+                        </Link>
+                      </Button>
+                      <Button asChild variant="outline" className="border-stone-300 dark:border-stone-600">
+                        <Link href="/new-arrivals">
+                          Voir les Nouveautés
+                        </Link>
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </FadeIn>
+                </FadeIn>
+                
+                <UpcomingPreview />
+              </div>
             </div>
           </div>
         </section>
