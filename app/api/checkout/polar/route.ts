@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
 
     // Configuration Polar
     const polarAccessToken = process.env.POLAR_ACCESS_TOKEN
-    const polarServerUrl = process.env.NEXT_PUBLIC_POLAR_SERVER_URL || 'https://sandbox-api.polar.sh'
+    const polarServerUrl = process.env.NEXT_PUBLIC_POLAR_SERVER_URL || 'https://api.polar.sh'
     const successUrl = `${process.env.NEXT_PUBLIC_URL}/checkout/success`
     const cancelUrl = `${process.env.NEXT_PUBLIC_URL}/checkout/cancel`
 

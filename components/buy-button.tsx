@@ -2,6 +2,16 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Loader2, ShoppingCart } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
+import { ORDER_CONFIG } from '@/lib/constants'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 
 interface BuyButtonProps {
   productId: string
@@ -19,9 +29,16 @@ export default function BuyButton({
   children 
 }: BuyButtonProps) {
   const [isLoading, setIsLoading] = useState(false)
+  const [showMinOrderAlert, setShowMinOrderAlert] = useState(false)
   const { toast } = useToast()
 
   const handlePurchase = async () => {
+    // Vérification du montant minimum
+    if (price < ORDER_CONFIG.MINIMUM_AMOUNT) {
+      setShowMinOrderAlert(true)
+      return
+    }
+    
     setIsLoading(true)
     
     try {
@@ -57,24 +74,47 @@ export default function BuyButton({
   }
 
   return (
-    <Button 
-      onClick={handlePurchase}
-      disabled={isLoading}
-      className={className}
-    >
-      {isLoading ? (
-        <>
-          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-          Redirection...
-        </>
-      ) : (
-        children || (
+    <>
+      <Button 
+        onClick={handlePurchase}
+        disabled={isLoading}
+        className={className}
+      >
+        {isLoading ? (
           <>
-            <ShoppingCart className="w-4 h-4 mr-2" />
-            Acheter - {price}€
+            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            Redirection...
           </>
-        )
-      )}
-    </Button>
+        ) : (
+          children || (
+            <>
+              <ShoppingCart className="w-4 h-4 mr-2" />
+              Acheter - {price}€
+            </>
+          )
+        )}
+      </Button>
+
+      <AlertDialog open={showMinOrderAlert} onOpenChange={setShowMinOrderAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Commande minimum requise</AlertDialogTitle>
+            <AlertDialogDescription>
+              Le montant minimum de commande est de <strong>{ORDER_CONFIG.MINIMUM_AMOUNT}€</strong>.
+              <br />
+              Ce produit coûte <strong>{price}€</strong>.
+              <br />
+              <br />
+              Veuillez ajouter ce produit à votre panier et compléter avec d'autres articles pour atteindre le montant minimum de commande.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setShowMinOrderAlert(false)}>
+              J'ai compris
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   )
 }

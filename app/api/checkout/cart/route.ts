@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { CartService } from '@/lib/services/cart-service'
+import { ORDER_CONFIG, ERROR_MESSAGES } from '@/lib/constants'
 
 export async function POST(request: NextRequest) {
   try {
@@ -28,6 +29,13 @@ export async function POST(request: NextRequest) {
     
     if (!cartItems || cartItems.length === 0) {
       return NextResponse.json({ error: "Le panier est vide" }, { status: 400 })
+    }
+
+    // Vérification du montant minimum
+    if (cartTotals.total < ORDER_CONFIG.MINIMUM_AMOUNT) {
+      return NextResponse.json({ 
+        error: ERROR_MESSAGES.MINIMUM_ORDER(cartTotals.total, ORDER_CONFIG.MINIMUM_AMOUNT)
+      }, { status: 400 })
     }
 
     // Créer un produit temporaire sur Polar pour représenter tout le panier
