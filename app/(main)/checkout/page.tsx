@@ -29,7 +29,6 @@ function CheckoutContent() {
           setCheckoutUrl(checkoutUrl)
         }
       } catch (error) {
-        console.error('Erreur création checkout:', error)
       } finally {
         setLoading(false)
       }

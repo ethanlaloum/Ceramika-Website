@@ -17,7 +17,6 @@ export async function GET() {
       ...totals,
     })
   } catch (error) {
-    console.error("Erreur lors de la récupération du panier:", error)
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
   }
 }
@@ -35,7 +34,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(cartItem)
   } catch (error) {
-    console.error("Erreur lors de l'ajout au panier:", error)
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
   }
 }
@@ -55,7 +53,6 @@ export async function DELETE() {
       userId: session.user.id
     })
   } catch (error) {
-    console.error("Erreur lors du vidage du panier:", error)
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
   }
 }

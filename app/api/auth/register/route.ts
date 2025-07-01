@@ -67,7 +67,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ message: "Utilisateur créé avec succès", user }, { status: 201 })
   } catch (error) {
-    console.error("Registration error:", error)
     return NextResponse.json({ error: "Erreur interne du serveur" }, { status: 500 })
   }
 }

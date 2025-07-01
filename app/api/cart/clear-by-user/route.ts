@@ -13,7 +13,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, message: "Panier vidé avec succès" })
   } catch (error) {
-    console.error('Erreur lors du vidage du panier:', error)
     return NextResponse.json(
       { error: 'Erreur lors du vidage du panier' },
       { status: 500 }

@@ -44,7 +44,6 @@ export async function GET() {
       recentOrders,
     })
   } catch (error) {
-    console.error("Error fetching admin stats:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }

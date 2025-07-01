@@ -32,7 +32,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(products)
   } catch (error) {
-    console.error("Error fetching products:", error)
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
   }
 }
@@ -141,7 +140,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(product, { status: 201 })
   } catch (error) {
-    console.error("Error creating product:", error)
     return NextResponse.json({ error: "Erreur lors de la création du produit" }, { status: 500 })
   }
 }

@@ -14,7 +14,6 @@ export default async function DashboardPage() {
     redirect("/customer/login")
   }
 
-    console.log("Session user ID:", session.user.id) // Add this debug line
 
 
   try {
@@ -26,11 +25,9 @@ export default async function DashboardPage() {
       getUserPreferences(session.user.id),
     ])
 
-    console.log("Found user:", user) // Add this debug line
 
 
     if (!user) {
-      console.log("User not found in database, clearing session")
       return <SessionCleaner />
     }
 
@@ -89,7 +86,6 @@ export default async function DashboardPage() {
       />
     )
   } catch (error) {
-    console.error("Error loading dashboard data:", error)
     return (
       <div className="min-h-screen bg-stone-50">
         <div className="container mx-auto px-4 py-8">

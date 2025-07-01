@@ -18,13 +18,11 @@ export async function sendWelcomeEmail({ email, userFirstname }: WelcomeEmailPar
     })
 
     if (error) {
-      console.error('Erreur lors de l\'envoi de l\'email de bienvenue:', error)
       return { success: false, error }
     }
 
     return { success: true, data }
   } catch (error) {
-    console.error('Exception lors de l\'envoi de l\'email de bienvenue:', error)
     return { success: false, error }
   }
 }

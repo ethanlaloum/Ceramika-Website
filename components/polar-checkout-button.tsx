@@ -76,7 +76,6 @@ export function PolarCheckoutButton() {
       window.location.href = checkoutUrl
       
     } catch (error) {
-      console.error('Erreur checkout:', error)
       toast({
         title: "Erreur",
         description: "Une erreur est survenue lors de l'initialisation du paiement",

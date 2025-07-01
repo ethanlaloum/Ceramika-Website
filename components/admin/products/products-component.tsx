@@ -63,7 +63,6 @@ export function ProductsComponent() {
         setArtists(data)
       }
     } catch (error) {
-      console.error("Error fetching artists:", error)
       toast({
         title: "Avertissement",
         description: "Impossible de charger la liste des artistes",
@@ -80,7 +79,7 @@ export function ProductsComponent() {
         setCollections(data)
       }
     } catch (error) {
-      console.error("Error fetching collections:", error)
+      // Erreur silencieuse pour les collections
     }
   }
 
@@ -105,7 +104,7 @@ export function ProductsComponent() {
     return matchesSearch && matchesCategory
   })
 
-  const categories = [...new Set(products.map((p) => p.category).filter(Boolean))]
+  const categories = [...new Set(products.map((p) => p.category).filter(Boolean))] as string[]
 
   if (loading) {
     return <LoadingState />

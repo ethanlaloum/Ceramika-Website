@@ -67,7 +67,6 @@ export function PolarCheckoutModal() {
       setIsOpen(true)
       
     } catch (error) {
-      console.error('Erreur checkout:', error)
       toast({
         title: "Erreur",
         description: "Une erreur est survenue lors de l'initialisation du paiement",

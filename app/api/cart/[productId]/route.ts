@@ -16,7 +16,6 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 
     return NextResponse.json(cartItem)
   } catch (error) {
-    console.error("Erreur lors de la mise à jour du panier:", error)
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
   }
 }
@@ -34,7 +33,6 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error("Erreur lors de la suppression du panier:", error)
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
   }
 }

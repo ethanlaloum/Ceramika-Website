@@ -31,7 +31,6 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
     return NextResponse.json(collection)
   } catch (error) {
-    console.error("Error fetching collection:", error)
     return NextResponse.json({ error: "Erreur lors du chargement de la collection" }, { status: 500 })
   }
 }

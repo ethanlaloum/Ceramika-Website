@@ -19,7 +19,6 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
     return NextResponse.json(product)
   } catch (error) {
-    console.error("Error fetching product:", error)
     return NextResponse.json({ error: "Erreur lors du chargement du produit" }, { status: 500 })
   }
 }

@@ -56,7 +56,6 @@ export default function CartCheckoutButton({
       window.location.href = checkoutUrl
       
     } catch (error) {
-      console.error('Erreur:', error)
       toast({
         title: "Erreur",
         description: "Impossible de procéder au paiement. Veuillez réessayer.",

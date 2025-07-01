@@ -50,7 +50,6 @@ export async function getUserOrders(userId: string): Promise<OrderWithItems[]> {
     })
     return orders
   } catch (error) {
-    console.error("Error fetching user orders:", error)
     throw new Error("Failed to fetch user orders")
   }
 }
@@ -86,7 +85,6 @@ export async function getOrderById(orderId: string): Promise<OrderWithItems | nu
     })
     return order
   } catch (error) {
-    console.error("Error fetching order:", error)
     throw new Error("Failed to fetch order")
   }
 }

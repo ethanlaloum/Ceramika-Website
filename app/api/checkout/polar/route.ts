@@ -16,14 +16,15 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Product ID is required' }, { status: 400 })
     }
 
-    console.log('🛒 Tentative de checkout:', {
+    // Informations du checkout
+    const checkoutInfo = {
       productId,
       customerEmail,
       customerName,
       cartTotal,
       itemCount,
       cartId
-    })
+    }
 
     // Configuration Polar
     const polarAccessToken = process.env.POLAR_ACCESS_TOKEN
@@ -49,7 +50,6 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    console.log('📤 Données envoyées à Polar:', checkoutData)
 
     // Appel à l'API Polar pour créer le checkout
     const response = await fetch(`${polarServerUrl}/v1/checkouts/`, {
@@ -61,22 +61,18 @@ export async function GET(request: NextRequest) {
       body: JSON.stringify(checkoutData)
     })
 
-    console.log('📥 Réponse Polar status:', response.status)
 
     if (!response.ok) {
       const errorText = await response.text()
-      console.error('❌ Erreur Polar:', errorText)
       throw new Error(`Polar API error: ${response.status} ${errorText}`)
     }
 
     const checkout = await response.json()
-    console.log('✅ Checkout créé:', checkout.id)
 
     // Rediriger vers l'URL de checkout Polar
     return NextResponse.redirect(checkout.url)
 
   } catch (error) {
-    console.error('❌ Erreur checkout:', error)
     return NextResponse.json(
       { error: 'Erreur lors de la création du checkout' },
       { status: 500 }

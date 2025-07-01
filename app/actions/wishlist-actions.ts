@@ -15,7 +15,6 @@ export async function addProductToWishlist(productId: string) {
     revalidatePath("/customer/dashboard")
     return { success: true }
   } catch (error) {
-    console.error("Failed to add to wishlist:", error)
     return { success: false, error: "Failed to add to wishlist" }
   }
 }
@@ -31,7 +30,6 @@ export async function removeProductFromWishlist(productId: string) {
     revalidatePath("/customer/dashboard")
     return { success: true }
   } catch (error) {
-    console.error("Failed to remove from wishlist:", error)
     return { success: false, error: "Failed to remove from wishlist" }
   }
 }

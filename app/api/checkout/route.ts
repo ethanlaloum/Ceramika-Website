@@ -6,8 +6,6 @@ import { ORDER_CONFIG, ERROR_MESSAGES } from '@/lib/constants'
 export async function POST(request: NextRequest) {
   try {
     const { productId, customerId, successUrl, cancelUrl } = await request.json()
-    
-    console.log('Création checkout simple avec:', { productId, customerId })
 
     // Récupérer le produit depuis la base de données pour vérifier le prix
     const product = await prisma.product.findUnique({
@@ -35,7 +33,6 @@ export async function POST(request: NextRequest) {
       checkoutId: checkout.id 
     })
   } catch (error) {
-    console.error('Erreur création checkout:', error)
     return NextResponse.json(
       { error: 'Erreur lors de la création du checkout' },
       { status: 500 }

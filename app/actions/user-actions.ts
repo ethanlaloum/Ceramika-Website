@@ -30,7 +30,6 @@ export async function updateProfile(formData: FormData) {
     revalidatePath("/customer/dashboard")
     return { success: true }
   } catch (error) {
-    console.error("Failed to update profile:", error)
     return { success: false, error: "Failed to update profile" }
   }
 }
@@ -48,7 +47,6 @@ export async function updateEmail(formData: FormData) {
     revalidatePath("/customer/dashboard")
     return { success: true }
   } catch (error: any) {
-    console.error("Failed to update email:", error)
     return { success: false, error: error.message || "Failed to update email" }
   }
 }
@@ -87,7 +85,6 @@ export async function saveAddress(formData: FormData) {
     revalidatePath("/customer/dashboard")
     return { success: true }
   } catch (error) {
-    console.error("Failed to save address:", error)
     return { success: false, error: "Failed to save address" }
   }
 }
@@ -103,7 +100,6 @@ export async function removeAddress(addressId: string) {
     revalidatePath("/customer/dashboard")
     return { success: true }
   } catch (error) {
-    console.error("Failed to delete address:", error)
     return { success: false, error: "Failed to delete address" }
   }
 }
@@ -130,7 +126,6 @@ export async function savePreferences(formData: FormData) {
     revalidatePath("/customer/dashboard")
     return { success: true }
   } catch (error) {
-    console.error("Failed to update preferences:", error)
     return { success: false, error: "Failed to update preferences" }
   }
 }

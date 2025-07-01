@@ -39,12 +39,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return {
             id: user.id,
             email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
+            firstName: user.firstName ?? undefined,
+            lastName: user.lastName ?? undefined,
             role: user.role,
           }
         } catch (error) {
-          console.error("Auth error:", error)
           return null
         }
       },

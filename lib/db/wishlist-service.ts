@@ -40,7 +40,6 @@ export async function getUserWishlist(userId: string): Promise<WishlistItemWithP
     })
     return wishlistItems
   } catch (error) {
-    console.error("Error fetching user wishlist:", error)
     throw new Error("Failed to fetch user wishlist")
   }
 }
@@ -70,7 +69,6 @@ export async function addToWishlist(userId: string, productId: string): Promise<
     })
     return wishlistItem
   } catch (error) {
-    console.error("Error adding to wishlist:", error)
     throw new Error("Failed to add item to wishlist")
   }
 }
@@ -86,7 +84,6 @@ export async function removeFromWishlist(userId: string, productId: string): Pro
       },
     })
   } catch (error) {
-    console.error("Error removing from wishlist:", error)
     throw new Error("Failed to remove item from wishlist")
   }
 }

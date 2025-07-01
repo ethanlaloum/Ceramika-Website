@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { CartService } from '@/lib/services/cart-service'
-import { ORDER_CONFIG, ERROR_MESSAGES } from '@/lib/constants'
+import { ORDER_CONFIG, ERROR_MESSAGES, PAYMENT_CONFIG, PRICE_UTILS } from '@/lib/constants'
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,17 +16,6 @@ export async function POST(request: NextRequest) {
     const cartItems = await CartService.getCart(session.user.id)
     const cartTotals = await CartService.getCartTotal(session.user.id)
     
-    console.log('Articles du panier:', cartItems.map(item => ({
-      id: item.id,
-      productId: item.productId,
-      quantity: item.quantity,
-      productName: item.product.name,
-      price: item.product.price,
-      polarId: item.product.polarId
-    })))
-    
-    console.log('Totaux du panier:', cartTotals)
-    
     if (!cartItems || cartItems.length === 0) {
       return NextResponse.json({ error: "Le panier est vide" }, { status: 400 })
     }
@@ -39,7 +28,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Créer un produit temporaire sur Polar pour représenter tout le panier
-    // Cela permet un paiement unique au lieu de paiements séparés
+    // Note: Polar force l'utilisation d'USD même en production, donc on convertit EUR → USD
+    // Le client voit les prix en euros, mais Polar traite en USD en arrière-plan
     const cartProductData = {
       name: `Commande Ceramika - ${cartItems.length} article${cartItems.length > 1 ? 's' : ''}`,
       description: cartItems.map(item => `${item.quantity}x ${item.product.name}`).join(', '),
@@ -47,16 +37,18 @@ export async function POST(request: NextRequest) {
       prices: [{
         type: 'one_time',
         amount_type: 'fixed',
-        price_amount: Math.round(cartTotals.total * 100), // Polar attend les centimes
-        price_currency: 'usd' // Polar n'accepte que USD pour le moment
+        price_amount: PRICE_UTILS.euroToPolarCents(cartTotals.total), // EUR → USD centimes
+        price_currency: PAYMENT_CONFIG.POLAR_CURRENCY // Force 'usd' par Polar
       }]
     }
 
-    console.log('Création d\'un produit temporaire pour le panier:', {
+    // Informations du checkout avec conversion EUR → USD
+    const cartCheckoutInfo = {
       ...cartProductData,
       total_eur: cartTotals.total,
-      total_usd_cents: Math.round(cartTotals.total * 100)
-    })
+      total_usd: PRICE_UTILS.euroToUsd(cartTotals.total),
+      total_usd_cents: PRICE_UTILS.euroToPolarCents(cartTotals.total),
+    }
 
     // Créer le produit temporaire sur Polar
     const productResponse = await fetch(`${process.env.NEXT_PUBLIC_POLAR_SERVER_URL}/v1/products/`, {
@@ -70,12 +62,10 @@ export async function POST(request: NextRequest) {
 
     if (!productResponse.ok) {
       const errorData = await productResponse.text()
-      console.error('Erreur création produit temporaire:', productResponse.status, errorData)
       throw new Error(`Erreur création produit temporaire: ${productResponse.status} ${errorData}`)
     }
 
     const tempProduct = await productResponse.json()
-    console.log('Produit temporaire créé:', { id: tempProduct.id, name: tempProduct.name })
 
     // Utiliser le produit temporaire pour créer le checkout
     const checkoutData = {
@@ -100,10 +90,6 @@ export async function POST(request: NextRequest) {
       }
     }
     
-    console.log('Données de checkout avec produit temporaire:', checkoutData)
-    console.log('URL utilisée:', `${process.env.NEXT_PUBLIC_POLAR_SERVER_URL}/v1/checkouts/`)
-    console.log('Token utilisé:', process.env.POLAR_ACCESS_TOKEN?.substring(0, 20) + '...')
-    
     const response = await fetch(`${process.env.NEXT_PUBLIC_POLAR_SERVER_URL}/v1/checkouts/`, {
       method: 'POST',
       headers: {
@@ -115,23 +101,16 @@ export async function POST(request: NextRequest) {
 
     if (!response.ok) {
       const errorData = await response.text()
-      console.error('Erreur API Polar:', response.status, errorData)
       throw new Error(`Erreur API Polar: ${response.status} ${errorData}`)
     }
 
     const checkout = await response.json()
-    console.log('Checkout créé avec succès:', checkout)
 
     return NextResponse.json({ 
       checkoutUrl: checkout.url,
       checkoutId: checkout.id 
     })
   } catch (error) {
-    console.error('Erreur création checkout panier détaillée:', {
-      error,
-      message: error instanceof Error ? error.message : 'Erreur inconnue',
-      stack: error instanceof Error ? error.stack : undefined
-    })
     return NextResponse.json(
       { 
         error: 'Erreur lors de la création du checkout',

@@ -119,7 +119,6 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
 
     return NextResponse.json(product)
   } catch (error) {
-    console.error("Error updating product:", error)
     return NextResponse.json({ error: "Erreur lors de la mise à jour du produit" }, { status: 500 })
   }
 }
@@ -151,7 +150,6 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
 
     return NextResponse.json({ message: "Produit supprimé avec succès" })
   } catch (error) {
-    console.error("Error deleting product:", error)
     return NextResponse.json({ error: "Erreur lors de la suppression du produit" }, { status: 500 })
   }
 }

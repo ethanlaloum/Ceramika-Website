@@ -3,7 +3,6 @@ import polar from '@/lib/polar'
 
 export async function GET() {
   try {
-    console.log('Test de connexion à Polar...')
     
     // Essayer de récupérer la liste des produits (plus simple qu'un checkout)
     const products = await polar.products.list({})
@@ -14,7 +13,6 @@ export async function GET() {
       message: 'Connexion Polar réussie'
     })
   } catch (error) {
-    console.error('Erreur test Polar:', error)
     return NextResponse.json(
       { 
         success: false,

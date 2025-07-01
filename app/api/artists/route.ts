@@ -34,7 +34,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(artists)
   } catch (error) {
-    console.error("Error fetching artists:", error)
     return NextResponse.json({ error: "Failed to fetch artists" }, { status: 500 })
   }
 }
@@ -54,7 +53,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(artist, { status: 201 })
   } catch (error) {
-    console.error("Error creating artist:", error)
     return NextResponse.json({ error: "Failed to create artist" }, { status: 500 })
   }
 }

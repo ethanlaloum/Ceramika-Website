@@ -55,7 +55,6 @@ export default async function OrderDetailPage({
 
     return <OrderDetail order={formattedOrder} />
   } catch (error) {
-    console.error("Error loading order:", error)
     return (
       <div className="min-h-screen bg-stone-50">
         <div className="container mx-auto px-4 py-8">

@@ -15,7 +15,6 @@ export async function getUserById(userId: string): Promise<UserWithAddress | nul
     })
     return user
   } catch (error) {
-    console.error("Error fetching user:", error)
     throw new Error("Failed to fetch user")
   }
 }
@@ -35,7 +34,6 @@ export async function updateUserProfile(
     })
     return updatedUser
   } catch (error) {
-    console.error("Error updating user profile:", error)
     throw new Error("Failed to update user profile")
   }
 }
@@ -57,7 +55,6 @@ export async function updateUserEmail(userId: string, email: string): Promise<Us
     })
     return updatedUser
   } catch (error) {
-    console.error("Error updating user email:", error)
     throw error
   }
 }
@@ -70,7 +67,6 @@ export async function getUserAddresses(userId: string): Promise<Address[]> {
     })
     return addresses
   } catch (error) {
-    console.error("Error fetching user addresses:", error)
     throw new Error("Failed to fetch user addresses")
   }
 }
@@ -82,7 +78,6 @@ export async function getDefaultAddress(userId: string): Promise<Address | null>
     })
     return address
   } catch (error) {
-    console.error("Error fetching default address:", error)
     throw new Error("Failed to fetch default address")
   }
 }
@@ -130,7 +125,6 @@ export async function createOrUpdateAddress(
       })
     }
   } catch (error) {
-    console.error("Error creating/updating address:", error)
     throw new Error("Failed to save address")
   }
 }
@@ -141,7 +135,6 @@ export async function deleteAddress(id: string): Promise<void> {
       where: { id },
     })
   } catch (error) {
-    console.error("Error deleting address:", error)
     throw new Error("Failed to delete address")
   }
 }
@@ -165,7 +158,6 @@ export async function updateUserPreferences(
     })
     return updatedUser
   } catch (error) {
-    console.error("Error updating user preferences:", error)
     throw new Error("Failed to update user preferences")
   }
 }
@@ -188,7 +180,6 @@ export async function getUserPreferences(userId: string): Promise<any> {
 
     return JSON.parse(user.preferences as string)
   } catch (error) {
-    console.error("Error fetching user preferences:", error)
     throw new Error("Failed to fetch user preferences")
   }
 }
