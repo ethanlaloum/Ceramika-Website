@@ -11,7 +11,7 @@ interface WelcomeEmailParams {
 export async function sendWelcomeEmail({ email, userFirstname }: WelcomeEmailParams) {
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Ceramika <contact@cerami-ka.com>',
+      from: 'Ceramika <noreply@mail.cerami-ka.com>',
       to: email,
       subject: 'Bienvenue sur Ceramika !',
       react: CeramikaWelcomeEmail({ userFirstname }),
