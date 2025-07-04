@@ -52,11 +52,8 @@ export const CeramikaLayout = ({ children, preview }: CeramikaLayoutProps) => (
           {/* Footer */}
           <div className="text-center">
             <Hr className="border-ceramika-secondary my-6" />
-            <Text className="text-ceramika-dark text-sm mb-2">Céramique Studio - Créations artisanales uniques</Text>
-            <Text className="text-gray-500 text-xs mb-4">123 Rue de l'Artisanat, 75001 Paris, France</Text>
-            <Text className="text-gray-500 text-xs">
-              Suivez-nous sur nos réseaux sociaux pour découvrir nos dernières créations
-            </Text>
+            <Text className="text-ceramika-dark text-sm mb-2">Ceramika - Créations artisanales uniques</Text>
+            <Text className="text-gray-500 text-xs mb-4">10 rue Solférino - 06220 Vallauris, France</Text>
           </div>
         </Container>
       </Body>

@@ -17,7 +17,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 
-export function PolarCheckoutButton() {
+export function StripeCheckoutButton() {
   const { user } = useAuth()
   const { items, total } = useCart()
   const { toast } = useToast()
@@ -52,14 +52,14 @@ export function PolarCheckoutButton() {
     setLoading(true)
     
     try {
-      // Créer le checkout et rediriger directement vers l'URL de paiement externe
-      const response = await fetch('/api/checkout/cart', {
+      // Créer le checkout et rediriger directement vers l'URL de paiement Stripe
+      const response = await fetch('/api/checkout/stripe', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          successUrl: `${window.location.origin}/checkout/success`,
+          successUrl: `${window.location.origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
           cancelUrl: `${window.location.origin}/checkout/cancel`,
           customerEmail: user.email,
           customerName: (user.firstName && user.lastName) ? `${user.firstName} ${user.lastName}` : user.email || '',
@@ -70,10 +70,10 @@ export function PolarCheckoutButton() {
         throw new Error('Erreur lors de la création du checkout')
       }
 
-      const { checkoutUrl } = await response.json()
+      const { url } = await response.json()
       
-      // Redirection directe vers la page de paiement externe
-      window.location.href = checkoutUrl
+      // Redirection directe vers la page de paiement Stripe
+      window.location.href = url
       
     } catch (error) {
       toast({

@@ -118,30 +118,8 @@ export function Footer() {
           </Stagger>
         </div>
 
-        {/* Newsletter Signup */}
-        <FadeIn delay={0.6}>
-          <div className="border-t border-stone-200 dark:border-stone-700 mt-8 pt-8">
-            <div className="max-w-md mx-auto text-center">
-              <h4 className="font-semibold text-stone-800 dark:text-stone-100 mb-2">Stay Updated</h4>
-              <p className="text-sm text-stone-600 dark:text-stone-300 mb-4">
-                Subscribe to our newsletter for new arrivals and exclusive offers
-              </p>
-              <div className="flex space-x-2">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="flex-1 px-3 py-2 text-sm border border-stone-300 dark:border-stone-600 rounded-md bg-white dark:bg-stone-800 text-stone-800 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-stone-500 transition-all duration-300"
-                />
-                <button className="px-4 py-2 bg-stone-800 dark:bg-stone-100 text-white dark:text-stone-900 text-sm rounded-md hover:bg-stone-700 dark:hover:bg-stone-200 transition-all duration-300 hover:scale-105">
-                  Subscribe
-                </button>
-              </div>
-            </div>
-          </div>
-        </FadeIn>
-
         {/* Copyright */}
-        <FadeIn delay={0.8}>
+        <FadeIn delay={0.6}>
           <div className="border-t border-stone-200 dark:border-stone-700 mt-8 pt-8 text-center">
             <p className="text-sm text-stone-600 dark:text-stone-400">
               &copy; 2025 Céramika. All rights reserved. |

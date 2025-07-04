@@ -149,12 +149,17 @@ export async function updateUserPreferences(
   },
 ): Promise<User> {
   try {
-    // Convert preferences to JSON format for storage
-    const userPreferences = JSON.stringify(preferences)
-
     const updatedUser = await prisma.user.update({
       where: { id: userId },
-      data: { preferences: userPreferences },
+      data: { 
+        preferences: {
+          upsert: {
+            create: preferences,
+            update: preferences
+          }
+        }
+      },
+      include: { preferences: true }
     })
     return updatedUser
   } catch (error) {
@@ -166,11 +171,12 @@ export async function getUserPreferences(userId: string): Promise<any> {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { preferences: true },
+      include: { preferences: true },
     })
 
     if (!user || !user.preferences) {
       return {
+        darkMode: false,
         newProductNotifications: true,
         orderUpdates: true,
         artistSpotlights: true,
@@ -178,7 +184,7 @@ export async function getUserPreferences(userId: string): Promise<any> {
       }
     }
 
-    return JSON.parse(user.preferences as string)
+    return user.preferences
   } catch (error) {
     throw new Error("Failed to fetch user preferences")
   }

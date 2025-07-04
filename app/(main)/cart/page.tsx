@@ -9,7 +9,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { useCart } from "@/hooks/use-cart"
 import { FadeIn, Stagger, HoverScale } from "@/components/animations"
-import { PolarCheckoutButton } from '@/components/polar-checkout-button'
+import CartCheckoutButton from '@/components/cart-checkout-button'
 
 export default function CartPage() {
   const { items, removeFromCart, updateQuantity, subtotal, tax, shipping, total, itemCount, addToCart } = useCart()
@@ -245,13 +245,13 @@ export default function CartPage() {
                         <span>{finalTotal.toFixed(2)}€</span>
                       </div>
                       <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
-                        * Les taxes seront calculées par Polar lors du paiement
+                        * Les taxes seront calculées par Stripe lors du paiement
                       </p>
                     </div>
                   </div>
 
                   {/* Checkout Button */}
-                  <PolarCheckoutButton />
+                  <CartCheckoutButton total={total} />
 
                   {/* Trust Badges */}
                   <div className="grid grid-cols-3 gap-2 text-xs text-stone-600 dark:text-stone-400 mt-6">

@@ -225,7 +225,7 @@ export function HomeContent() {
                                     {collection.name}
                                   </h3>
                                   <p className="text-xs sm:text-sm opacity-90">
-                                    {collection._count?.products || 0} pièces
+                                    {collection.products?.length || 0} pièces
                                   </p>
                                 </div>
                               </div>

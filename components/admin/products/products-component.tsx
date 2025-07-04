@@ -11,7 +11,17 @@ import { AddProductDialog } from "./add-product-dialog"
 import { EditProductDialog } from "./edit-product-dialog"
 import { ViewProductDialog } from "./view-product-dialog"
 import { DeleteProductDialog } from "./delete-product-dialog"
-import type { Product, Artist, Collection } from "./types"
+import type { Product, Artist, Collection } from "@prisma/client"
+
+interface ProductWithRelations extends Product {
+  artist: Artist
+  collection?: Collection
+}
+
+// Types temporaires pour éviter les conflits null/undefined en production
+type ProductAny = any
+type ArtistAny = any  
+type CollectionAny = any
 
 export function ProductsComponent() {
   const [products, setProducts] = useState<Product[]>([])
@@ -126,7 +136,7 @@ export function ProductsComponent() {
         <EmptyState />
       ) : (
         <ProductsGrid
-          products={filteredProducts}
+          products={filteredProducts as any}
           onViewProduct={handleViewProduct}
           onEditProduct={handleEditProduct}
           onDeleteProduct={handleDeleteClick}
@@ -136,30 +146,30 @@ export function ProductsComponent() {
       <AddProductDialog
         isOpen={isAddDialogOpen}
         onClose={() => setIsAddDialogOpen(false)}
-        artists={artists}
-        collections={collections}
+        artists={artists as any}
+        collections={collections as any}
         onSuccess={fetchProducts}
       />
 
       <EditProductDialog
         isOpen={isEditDialogOpen}
         onClose={() => setIsEditDialogOpen(false)}
-        product={selectedProduct}
-        artists={artists}
-        collections={collections}
+        product={selectedProduct as any}
+        artists={artists as any}
+        collections={collections as any}
         onSuccess={fetchProducts}
       />
 
       <ViewProductDialog
         isOpen={isViewDialogOpen}
         onClose={() => setIsViewDialogOpen(false)}
-        product={selectedProduct}
+        product={selectedProduct as any}
       />
 
       <DeleteProductDialog
         isOpen={isDeleteDialogOpen}
         onClose={() => setIsDeleteDialogOpen(false)}
-        product={productToDelete}
+        product={productToDelete as any}
         onSuccess={fetchProducts}
       />
     </div>

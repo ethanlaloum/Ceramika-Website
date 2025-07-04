@@ -20,7 +20,6 @@ export function useAuth() {
 
   const isAdmin = hasRole("ADMIN")
   const isCustomer = hasRole("CUSTOMER")
-  const isArtist = hasRole("ARTIST")
 
   return {
     user,
@@ -29,7 +28,6 @@ export function useAuth() {
     hasRole,
     hasAnyRole,
     isAdmin,
-    isCustomer,
-    isArtist,
+    isCustomer
   }
 }

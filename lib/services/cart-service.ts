@@ -10,7 +10,6 @@ export interface CartItem {
     name: string
     price: number
     images: string[]
-    polarId: string | null
     artist: {
       name: string
     }
@@ -41,7 +40,6 @@ export class CartService {
               name: true,
               price: true,
               images: true,
-              polarId: true,
               artist: {
                 select: {
                   name: true,
@@ -66,7 +64,6 @@ export class CartService {
               name: true,
               price: true,
               images: true,
-              polarId: true,
               artist: {
                 select: {
                   name: true,
@@ -90,7 +87,6 @@ export class CartService {
             name: true,
             price: true,
             images: true,
-            polarId: true,
             artist: {
               select: {
                 name: true,
@@ -124,7 +120,6 @@ export class CartService {
             name: true,
             price: true,
             images: true,
-            polarId: true,
             artist: {
               select: {
                 name: true,

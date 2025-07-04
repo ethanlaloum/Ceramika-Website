@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json()
     
-    const { checkoutSessionId, polarCustomerSessionToken } = body
+    const { checkoutSessionId, stripeSessionId } = body
 
     // Accepter même un ID temporaire pour permettre la création de commande
     if (!checkoutSessionId) {
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
           tax: cartTotals.tax,
           shipping: cartTotals.shipping,
           status: 'completed',
-          polarCheckoutId: checkoutSessionId, // Stocker l'ID checkout Polar
+          stripeSessionId: stripeSessionId || checkoutSessionId, // Stocker l'ID session Stripe
         }
       })
 

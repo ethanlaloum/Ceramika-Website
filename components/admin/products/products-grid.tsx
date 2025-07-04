@@ -1,11 +1,16 @@
 import { ProductCard } from "./product-card"
-import type { Product } from "./types"
+import type { Product, Artist, Collection } from "@prisma/client"
+
+interface ProductWithRelations extends Product {
+  artist: Artist
+  collection?: Collection
+}
 
 interface ProductsGridProps {
-  products: Product[]
-  onViewProduct: (product: Product) => void
-  onEditProduct: (product: Product) => void
-  onDeleteProduct: (product: Product) => void
+  products: ProductWithRelations[]
+  onViewProduct: (product: ProductWithRelations) => void
+  onEditProduct: (product: ProductWithRelations) => void
+  onDeleteProduct: (product: ProductWithRelations) => void
 }
 
 export function ProductsGrid({ products, onViewProduct, onEditProduct, onDeleteProduct }: ProductsGridProps) {

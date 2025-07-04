@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import InvoiceManager from "@/components/invoice-manager-simple-v2"
 
 interface OrderDetailProps {
   order: {
@@ -16,6 +17,7 @@ interface OrderDetailProps {
     subtotal: number
     tax: number
     shipping: number
+    invoiceId?: string
     items: Array<{
       id: string
       name: string
@@ -42,6 +44,8 @@ export function OrderDetail({ order }: OrderDetailProps) {
     switch (status) {
       case "DELIVERED":
         return "bg-green-100 text-green-800"
+      case "completed":
+        return "bg-green-100 text-green-800"
       case "SHIPPED":
         return "bg-blue-100 text-blue-800"
       case "PROCESSING":
@@ -59,6 +63,8 @@ export function OrderDetail({ order }: OrderDetailProps) {
     switch (status) {
       case "DELIVERED":
         return "Livré"
+      case "completed":
+        return "Terminé"
       case "SHIPPED":
         return "Expédié"
       case "PROCESSING":
@@ -166,6 +172,16 @@ export function OrderDetail({ order }: OrderDetailProps) {
                 </CardContent>
               </Card>
             )}
+
+            {/* Composant de gestion des factures */}
+            <div className="mt-6">
+              <InvoiceManager
+                orderId={order.id}
+                orderNumber={order.id.slice(-8)}
+                hasInvoice={!!order.invoiceId}
+                invoiceId={order.invoiceId}
+              />
+            </div>
           </div>
         </div>
       </div>

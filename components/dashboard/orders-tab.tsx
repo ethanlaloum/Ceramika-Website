@@ -30,6 +30,8 @@ export function OrdersTab({ orders }: OrdersTabProps) {
     switch (status) {
       case "DELIVERED":
         return "bg-green-100 text-green-800"
+      case "completed":
+        return "bg-green-100 text-green-800"
       case "SHIPPED":
         return "bg-blue-100 text-blue-800"
       case "PROCESSING":
@@ -47,6 +49,8 @@ export function OrdersTab({ orders }: OrdersTabProps) {
     switch (status) {
       case "DELIVERED":
         return "Livré"
+      case "completed":
+        return "Terminé"
       case "SHIPPED":
         return "Expédié"
       case "PROCESSING":

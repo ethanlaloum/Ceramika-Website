@@ -42,6 +42,7 @@ export default async function OrderDetailPage({
       subtotal: order.subtotal,
       tax: order.tax,
       shipping: order.shipping,
+      invoiceId: order.invoiceId || undefined, // Ajout de l'invoiceId manquant (convertir null en undefined)
       items: orderItems.map((item) => ({
         id: item.id,
         name: item.product.name,

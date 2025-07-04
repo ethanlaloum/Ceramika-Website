@@ -38,22 +38,25 @@ export default function CartCheckoutButton({
     setIsLoading(true)
     
     try {
-      const response = await fetch('/api/checkout/cart', {
+      const response = await fetch('/api/checkout/stripe', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({}),
+        body: JSON.stringify({
+          successUrl: `${window.location.origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+          cancelUrl: `${window.location.origin}/checkout/cancel`,
+        }),
       })
 
       if (!response.ok) {
         throw new Error('Erreur lors de la création du checkout')
       }
 
-      const { checkoutUrl } = await response.json()
+      const { url } = await response.json()
       
-      // Redirection vers la page de paiement Polar
-      window.location.href = checkoutUrl
+      // Redirection vers la page de paiement Stripe
+      window.location.href = url
       
     } catch (error) {
       toast({

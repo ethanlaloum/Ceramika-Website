@@ -5,10 +5,15 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
-import type { Product } from "@/types"
+import type { Product, Artist, Collection } from "@prisma/client"
+
+interface ProductWithRelations extends Product {
+  artist: Artist
+  collection?: Collection
+}
 
 interface ProductCardProps {
-  product: Product
+  product: ProductWithRelations
   onView: () => void
   onEdit: () => void
   onDelete: () => void

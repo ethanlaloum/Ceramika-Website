@@ -7,42 +7,24 @@ async function main() {
   const elena = await prisma.artist.create({
     data: {
       name: "Elena Vasquez",
-      email: "elena@ceramique.com",
       bio: "Elena combine les techniques céramiques traditionnelles du Sud-Ouest avec des sensibilités de design contemporain.",
-      specialty: "Fusion Traditionnelle et Contemporaine",
-      location: "Santa Fe, Nouveau-Mexique",
-      experience: "15+ ans",
       image: "/placeholder.svg?height=400&width=400",
-      featured: true,
-      awards: ["Prix des Arts Céramiques du Sud-Ouest 2023", "Artiste Vedette - Ceramic Monthly"],
     },
   })
 
   const marcus = await prisma.artist.create({
     data: {
       name: "Marcus Chen",
-      email: "marcus@ceramique.com",
       bio: "Le travail de Marcus incarne les principes du minimalisme fonctionnel.",
-      specialty: "Design Minimaliste et Fonctionnel",
-      location: "Portland, Oregon",
-      experience: "12+ ans",
       image: "/placeholder.svg?height=400&width=400",
-      featured: true,
-      awards: ["Prix d'Excellence Céramique du Pacifique Nord-Ouest", "Prix d'Innovation Design 2022"],
     },
   })
 
   const sofia = await prisma.artist.create({
     data: {
       name: "Sofia Andersson",
-      email: "sofia@ceramique.com",
       bio: "Sofia puise son inspiration dans le monde naturel.",
-      specialty: "Céramiques Inspirées par la Nature",
-      location: "Asheville, Caroline du Nord",
-      experience: "18+ ans",
       image: "/placeholder.svg?height=400&width=400",
-      featured: false,
-      awards: ["Bourse de la Fondation Nationale des Arts Céramiques"],
     },
   })
 
@@ -128,7 +110,7 @@ async function main() {
     },
   })
 
-  console.log("Database seeded successfully!")
+  // Database seeded successfully!
 }
 
 main()
