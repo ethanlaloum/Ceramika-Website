@@ -75,13 +75,13 @@ export function Navigation() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3 group">
-            <div className="relative w-20 h-20 group-hover:scale-105 transition-transform">
+            <div className="relative group-hover:scale-105 transition-transform">
               <Image
                 src="/logo-ceramika.svg"
                 alt="Ceramika Logo"
-                width={80}
-                height={80}
-                className="w-full h-full"
+                width={220}
+                height={270}
+                className="w-auto h-12"
                 priority
               />
             </div>

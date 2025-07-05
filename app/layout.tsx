@@ -11,6 +11,15 @@ const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfa
 export const metadata: Metadata = {
   title: "Céramika - Artisan Ceramic Utensils",
   description: "Discover handcrafted ceramic utensils by renowned artists",
+  icons: {
+    icon: [
+      { url: "/favicon-logo-original.svg", type: "image/svg+xml" },
+      { url: "/favicon-logo-original.svg", sizes: "32x32", type: "image/svg+xml" },
+      { url: "/favicon-logo-original.svg", sizes: "16x16", type: "image/svg+xml" }
+    ],
+    shortcut: "/favicon-logo-original.svg",
+    apple: "/favicon-logo-original.svg",
+  },
 }
 
 export default function RootLayout({
