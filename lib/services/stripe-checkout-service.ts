@@ -1,5 +1,6 @@
 import { stripe } from '@/lib/stripe'
 import { CartItem } from '@/lib/services/cart-service'
+import { PRICE_UTILS } from '@/lib/constants'
 
 export interface StripeCheckoutParams {
   items: CartItem[]
@@ -16,33 +17,73 @@ export interface StripeCheckoutResult {
 
 export class StripeCheckoutService {
   /**
-   * Crée une session de checkout Stripe
+   * Crée une session de checkout Stripe avec validation stricte
    */
   static async createCheckoutSession(params: StripeCheckoutParams): Promise<StripeCheckoutResult> {
     const { items, successUrl, cancelUrl, customerEmail, metadata = {} } = params
 
-    // Conversion des articles du panier en line_items Stripe
-    const lineItems = items.map(item => ({
-      price_data: {
-        currency: 'eur',
-        product_data: {
-          name: item.product.name,
-          images: item.product.images?.length ? [item.product.images[0]] : undefined,
-          metadata: {
-            artist: item.product.artist.name,
-            product_id: item.product.id,
-          },
-        },
-        unit_amount: Math.round(item.product.price * 100), // Prix en centimes
-      },
-      quantity: item.quantity,
-    }))
+    // Validation des paramètres
+    if (!items || items.length === 0) {
+      throw new Error('Aucun article dans le panier')
+    }
 
-    // Calcul des totaux pour les métadonnées
+    if (!successUrl || !cancelUrl) {
+      throw new Error('URLs de redirection manquantes')
+    }
+
+    // Validation des prix pour éviter les manipulations
+    for (const item of items) {
+      if (item.product.price <= 0) {
+        throw new Error(`Prix invalide pour le produit ${item.product.name}`)
+      }
+      if (item.quantity <= 0) {
+        throw new Error(`Quantité invalide pour le produit ${item.product.name}`)
+      }
+    }
+
+    // Conversion des articles du panier en line_items Stripe avec validation
+    const lineItems = items.map(item => {
+      const unitAmount = PRICE_UTILS.euroToStripeCents(item.product.price)
+      
+      // Double validation du prix
+      if (unitAmount <= 0) {
+        throw new Error(`Prix invalide pour ${item.product.name}: ${item.product.price}€`)
+      }
+      
+      return {
+        price_data: {
+          currency: 'eur',
+          product_data: {
+            name: item.product.name,
+            images: item.product.images?.length ? [item.product.images[0]] : undefined,
+            metadata: {
+              artist: item.product.artist.name,
+              product_id: item.product.id,
+            },
+          },
+          unit_amount: unitAmount, // Prix en centimes, validé
+        },
+        quantity: item.quantity,
+      }
+    })
+
+    // Calcul des totaux pour les métadonnées avec validation
     const subtotal = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0)
     const itemCount = items.reduce((sum, item) => sum + item.quantity, 0)
     const shipping = itemCount * 0.40 // 40 centimes par article
     const total = subtotal + shipping
+
+    // Validation des montants
+    if (subtotal <= 0 || total <= 0) {
+      throw new Error('Montants invalides calculés')
+    }
+
+    console.log('💰 Création session Stripe:', {
+      items: items.length,
+      subtotal: subtotal.toFixed(2),
+      shipping: shipping.toFixed(2),
+      total: total.toFixed(2)
+    })
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
@@ -71,7 +112,7 @@ export class StripeCheckoutService {
           shipping_rate_data: {
             type: 'fixed_amount',
             fixed_amount: {
-              amount: Math.round(shipping * 100), // Frais de livraison en centimes
+              amount: PRICE_UTILS.euroToStripeCents(shipping), // Frais de livraison en centimes
               currency: 'eur',
             },
             display_name: 'Livraison standard',
@@ -90,9 +131,16 @@ export class StripeCheckoutService {
       ],
     })
 
+    // Vérification que la session a une URL
+    if (!session.url) {
+      throw new Error('Erreur lors de la création de la session Stripe')
+    }
+
+    console.log('✅ Session Stripe créée:', session.id)
+
     return {
       sessionId: session.id,
-      url: session.url!,
+      url: session.url,
     }
   }
 
