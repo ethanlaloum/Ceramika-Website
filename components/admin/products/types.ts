@@ -37,5 +37,5 @@ export interface ProductFormData {
   artistId: string
   collectionId: string
   features: string
-  images?: string[]
+  images: string[]
 }

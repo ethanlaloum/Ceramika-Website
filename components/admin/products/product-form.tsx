@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { ImageUpload } from "./image-upload"
 import type { Artist, Collection, ProductFormData } from "./types"
 
 interface ProductFormProps {
@@ -173,6 +174,14 @@ export function ProductForm({
           Listez les caractéristiques importantes séparées par des virgules.
         </p>
       </div>
+
+      {/* Section des images */}
+      <ImageUpload
+        images={formData.images || []}
+        onImagesChange={(images) => setFormData({ ...formData, images })}
+        maxImages={5}
+        disabled={isSubmitting}
+      />
 
       <div className="pt-4">
         <Button type="submit" className="w-full" disabled={isSubmitting}>
