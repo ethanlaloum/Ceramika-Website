@@ -7,6 +7,7 @@ import type { UserRole } from "@prisma/client"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
+  trustHost: true, // Accepter localhost en production
   providers: [
     CredentialsProvider({
       name: "credentials",
