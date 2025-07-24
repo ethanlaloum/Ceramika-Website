@@ -25,84 +25,39 @@ export function ImageUpload({
   const { toast } = useToast()
 
   const uploadImage = useCallback(async (file: File) => {
-    console.log('🚀 Début upload côté client:', {
-      fileName: file.name,
-      fileSize: file.size,
-      fileType: file.type
-    })
-    
     setIsUploading(true)
     
     try {
       const formData = new FormData()
       formData.append('file', file)
 
-      console.log('📤 Envoi de la requête vers /api/admin/upload...')
       const response = await fetch('/api/admin/upload', {
         method: 'POST',
         body: formData,
       })
 
-      console.log('📥 Réponse reçue:', {
-        status: response.status,
-        statusText: response.statusText,
-        ok: response.ok,
-        headers: Object.fromEntries(response.headers.entries())
-      })
-
       let result: any
       try {
         result = await response.json()
-        console.log('📋 Contenu de la réponse:', result)
       } catch (jsonError) {
-        console.error('❌ Erreur lors du parsing JSON:', jsonError)
         throw new Error(`Erreur de format de réponse (${response.status}): ${response.statusText}`)
       }
 
       if (!response.ok) {
         const errorMessage = result.error || 'Erreur lors du téléchargement'
-        console.error('❌ Erreur serveur:', {
-          status: response.status,
-          error: errorMessage,
-          code: result.code,
-          details: result.details,
-          timestamp: result.timestamp,
-          fullResult: result
-        })
-        
-        // Message d'erreur plus détaillé selon le code d'erreur
-        let userErrorMessage = errorMessage
-        if (result.code === 'NO_SESSION') {
-          userErrorMessage = 'Session expirée. Veuillez vous reconnecter.'
-        } else if (result.code === 'INSUFFICIENT_PERMISSIONS') {
-          userErrorMessage = 'Permissions insuffisantes. Vous devez être administrateur.'
-        } else if (result.code === 'INVALID_FILE_TYPE') {
-          userErrorMessage = `Type de fichier invalide: ${result.receivedType}. Utilisez JPG, PNG ou WebP.`
-        } else if (result.code === 'FILE_TOO_LARGE') {
-          userErrorMessage = `Fichier trop volumineux: ${result.fileSizeMB}MB. Maximum autorisé: 5MB.`
-        }
-        
-        throw new Error(userErrorMessage)
+        throw new Error(errorMessage)
       }
 
       // Ajouter la nouvelle image à la liste
       const newImages = [...images, result.url]
       onImagesChange(newImages)
 
-      console.log('✅ Upload réussi, image ajoutée:', result.url)
       toast({
         title: 'Image téléchargée',
         description: 'L\'image a été téléchargée avec succès.',
       })
 
     } catch (error) {
-      console.error('❌ Erreur complète upload:', {
-        error: error instanceof Error ? error.message : 'Erreur inconnue',
-        stack: error instanceof Error ? error.stack : undefined,
-        fileName: file.name,
-        fileSize: file.size,
-        timestamp: new Date().toISOString()
-      })
       toast({
         title: 'Erreur',
         description: error instanceof Error ? error.message : 'Erreur lors du téléchargement',
@@ -227,23 +182,9 @@ export function ImageUpload({
                   src={imageUrl}
                   alt={`Image ${index + 1}`}
                   className="w-full h-full object-cover"
-                  onLoad={() => console.log('✅ Image chargée:', imageUrl)}
                   onError={(e) => {
-                    console.error('❌ Erreur chargement image:', imageUrl)
-                    // Fallback vers Image de Next.js
                     const target = e.target as HTMLImageElement
                     target.style.display = 'none'
-                    
-                    // Créer un élément Image de Next.js en remplacement
-                    const container = target.parentElement
-                    if (container && !container.querySelector('.next-image-fallback')) {
-                      const nextImageContainer = document.createElement('div')
-                      nextImageContainer.className = 'next-image-fallback'
-                      nextImageContainer.style.width = '100%'
-                      nextImageContainer.style.height = '100%'
-                      nextImageContainer.style.position = 'relative'
-                      container.appendChild(nextImageContainer)
-                    }
                   }}
                 />
                 {index === 0 && (
@@ -261,10 +202,6 @@ export function ImageUpload({
                 >
                   <X className="h-3 w-3" />
                 </Button>
-              </div>
-              {/* Debug info */}
-              <div className="mt-1 text-xs text-muted-foreground truncate" title={imageUrl}>
-                🔗 {imageUrl}
               </div>
             </div>
           ))}
