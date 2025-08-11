@@ -71,8 +71,16 @@ export function ProductsComponent() {
       if (response.ok) {
         const data = await response.json()
         setArtists(data)
+      } else {
+        console.error('Erreur lors du chargement des artistes:', response.status, response.statusText)
+        toast({
+          title: "Avertissement",
+          description: "Impossible de charger la liste des artistes",
+          variant: "destructive",
+        })
       }
     } catch (error) {
+      console.error('Erreur réseau lors du chargement des artistes:', error)
       toast({
         title: "Avertissement",
         description: "Impossible de charger la liste des artistes",

@@ -15,6 +15,7 @@ const MAINTENANCE_ALLOWED_PATHS = [
   '/customer/forgot-password',
   '/api/auth',
   '/api/admin',
+  '/api/artists', // Autoriser l'API des artistes pour le panel admin
   '/api/maintenance',
   '/maintenance',
   '/_next',
