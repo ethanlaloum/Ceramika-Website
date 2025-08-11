@@ -5,7 +5,8 @@ import { maintenanceMiddleware } from "@/lib/maintenance-middleware"
 export default auth((req) => {
   const { pathname } = req.nextUrl
 
-  // Vérifier le mode maintenance en premier (synchrone)
+  // 🔧 VÉRIFIER LA MAINTENANCE EN PREMIER - PRIORITÉ ABSOLUE
+  // Cela s'exécute même si l'utilisateur n'est pas connecté
   const maintenanceResponse = maintenanceMiddleware(req)
   if (maintenanceResponse) {
     return maintenanceResponse
@@ -32,6 +33,7 @@ export default auth((req) => {
     "/sustainability",
     "/privacy",
     "/terms",
+    "/maintenance", // 🔧 Ajouté pour que la maintenance soit accessible sans authentification
   ]
 
   // Routes d'authentification

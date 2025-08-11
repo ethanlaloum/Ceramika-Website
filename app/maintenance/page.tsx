@@ -1,6 +1,6 @@
 "use client"
 
-import { Wrench, Clock, User, Shield, Globe } from 'lucide-react'
+import { Wrench, Clock, User, Globe } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 
@@ -36,29 +36,19 @@ export default function MaintenancePage() {
         {/* Espaces de connexion */}
         <div className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-lg border border-slate-200 dark:border-slate-700">
           <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
-            Accès aux espaces sécurisés
+            Accès sécurisé
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">
-            Si vous êtes client ou administrateur, vous pouvez toujours accéder à votre espace personnel.
+            Si vous avez un compte, vous pouvez accéder à votre espace personnel même pendant la maintenance.
           </p>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Espace Client */}
-            <Link href="/customer/login">
-              <Button variant="outline" className="w-full h-16 flex flex-col items-center justify-center space-y-1 hover:bg-blue-50 hover:border-blue-200 dark:hover:bg-blue-950/20">
-                <User className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                <span className="text-sm font-medium">Espace Client</span>
-              </Button>
-            </Link>
-            
-            {/* Espace Admin */}
-            <Link href="/admin/login">
-              <Button variant="outline" className="w-full h-16 flex flex-col items-center justify-center space-y-1 hover:bg-red-50 hover:border-red-200 dark:hover:bg-red-950/20">
-                <Shield className="w-5 h-5 text-red-600 dark:text-red-400" />
-                <span className="text-sm font-medium">Administration</span>
-              </Button>
-            </Link>
-          </div>
+          {/* Bouton unique de connexion */}
+          <Link href="/customer/login">
+            <Button className="w-full h-14 flex items-center justify-center space-x-3 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-900 hover:to-black text-white font-medium border border-slate-700 shadow-lg hover:shadow-xl transition-all duration-200">
+              <User className="w-5 h-5" />
+              <span>Se connecter</span>
+            </Button>
+          </Link>
         </div>
 
         {/* Actions */}
