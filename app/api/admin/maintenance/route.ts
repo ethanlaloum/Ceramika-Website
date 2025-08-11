@@ -23,7 +23,19 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Chemin vers le fichier .env
+    // En production, on ne peut pas modifier le fichier .env
+    // Il faut changer la variable d'environnement directement sur Vercel
+    if (process.env.NODE_ENV === 'production') {
+      return new Response(JSON.stringify({
+        error: 'Le mode maintenance ne peut être modifié qu\'via les variables d\'environnement Vercel en production',
+        instructions: 'Aller dans Settings > Environment Variables sur Vercel et modifier MAINTENANCE_MODE'
+      }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      })
+    }
+
+    // En développement local, on peut modifier le fichier .env
     const envPath = join(process.cwd(), '.env')
     
     try {
@@ -38,9 +50,6 @@ export async function POST(request: NextRequest) {
       
       // Écrire le fichier mis à jour
       await writeFile(envPath, updatedContent, 'utf-8')
-      
-      // Optionnel: redémarrer l'application en production (nécessite un redéploiement sur Vercel)
-      // En développement, le serveur Next.js va se recharger automatiquement
       
       return new Response(JSON.stringify({ 
         success: true, 

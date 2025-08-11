@@ -30,11 +30,23 @@ export function MaintenanceControl({ initialMaintenanceMode }: MaintenanceContro
         body: JSON.stringify({ maintenance: enabled }),
       })
 
+      const result = await response.json()
+
       if (!response.ok) {
-        throw new Error('Erreur lors du changement de mode')
+        // Si c'est une erreur de production, afficher les instructions
+        if (result.instructions) {
+          toast({
+            title: 'Mode production',
+            description: result.instructions,
+            variant: 'default',
+            duration: 10000
+          })
+        } else {
+          throw new Error(result.error)
+        }
+        return
       }
 
-      const result = await response.json()
       setMaintenanceMode(enabled)
       
       toast({
