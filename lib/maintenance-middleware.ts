@@ -10,9 +10,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * TOUT LE RESTE EST BLOQUÉ
  */
 const MAINTENANCE_ALLOWED_PATHS = [
-  '/admin/login',
-  '/admin/dashboard', 
-  '/admin/forgot-password',
+  '/admin', // Toutes les routes admin sont autorisées
   '/customer/login',
   '/customer/forgot-password',
   '/api/auth',
