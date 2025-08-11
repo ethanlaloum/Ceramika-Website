@@ -1,32 +1,74 @@
 import { prisma } from '@/lib/prisma'
+import { 
+  setGlobalMaintenanceState, 
+  getGlobalMaintenanceState, 
+  isGlobalMaintenanceCacheValid 
+} from '@/lib/maintenance-cache'
+
+// Cache en mémoire pour l'état de maintenance (compatible Edge Runtime)
+let maintenanceCache: boolean | null = null
+let cacheTimestamp: number = 0
+const CACHE_DURATION = 5000 // 5 secondes seulement pour plus de réactivité
 
 /**
- * Utilitaire pour gérer le mode maintenance
+ * Synchronise l'état de maintenance depuis la base de données vers le cache
  */
-export async function isMaintenanceMode(): Promise<boolean> {
+export async function syncMaintenanceModeFromDatabase(): Promise<boolean> {
   try {
-    // D'abord essayer de récupérer depuis la base de données
     const config = await prisma.siteConfig.findUnique({
       where: { key: 'maintenance_mode' }
     })
     
-    if (config) {
-      return config.value === 'true'
-    }
+    const isMaintenanceActive = config ? config.value === 'true' : false
+    
+    // Mettre à jour tous les caches
+    maintenanceCache = isMaintenanceActive
+    cacheTimestamp = Date.now()
+    setGlobalMaintenanceState(isMaintenanceActive)
+    
+    return isMaintenanceActive
   } catch (error) {
-    // Si erreur BDD, utiliser la variable d'environnement comme fallback
-    console.log('Fallback vers variable d\'environnement pour maintenance_mode')
+    console.log('Impossible de synchroniser l\'état de maintenance depuis la BDD:', error)
+    // En cas d'erreur, utiliser la variable d'environnement
+    const envValue = process.env.MAINTENANCE_MODE === 'true'
+    maintenanceCache = envValue
+    cacheTimestamp = Date.now()
+    setGlobalMaintenanceState(envValue)
+    return envValue
   }
-  
-  // Fallback vers la variable d'environnement
-  return process.env.MAINTENANCE_MODE === 'true'
 }
 
 /**
- * Version synchrone pour le middleware (utilise seulement les variables d'environnement)
+ * Utilitaire pour gérer le mode maintenance (version async)
+ */
+export async function isMaintenanceMode(): Promise<boolean> {
+  return await syncMaintenanceModeFromDatabase()
+}
+
+/**
+ * Version synchrone pour le middleware (utilise le cache global ou la variable d'environnement)
  */
 export function isMaintenanceModeSync(): boolean {
-  return process.env.MAINTENANCE_MODE === 'true'
+  // D'abord vérifier le cache global
+  if (isGlobalMaintenanceCacheValid()) {
+    const globalCache = getGlobalMaintenanceState()
+    return globalCache.value
+  }
+  
+  // Si le cache local est récent, l'utiliser
+  if (maintenanceCache !== null && (Date.now() - cacheTimestamp) < CACHE_DURATION) {
+    // Mettre à jour le cache global aussi
+    setGlobalMaintenanceState(maintenanceCache)
+    return maintenanceCache
+  }
+  
+  // Sinon, utiliser la variable d'environnement
+  const envValue = process.env.MAINTENANCE_MODE === 'true'
+  maintenanceCache = envValue
+  cacheTimestamp = Date.now()
+  setGlobalMaintenanceState(envValue)
+  
+  return envValue
 }
 
 /**
@@ -37,6 +79,7 @@ export const MAINTENANCE_ALLOWED_PATHS = [
   '/customer', // Espace client complet
   '/api/auth',
   '/api/admin',
+  '/api/maintenance', // API de synchronisation
   '/maintenance'
 ]
 

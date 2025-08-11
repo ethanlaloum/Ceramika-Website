@@ -37,7 +37,8 @@ export async function POST(request: NextRequest) {
 
     return new Response(JSON.stringify({ 
       success: true, 
-      maintenanceMode: maintenance 
+      maintenanceMode: maintenance,
+      message: 'Mode maintenance mis à jour. Redémarrez le serveur pour que les changements prennent effet.'
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }

@@ -4,6 +4,7 @@ import { Inter, Playfair_Display } from "next/font/google"
 import "./globals.css"
 import { AuthProvider } from "@/components/auth-provider"
 import { Toaster } from "@/components/ui/toaster"
+import { MaintenanceInitializer } from "@/components/maintenance-initializer"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" })
@@ -31,6 +32,7 @@ export default function RootLayout({
     <html lang="fr" suppressHydrationWarning>
       <body className={`${inter.variable} ${playfair.variable} font-sans antialiased`}>
           <AuthProvider>
+            <MaintenanceInitializer />
             {children}
             <Toaster />
           </AuthProvider>
