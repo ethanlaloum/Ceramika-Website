@@ -1,14 +1,9 @@
 import { prisma } from '@/lib/prisma'
-import { 
-  setGlobalMaintenanceState, 
-  getGlobalMaintenanceState, 
-  isGlobalMaintenanceCacheValid 
-} from '@/lib/maintenance-cache'
 
 // Cache en mémoire pour l'état de maintenance (compatible Edge Runtime)
 let maintenanceCache: boolean | null = null
 let cacheTimestamp: number = 0
-const CACHE_DURATION = 5000 // 5 secondes seulement pour plus de réactivité
+const CACHE_DURATION = 30000 // 30 secondes pour la production
 
 /**
  * Synchronise l'état de maintenance depuis la base de données vers le cache
@@ -21,10 +16,9 @@ export async function syncMaintenanceModeFromDatabase(): Promise<boolean> {
     
     const isMaintenanceActive = config ? config.value === 'true' : false
     
-    // Mettre à jour tous les caches
+    // Mettre à jour le cache en mémoire
     maintenanceCache = isMaintenanceActive
     cacheTimestamp = Date.now()
-    setGlobalMaintenanceState(isMaintenanceActive)
     
     return isMaintenanceActive
   } catch (error) {
@@ -33,7 +27,6 @@ export async function syncMaintenanceModeFromDatabase(): Promise<boolean> {
     const envValue = process.env.MAINTENANCE_MODE === 'true'
     maintenanceCache = envValue
     cacheTimestamp = Date.now()
-    setGlobalMaintenanceState(envValue)
     return envValue
   }
 }
@@ -46,27 +39,18 @@ export async function isMaintenanceMode(): Promise<boolean> {
 }
 
 /**
- * Version synchrone pour le middleware (utilise le cache global ou la variable d'environnement)
+ * Version synchrone pour le middleware (utilise le cache ou la variable d'environnement)
  */
 export function isMaintenanceModeSync(): boolean {
-  // D'abord vérifier le cache global
-  if (isGlobalMaintenanceCacheValid()) {
-    const globalCache = getGlobalMaintenanceState()
-    return globalCache.value
-  }
-  
-  // Si le cache local est récent, l'utiliser
+  // Si le cache en mémoire est récent, l'utiliser
   if (maintenanceCache !== null && (Date.now() - cacheTimestamp) < CACHE_DURATION) {
-    // Mettre à jour le cache global aussi
-    setGlobalMaintenanceState(maintenanceCache)
     return maintenanceCache
   }
   
-  // Sinon, utiliser la variable d'environnement
+  // Sinon, utiliser la variable d'environnement et mettre à jour le cache
   const envValue = process.env.MAINTENANCE_MODE === 'true'
   maintenanceCache = envValue
   cacheTimestamp = Date.now()
-  setGlobalMaintenanceState(envValue)
   
   return envValue
 }

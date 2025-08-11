@@ -1,13 +1,14 @@
 import { auth } from "@/auth"
 import { NextResponse } from "next/server"
-import { shouldRedirectToMaintenance } from "@/lib/maintenance"
+import { maintenanceMiddleware } from "@/lib/maintenance-middleware"
 
 export default auth((req) => {
   const { pathname } = req.nextUrl
 
   // Vérifier le mode maintenance en premier
-  if (shouldRedirectToMaintenance(pathname)) {
-    return NextResponse.redirect(new URL('/maintenance', req.url))
+  const maintenanceResponse = maintenanceMiddleware(req)
+  if (maintenanceResponse) {
+    return maintenanceResponse
   }
 
   const isLoggedIn = !!req.auth

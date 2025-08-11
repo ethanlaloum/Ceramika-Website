@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
+import { updateMaintenanceCache } from '@/lib/maintenance-middleware'
 
 export async function POST(request: NextRequest) {
   try {
@@ -35,10 +36,13 @@ export async function POST(request: NextRequest) {
       }
     })
 
+    // Mettre à jour le cache du middleware
+    updateMaintenanceCache(maintenance)
+
     return new Response(JSON.stringify({ 
       success: true, 
       maintenanceMode: maintenance,
-      message: 'Mode maintenance mis à jour. Redémarrez le serveur pour que les changements prennent effet.'
+      message: 'Mode maintenance mis à jour avec succès'
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }

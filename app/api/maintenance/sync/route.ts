@@ -1,4 +1,5 @@
 import { syncMaintenanceModeFromDatabase } from '@/lib/maintenance'
+import { updateMaintenanceCache } from '@/lib/maintenance-middleware'
 
 /**
  * API publique pour synchroniser l'état de maintenance
@@ -7,6 +8,9 @@ import { syncMaintenanceModeFromDatabase } from '@/lib/maintenance'
 export async function GET() {
   try {
     const maintenanceMode = await syncMaintenanceModeFromDatabase()
+    
+    // Mettre à jour le cache du middleware
+    updateMaintenanceCache(maintenanceMode)
     
     return new Response(JSON.stringify({ 
       maintenance: maintenanceMode 
