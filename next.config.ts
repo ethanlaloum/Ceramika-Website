@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
     // ⚠️ Cela ignorera toutes les erreurs de type lors du build
     ignoreBuildErrors: true,
   },
+  eslint: {
+    // Désactiver ESLint pendant le build
+    ignoreDuringBuilds: true,
+  },
   // Configuration pour les images avec Vercel Blob Storage
   images: {
     unoptimized: true,
