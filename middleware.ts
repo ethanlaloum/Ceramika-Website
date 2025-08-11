@@ -5,7 +5,7 @@ import { maintenanceMiddleware } from "@/lib/maintenance-middleware"
 export default auth((req) => {
   const { pathname } = req.nextUrl
 
-  // Vérifier le mode maintenance en premier
+  // Vérifier le mode maintenance en premier (synchrone)
   const maintenanceResponse = maintenanceMiddleware(req)
   if (maintenanceResponse) {
     return maintenanceResponse

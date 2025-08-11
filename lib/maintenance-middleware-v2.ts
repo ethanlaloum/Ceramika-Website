@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 /**
  * Système de maintenance simple pour Edge Runtime
- * Utilise les cookies pour synchroniser l'état entre contextes
+ * Utilise une variable globale pour synchroniser l'état
  */
 
 /**
@@ -32,44 +32,50 @@ function isPathAllowedDuringMaintenance(pathname: string): boolean {
   )
 }
 
+/**
+ * Variable globale partagée (Edge Runtime compatible)
+ */
+const globalThis_ = globalThis as any
+globalThis_.__CERAMIKA_MAINTENANCE__ = globalThis_.__CERAMIKA_MAINTENANCE__ || false
+
 export function maintenanceMiddleware(request: NextRequest): NextResponse | null {
   const { pathname } = request.nextUrl
 
+  console.log(`🔍 Middleware: Chemin demandé: ${pathname}`)
+
   // Toujours permettre l'accès aux chemins autorisés
   if (isPathAllowedDuringMaintenance(pathname)) {
+    console.log(`✅ Chemin autorisé: ${pathname}`)
     return null // Laisser passer
   }
 
-  // Vérifier le mode maintenance depuis les cookies
-  const maintenanceCookie = request.cookies.get('ceramika-maintenance')
-  const isMaintenanceActive = maintenanceCookie?.value === 'true'
+  // Vérifier le mode maintenance depuis la variable globale
+  const isMaintenanceActive = globalThis_.__CERAMIKA_MAINTENANCE__
+  console.log(`🔧 Mode maintenance (global): ${isMaintenanceActive}`)
 
   if (isMaintenanceActive) {
+    console.log(`🚫 BLOCAGE: Redirection vers /maintenance pour ${pathname}`)
     // BLOQUER et rediriger vers maintenance
     return NextResponse.redirect(new URL('/maintenance', request.url))
   }
 
+  console.log(`✅ Passage autorisé pour: ${pathname}`)
   return null // Pas de maintenance, laisser passer
 }
 
 /**
- * Met à jour l'état de maintenance via cookie (appelé par les APIs)
+ * Met à jour l'état de maintenance dans la variable globale
  */
-export function setMaintenanceCookie(response: NextResponse, isActive: boolean): NextResponse {
-  response.cookies.set('ceramika-maintenance', isActive.toString(), {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: 60 * 60 * 24 * 7 // 7 jours
-  })
-  
-  return response
+export function updateMaintenanceCache(isActive: boolean): void {
+  const globalThis_ = globalThis as any
+  globalThis_.__CERAMIKA_MAINTENANCE__ = isActive
+  console.log(`🔧 Global maintenance mis à jour: ${isActive}`)
 }
 
 /**
- * Récupère l'état actuel depuis les cookies
+ * Récupère l'état actuel (pour les APIs)
  */
-export function getMaintenanceFromCookie(request: NextRequest): boolean {
-  const maintenanceCookie = request.cookies.get('ceramika-maintenance')
-  return maintenanceCookie?.value === 'true'
+export function getMaintenanceCacheStatus(): boolean {
+  const globalThis_ = globalThis as any
+  return globalThis_.__CERAMIKA_MAINTENANCE__ || false
 }

@@ -1,7 +1,7 @@
-import { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
-import { updateMaintenanceCache } from '@/lib/maintenance-middleware'
+import { setMaintenanceCookie } from '@/lib/maintenance-middleware'
 
 export async function POST(request: NextRequest) {
   try {
@@ -36,10 +36,8 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    // Mettre à jour le cache du middleware
-    updateMaintenanceCache(maintenance)
-
-    return new Response(JSON.stringify({ 
+    // Créer la réponse et définir le cookie de maintenance
+    const response = new NextResponse(JSON.stringify({ 
       success: true, 
       maintenanceMode: maintenance,
       message: 'Mode maintenance mis à jour avec succès'
@@ -47,6 +45,11 @@ export async function POST(request: NextRequest) {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     })
+
+    // Définir le cookie de maintenance
+    setMaintenanceCookie(response, maintenance)
+
+    return response
 
   } catch (error: any) {
     console.error('Erreur API maintenance:', error)

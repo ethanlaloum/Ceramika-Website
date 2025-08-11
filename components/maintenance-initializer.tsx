@@ -3,21 +3,26 @@
 import { useEffect } from 'react'
 
 /**
- * Composant qui initialise l'état de maintenance au chargement de l'application
+ * Composant qui initialise le cache de maintenance au démarrage de l'app
+ * Synchronise le cache avec la base de données
  */
 export function MaintenanceInitializer() {
   useEffect(() => {
-    // Utiliser l'API publique de synchronisation
-    fetch('/api/maintenance/sync', { 
-      method: 'GET'
+    // Initialiser le cache de maintenance depuis la DB
+    fetch('/api/maintenance/init', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     })
-      .then(() => {
-        console.log('État de maintenance synchronisé depuis la base de données')
+      .then(response => response.json())
+      .then(data => {
+        console.log('🔧 Cache maintenance initialisé:', data.maintenance)
       })
-      .catch((error) => {
-        console.log('Erreur synchronisation maintenance:', error.message)
+      .catch(error => {
+        console.error('❌ Erreur initialisation maintenance:', error)
       })
   }, [])
 
-  return null
+  return null // Ce composant ne rend rien
 }
