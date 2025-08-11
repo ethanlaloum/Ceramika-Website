@@ -1,8 +1,31 @@
+import { prisma } from '@/lib/prisma'
+
 /**
  * Utilitaire pour gérer le mode maintenance
  */
+export async function isMaintenanceMode(): Promise<boolean> {
+  try {
+    // D'abord essayer de récupérer depuis la base de données
+    const config = await prisma.siteConfig.findUnique({
+      where: { key: 'maintenance_mode' }
+    })
+    
+    if (config) {
+      return config.value === 'true'
+    }
+  } catch (error) {
+    // Si erreur BDD, utiliser la variable d'environnement comme fallback
+    console.log('Fallback vers variable d\'environnement pour maintenance_mode')
+  }
+  
+  // Fallback vers la variable d'environnement
+  return process.env.MAINTENANCE_MODE === 'true'
+}
 
-export function isMaintenanceMode(): boolean {
+/**
+ * Version synchrone pour le middleware (utilise seulement les variables d'environnement)
+ */
+export function isMaintenanceModeSync(): boolean {
   return process.env.MAINTENANCE_MODE === 'true'
 }
 
@@ -30,7 +53,7 @@ export function isPathAllowedDuringMaintenance(pathname: string): boolean {
  * Vérifie si une requête doit être redirigée vers la page de maintenance
  */
 export function shouldRedirectToMaintenance(pathname: string): boolean {
-  if (!isMaintenanceMode()) {
+  if (!isMaintenanceModeSync()) {
     return false
   }
 

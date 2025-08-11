@@ -1,7 +1,6 @@
 import { NextRequest } from 'next/server'
 import { auth } from '@/auth'
-import { writeFile, readFile } from 'fs/promises'
-import { join } from 'path'
+import { prisma } from '@/lib/prisma'
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,52 +22,26 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // En production, on ne peut pas modifier le fichier .env
-    // Il faut changer la variable d'environnement directement sur Vercel
-    if (process.env.NODE_ENV === 'production') {
-      return new Response(JSON.stringify({
-        error: 'Le mode maintenance ne peut être modifié qu\'via les variables d\'environnement Vercel en production',
-        instructions: 'Aller dans Settings > Environment Variables sur Vercel et modifier MAINTENANCE_MODE'
-      }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' }
-      })
-    }
+    // Utiliser la base de données pour stocker l'état de maintenance
+    await prisma.siteConfig.upsert({
+      where: { key: 'maintenance_mode' },
+      update: { 
+        value: maintenance.toString(),
+        updatedAt: new Date()
+      },
+      create: {
+        key: 'maintenance_mode',
+        value: maintenance.toString()
+      }
+    })
 
-    // En développement local, on peut modifier le fichier .env
-    const envPath = join(process.cwd(), '.env')
-    
-    try {
-      // Lire le fichier .env actuel
-      const envContent = await readFile(envPath, 'utf-8')
-      
-      // Mettre à jour la ligne MAINTENANCE_MODE
-      const updatedContent = envContent.replace(
-        /MAINTENANCE_MODE=.*/,
-        `MAINTENANCE_MODE=${maintenance}`
-      )
-      
-      // Écrire le fichier mis à jour
-      await writeFile(envPath, updatedContent, 'utf-8')
-      
-      return new Response(JSON.stringify({ 
-        success: true, 
-        maintenanceMode: maintenance 
-      }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      })
-      
-    } catch (fileError: any) {
-      console.error('Erreur fichier .env:', fileError)
-      return new Response(JSON.stringify({
-        error: 'Erreur lors de la mise à jour du fichier de configuration',
-        details: fileError.message
-      }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      })
-    }
+    return new Response(JSON.stringify({ 
+      success: true, 
+      maintenanceMode: maintenance 
+    }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    })
 
   } catch (error: any) {
     console.error('Erreur API maintenance:', error)
@@ -93,7 +66,21 @@ export async function GET() {
       })
     }
 
-    const maintenanceMode = process.env.MAINTENANCE_MODE === 'true'
+    // Récupérer l'état depuis la base de données
+    let maintenanceMode = false
+    
+    try {
+      const config = await prisma.siteConfig.findUnique({
+        where: { key: 'maintenance_mode' }
+      })
+      
+      if (config) {
+        maintenanceMode = config.value === 'true'
+      }
+    } catch (dbError) {
+      // Si la table n'existe pas encore, utiliser la variable d'environnement comme fallback
+      maintenanceMode = process.env.MAINTENANCE_MODE === 'true'
+    }
     
     return new Response(JSON.stringify({ 
       maintenanceMode 
