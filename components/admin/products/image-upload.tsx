@@ -22,6 +22,7 @@ export function ImageUpload({
   disabled = false 
 }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false)
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
   const { toast } = useToast()
 
   const uploadImage = useCallback(async (file: File) => {
@@ -48,8 +49,19 @@ export function ImageUpload({
         throw new Error(errorMessage)
       }
 
-      // Ajouter la nouvelle image à la liste
-      const newImages = [...images, result.url]
+      // Ajouter la nouvelle image dans le premier slot disponible
+      const newImages = [...images]
+      
+      // Trouver le premier index libre (null, undefined, ou chaîne vide)
+      let insertIndex = newImages.findIndex(img => !img || img.trim() === '')
+      
+      // Si aucun slot libre, ajouter à la fin
+      if (insertIndex === -1) {
+        newImages.push(result.url)
+      } else {
+        newImages[insertIndex] = result.url
+      }
+      
       onImagesChange(newImages)
 
       toast({
@@ -100,9 +112,54 @@ export function ImageUpload({
   }, [uploadImage, toast])
 
   const removeImage = useCallback((indexToRemove: number) => {
+    console.log('Suppression de l\'image à l\'index:', indexToRemove)
+    console.log('Image supprimée:', images[indexToRemove])
+    console.log('Tableau actuel:', images)
+    
     const newImages = images.filter((_, index) => index !== indexToRemove)
+    console.log('Nouveau tableau:', newImages)
     onImagesChange(newImages)
   }, [images, onImagesChange])
+
+  // Fonction pour nettoyer le tableau (supprimer les entrées vides)
+  const cleanImages = useCallback(() => {
+    const cleanedImages = images.filter(img => img && img.trim() !== '')
+    if (cleanedImages.length !== images.length) {
+      onImagesChange(cleanedImages)
+    }
+  }, [images, onImagesChange])
+
+  // Fonctions pour réorganiser les images par drag & drop
+  const handleImageDragStart = useCallback((event: React.DragEvent, index: number) => {
+    setDraggedIndex(index)
+    event.dataTransfer.effectAllowed = 'move'
+  }, [])
+
+  const handleImageDragOver = useCallback((event: React.DragEvent) => {
+    event.preventDefault()
+    event.dataTransfer.dropEffect = 'move'
+  }, [])
+
+  const handleImageDrop = useCallback((event: React.DragEvent, dropIndex: number) => {
+    event.preventDefault()
+    
+    if (draggedIndex === null || draggedIndex === dropIndex) {
+      setDraggedIndex(null)
+      return
+    }
+
+    const newImages = [...images]
+    const draggedImage = newImages[draggedIndex]
+    
+    // Supprimer l'image de sa position actuelle
+    newImages.splice(draggedIndex, 1)
+    
+    // L'insérer à la nouvelle position
+    newImages.splice(dropIndex, 0, draggedImage)
+    
+    onImagesChange(newImages)
+    setDraggedIndex(null)
+  }, [images, onImagesChange, draggedIndex])
 
   const handleDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault()
@@ -123,13 +180,27 @@ export function ImageUpload({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <Label className="text-sm font-medium">
-          Images du produit ({images.length}/{maxImages})
+          Images du produit ({images.filter(img => img && img.trim() !== '').length}/{maxImages})
         </Label>
-        {images.length > 0 && (
-          <span className="text-xs text-muted-foreground">
-            Glissez pour réorganiser
-          </span>
-        )}
+        <div className="flex items-center gap-2">
+          {images.some(img => !img || img.trim() === '') && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={cleanImages}
+              disabled={disabled}
+              className="text-xs"
+            >
+              Nettoyer
+            </Button>
+          )}
+          {images.length > 0 && (
+            <span className="text-xs text-muted-foreground">
+              Glissez pour réorganiser
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Zone de téléchargement */}
@@ -174,37 +245,54 @@ export function ImageUpload({
       {/* Aperçu des images */}
       {images.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {images.map((imageUrl, index) => (
-            <div key={index} className="relative group">
-              <div className="aspect-square relative bg-muted rounded-lg overflow-hidden">
-                {/* Test avec img normal d'abord, puis Image de Next.js en fallback */}
-                <img
-                  src={imageUrl}
-                  alt={`Image ${index + 1}`}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement
-                    target.style.display = 'none'
-                  }}
-                />
-                {index === 0 && (
-                  <div className="absolute top-2 left-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded">
-                    Principal
-                  </div>
-                )}
-                <Button
-                  type="button"
-                  variant="destructive"
-                  size="sm"
-                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 h-auto"
-                  onClick={() => removeImage(index)}
-                  disabled={disabled}
-                >
-                  <X className="h-3 w-3" />
-                </Button>
+          {images.map((imageUrl, index) => {
+            // Ne pas afficher les images vides ou invalides
+            if (!imageUrl || imageUrl.trim() === '') {
+              return null
+            }
+            
+            return (
+              <div 
+                key={index} 
+                className="relative group cursor-move"
+                draggable={!disabled}
+                onDragStart={(e) => handleImageDragStart(e, index)}
+                onDragOver={handleImageDragOver}
+                onDrop={(e) => handleImageDrop(e, index)}
+              >
+                <div className={`aspect-square relative bg-muted rounded-lg overflow-hidden transition-opacity ${
+                  draggedIndex === index ? 'opacity-50' : ''
+                }`}>
+                  {/* Test avec img normal d'abord, puis Image de Next.js en fallback */}
+                  <img
+                    src={imageUrl}
+                    alt={`Image ${index + 1}`}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      console.error(`Erreur de chargement pour l'image ${index}:`, imageUrl)
+                      const target = e.target as HTMLImageElement
+                      target.style.display = 'none'
+                    }}
+                  />
+                  {index === 0 && (
+                    <div className="absolute top-2 left-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded">
+                      Principal
+                    </div>
+                  )}
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 h-auto"
+                    onClick={() => removeImage(index)}
+                    disabled={disabled}
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
 
@@ -219,7 +307,7 @@ export function ImageUpload({
       )}
 
       <p className="text-xs text-muted-foreground">
-        La première image sera utilisée comme image principale du produit.
+        La première image sera utilisée comme image principale du produit. Glissez-déposez les images pour les réorganiser.
       </p>
     </div>
   )
