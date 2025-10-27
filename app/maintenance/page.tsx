@@ -61,15 +61,15 @@ export default function MaintenancePage() {
             <Globe className="w-4 h-4 mr-2" />
             Actualiser la page
           </Button>
-          
+
           <div className="text-xs text-slate-400 dark:text-slate-600 space-y-1">
             <p>
               En cas de problème, contactez-nous à{' '}
-              <a 
+              <a
                 href="mailto:contact@ceramika.fr" 
                 className="text-blue-600 dark:text-blue-400 hover:underline"
               >
-                contact@ceramika.fr
+                contact@cerami-ka.com
               </a>
             </p>
             <p>Notre équipe support reste disponible durant la maintenance.</p>
