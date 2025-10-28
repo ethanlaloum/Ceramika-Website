@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { BarChart3, Package, ShoppingCart, Users, Settings, Home, LogOut, X } from "lucide-react"
+import { BarChart3, Package, ShoppingCart, Users, Settings, Home, LogOut, X, Palette } from "lucide-react"
 import { signOut } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 
@@ -11,6 +11,7 @@ const navigation = [
   { name: "Produits", href: "/admin/products", icon: Package },
   { name: "Commandes", href: "/admin/orders", icon: ShoppingCart },
   { name: "Clients", href: "/admin/customers", icon: Users },
+  { name: "Artistes", href: "/admin/artists", icon: Palette },
   { name: "Paramètres", href: "/admin/settings", icon: Settings },
 ]
 
