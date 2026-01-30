@@ -8,30 +8,9 @@ export function Footer() {
 
   const footerSections = [
     {
-      title: "Shop",
+      title: "Informations",
       links: [
-        { href: "/collections", label: "Collections" },
-        { href: "/artists", label: "Artists" },
-        { href: "/new-arrivals", label: "New Arrivals" },
-        { href: "/bestsellers", label: "Bestsellers" },
-      ],
-    },
-    {
-      title: "Support",
-      links: [
-        { href: "/contact", label: "Contact Us" },
-        { href: "/shipping", label: "Shipping Info" },
-        { href: "/returns", label: "Returns" },
-        { href: "/care", label: "Care Instructions" },
-      ],
-    },
-    {
-      title: "Company",
-      links: [
-        { href: "/about", label: "About Us" },
-        { href: "/careers", label: "Careers" },
-        { href: "/press", label: "Press" },
-        { href: "/sustainability", label: "Sustainability" },
+        { href: "/mentions-legales", label: "Mentions légales" },
       ],
     },
   ]
@@ -122,13 +101,9 @@ export function Footer() {
         <FadeIn delay={0.6}>
           <div className="border-t border-stone-200 dark:border-stone-700 mt-8 pt-8 text-center">
             <p className="text-sm text-stone-600 dark:text-stone-400">
-              &copy; 2025 Céramika. All rights reserved. |
-              <Link href="/privacy" className="hover:text-stone-800 dark:hover:text-stone-200 ml-1">
-                Privacy Policy
-              </Link>{" "}
-              |
-              <Link href="/terms" className="hover:text-stone-800 dark:hover:text-stone-200 ml-1">
-                Terms of Service
+              &copy; 2025 Céramika. Tous droits réservés. |
+              <Link href="/mentions-legales" className="hover:text-stone-800 dark:hover:text-stone-200 ml-1">
+                Mentions légales
               </Link>
             </p>
           </div>
