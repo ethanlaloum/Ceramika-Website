@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { TrendingUp, TrendingDown, DollarSign, ShoppingCart, Users, Package, Download } from "lucide-react"
+import { TrendingUp, Euro, ShoppingCart, Users, Package, Download } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -159,25 +159,10 @@ export function AnalyticsComponent() {
             <div className="flex items-center justify-between">
               <div className="space-y-1 md:space-y-2 min-w-0 flex-1">
                 <p className="text-xs md:text-sm font-medium text-gray-600 truncate">Revenus</p>
-                <p className="text-lg md:text-2xl font-bold truncate">€{analytics.revenue.total.toLocaleString()}</p>
-                <div className="flex items-center space-x-1">
-                  {analytics.revenue.trend === "up" ? (
-                    <TrendingUp className="h-3 w-3 md:h-4 md:w-4 text-green-600 flex-shrink-0" />
-                  ) : (
-                    <TrendingDown className="h-3 w-3 md:h-4 md:w-4 text-red-600 flex-shrink-0" />
-                  )}
-                  <span
-                    className={`text-xs md:text-sm font-medium truncate ${
-                      analytics.revenue.trend === "up" ? "text-green-600" : "text-red-600"
-                    }`}
-                  >
-                    {analytics.revenue.change > 0 ? "+" : ""}
-                    {analytics.revenue.change}%
-                  </span>
-                </div>
+                <p className="text-lg md:text-2xl font-bold truncate">{analytics.revenue.total.toLocaleString()}€</p>
               </div>
               <div className="p-2 md:p-3 bg-green-100 rounded-full flex-shrink-0">
-                <DollarSign className="h-4 w-4 md:h-6 md:w-6 text-green-600" />
+                <Euro className="h-4 w-4 md:h-6 md:w-6 text-green-600" />
               </div>
             </div>
           </CardContent>
@@ -189,21 +174,6 @@ export function AnalyticsComponent() {
               <div className="space-y-1 md:space-y-2 min-w-0 flex-1">
                 <p className="text-xs md:text-sm font-medium text-gray-600 truncate">Commandes</p>
                 <p className="text-lg md:text-2xl font-bold truncate">{analytics.orders.total.toLocaleString()}</p>
-                <div className="flex items-center space-x-1">
-                  {analytics.orders.trend === "up" ? (
-                    <TrendingUp className="h-3 w-3 md:h-4 md:w-4 text-green-600 flex-shrink-0" />
-                  ) : (
-                    <TrendingDown className="h-3 w-3 md:h-4 md:w-4 text-red-600 flex-shrink-0" />
-                  )}
-                  <span
-                    className={`text-xs md:text-sm font-medium truncate ${
-                      analytics.orders.trend === "up" ? "text-green-600" : "text-red-600"
-                    }`}
-                  >
-                    {analytics.orders.change > 0 ? "+" : ""}
-                    {analytics.orders.change}%
-                  </span>
-                </div>
               </div>
               <div className="p-2 md:p-3 bg-blue-100 rounded-full flex-shrink-0">
                 <ShoppingCart className="h-4 w-4 md:h-6 md:w-6 text-blue-600" />
@@ -218,21 +188,6 @@ export function AnalyticsComponent() {
               <div className="space-y-1 md:space-y-2 min-w-0 flex-1">
                 <p className="text-xs md:text-sm font-medium text-gray-600 truncate">Clients</p>
                 <p className="text-lg md:text-2xl font-bold truncate">{analytics.customers.total.toLocaleString()}</p>
-                <div className="flex items-center space-x-1">
-                  {analytics.customers.trend === "up" ? (
-                    <TrendingUp className="h-3 w-3 md:h-4 md:w-4 text-green-600 flex-shrink-0" />
-                  ) : (
-                    <TrendingDown className="h-3 w-3 md:h-4 md:w-4 text-red-600 flex-shrink-0" />
-                  )}
-                  <span
-                    className={`text-xs md:text-sm font-medium truncate ${
-                      analytics.customers.trend === "up" ? "text-green-600" : "text-red-600"
-                    }`}
-                  >
-                    {analytics.customers.change > 0 ? "+" : ""}
-                    {analytics.customers.change}%
-                  </span>
-                </div>
               </div>
               <div className="p-2 md:p-3 bg-purple-100 rounded-full flex-shrink-0">
                 <Users className="h-4 w-4 md:h-6 md:w-6 text-purple-600" />
@@ -247,21 +202,6 @@ export function AnalyticsComponent() {
               <div className="space-y-1 md:space-y-2 min-w-0 flex-1">
                 <p className="text-xs md:text-sm font-medium text-gray-600 truncate">Produits</p>
                 <p className="text-lg md:text-2xl font-bold truncate">{analytics.products.total.toLocaleString()}</p>
-                <div className="flex items-center space-x-1">
-                  {analytics.products.trend === "up" ? (
-                    <TrendingUp className="h-3 w-3 md:h-4 md:w-4 text-green-600 flex-shrink-0" />
-                  ) : (
-                    <TrendingDown className="h-3 w-3 md:h-4 md:w-4 text-red-600 flex-shrink-0" />
-                  )}
-                  <span
-                    className={`text-xs md:text-sm font-medium truncate ${
-                      analytics.products.trend === "up" ? "text-green-600" : "text-red-600"
-                    }`}
-                  >
-                    {analytics.products.change > 0 ? "+" : ""}
-                    {analytics.products.change}%
-                  </span>
-                </div>
               </div>
               <div className="p-2 md:p-3 bg-orange-100 rounded-full flex-shrink-0">
                 <Package className="h-4 w-4 md:h-6 md:w-6 text-orange-600" />

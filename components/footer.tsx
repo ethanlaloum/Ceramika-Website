@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Instagram, Facebook, Twitter, Mail, Phone, Smartphone, MapPin } from "lucide-react"
+import { Instagram, Facebook, Twitter, Mail, Phone, Smartphone, MapPin, Linkedin } from "lucide-react"
 import { FadeIn, Stagger } from "@/components/animations"
 
 export function Footer() {
@@ -39,11 +39,11 @@ export function Footer() {
                 </div>
                 <div className="flex items-center space-x-3 text-sm text-stone-600 dark:text-stone-300">
                   <Smartphone className="h-4 w-4" />
-                  <span>+33 (0)7 78 57 38 46</span>
+                  <span>07 78 57 38 46</span>
                 </div>
                 <div className="flex items-center space-x-3 text-sm text-stone-600 dark:text-stone-300">
                   <Phone className="h-4 w-4" />
-                  <span>+33 (0)4 93 64 48 94</span>
+                  <span>04 93 64 48 94</span>
                 </div>
                 <div className="flex items-center space-x-3 text-sm text-stone-600 dark:text-stone-300">
                   <MapPin className="h-4 w-4" />
@@ -54,22 +54,16 @@ export function Footer() {
               {/* Social Links */}
               <div className="flex space-x-4">
                 <Link
-                  href="#"
+                  href="https://www.instagram.com/ceramika_vallauris?igsh=NzgyZXRkOGF3eGph"
                   className="text-stone-600 dark:text-stone-300 hover:text-stone-800 dark:hover:text-stone-100 transition-all duration-300 hover:scale-110"
                 >
                   <Instagram className="h-5 w-5" />
                 </Link>
                 <Link
-                  href="#"
+                  href="https://www.linkedin.com/company/sas-c%C3%A9ramika/"
                   className="text-stone-600 dark:text-stone-300 hover:text-stone-800 dark:hover:text-stone-100 transition-all duration-300 hover:scale-110"
                 >
-                  <Facebook className="h-5 w-5" />
-                </Link>
-                <Link
-                  href="#"
-                  className="text-stone-600 dark:text-stone-300 hover:text-stone-800 dark:hover:text-stone-100 transition-all duration-300 hover:scale-110"
-                >
-                  <Twitter className="h-5 w-5" />
+                  <Linkedin className="h-5 w-5" />
                 </Link>
               </div>
             </div>
