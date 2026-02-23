@@ -34,6 +34,7 @@ export default auth((req) => {
     "/privacy",
     "/terms",
     "/maintenance", // 🔧 Ajouté pour que la maintenance soit accessible sans authentification
+    "/mentions-legales",
   ]
 
   // Routes d'authentification

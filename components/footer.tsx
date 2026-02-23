@@ -11,6 +11,8 @@ export function Footer() {
       title: "Informations",
       links: [
         { href: "/mentions-legales", label: "Mentions légales" },
+        { href: "/terms", label: "Conditions générales de vente" },
+        { href: "/privacy", label: "Politique de confidentialité" },
       ],
     },
   ]
@@ -98,6 +100,14 @@ export function Footer() {
               &copy; 2026 CéramiKa. Tous droits réservés. |
               <Link href="/mentions-legales" className="hover:text-stone-800 dark:hover:text-stone-200 ml-1">
                 Mentions légales
+              </Link>
+              <span className="mx-2">|</span>
+              <Link href="/terms" className="hover:text-stone-800 dark:hover:text-stone-200">
+                CGV
+              </Link>
+              <span className="mx-2">|</span>
+              <Link href="/privacy" className="hover:text-stone-800 dark:hover:text-stone-200">
+                Politique de confidentialité
               </Link>
             </p>
           </div>
