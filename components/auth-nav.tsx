@@ -27,7 +27,7 @@ export function AuthNav() {
           <Link href="/customer/login">Se connecter</Link>
         </Button>
         <Button asChild>
-          <Link href="/customer/login">S inscrire</Link>
+          <Link href="/customer/login">S'inscrire</Link>
         </Button>
       </div>
     )

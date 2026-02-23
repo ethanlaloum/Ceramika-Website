@@ -19,8 +19,8 @@ export default function CustomerLoginPage() {
         </div>
 
         <Tabs defaultValue="login" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="login">Se Connecter</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="login">Se connecter</TabsTrigger>
             <TabsTrigger value="signup">Créer un compte</TabsTrigger>
           </TabsList>
 
@@ -38,9 +38,9 @@ export default function CustomerLoginPage() {
 
           <TabsContent value="signup">
             <Card>
-              <CardHeader>
+                <CardHeader>
                 <CardTitle>Créer un compte</CardTitle>
-                <CardDescription>Join our community of ceramic enthusiasts</CardDescription>
+                <CardDescription>Rejoignez notre communauté d'amateurs de céramique</CardDescription>
               </CardHeader>
               <CardContent>
                 <RegisterForm isAdmin={false} />
