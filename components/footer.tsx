@@ -95,7 +95,7 @@ export function Footer() {
         <FadeIn delay={0.6}>
           <div className="border-t border-stone-200 dark:border-stone-700 mt-8 pt-8 text-center">
             <p className="text-sm text-stone-600 dark:text-stone-400">
-              &copy; 2025 Céramika. Tous droits réservés. |
+              &copy; 2026 CéramiKa. Tous droits réservés. |
               <Link href="/mentions-legales" className="hover:text-stone-800 dark:hover:text-stone-200 ml-1">
                 Mentions légales
               </Link>

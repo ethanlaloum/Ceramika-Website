@@ -91,10 +91,10 @@ export function Navigation() {
           <div className="hidden lg:flex items-center space-x-8">
             {[
               { href: "/", label: "Accueil" },
-              { href: "/products", label: "Explorer" },
+              { href: "/products", label: "Produits" },
               { href: "/collections", label: "Collections" },
               { href: "/artists", label: "Artistes" },
-              { href: "/about", label: "À propos" },
+              { href: "/about", label: "À Propos" },
             ].map((item) => (
               <Link
                 key={item.href}
