@@ -258,10 +258,10 @@ export function Navigation() {
           <div className="pt-4 border-t border-gray-100 space-y-2">
             {[
               { href: "/", label: "Accueil" },
-              { href: "/products", label: "Explorer" },
+              { href: "/products", label: "Produits" },
               { href: "/collections", label: "Collections" },
               { href: "/artists", label: "Artistes" },
-              { href: "/about", label: "À propos" },
+              { href: "/about", label: "À Propos" },
             ].map((item) => (
               <Link
                 key={item.href}
