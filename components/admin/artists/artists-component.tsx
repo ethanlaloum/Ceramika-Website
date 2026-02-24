@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Loader2, Image as ImageIcon, Plus, Search, User, Eye, Pencil, Trash2, Palette } from "lucide-react"
 import Image from "next/image"
+import { ImageUpload } from "@/components/admin/products/image-upload"
 import { useToast } from "@/hooks/use-toast"
 import { DeleteArtistDialog } from "./delete-artist-dialog"
 
@@ -237,8 +238,12 @@ export function ArtistsComponent() {
               <Input id="bio" value={newArtist.bio} onChange={(e) => setNewArtist((s) => ({ ...s, bio: e.target.value }))} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="image">Image (URL)</Label>
-              <Input id="image" value={newArtist.image} onChange={(e) => setNewArtist((s) => ({ ...s, image: e.target.value }))} />
+              <Label>Image</Label>
+              <ImageUpload
+                images={newArtist.image ? [newArtist.image] : []}
+                onImagesChange={(imgs) => setNewArtist((s) => ({ ...s, image: imgs[0] || "" }))}
+                maxImages={1}
+              />
             </div>
             <Button onClick={handleCreate} disabled={addLoading} className="w-full">
               {addLoading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
@@ -265,8 +270,12 @@ export function ArtistsComponent() {
                 <Input id="edit-bio" value={editing.bio || ""} onChange={(e) => setEditing((s) => s ? { ...s, bio: e.target.value } : s)} />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="edit-image">Image (URL)</Label>
-                <Input id="edit-image" value={editing.image || ""} onChange={(e) => setEditing((s) => s ? { ...s, image: e.target.value } : s)} />
+                <Label>Image</Label>
+                <ImageUpload
+                  images={editing.image ? [editing.image] : []}
+                  onImagesChange={(imgs) => setEditing((s) => s ? { ...s, image: imgs[0] || "" } : s)}
+                  maxImages={1}
+                />
               </div>
               <Button onClick={handleEdit} disabled={editLoading} className="w-full">
                 {editLoading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}

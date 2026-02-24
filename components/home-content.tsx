@@ -112,35 +112,36 @@ export function HomeContent() {
                 ? Array.from({ length: 3 }).map((_, index) => <ProductCardSkeleton key={index} />)
                 : featuredProducts.map((product) => (
                     <HoverScale key={product.id} scale={1.03}>
-                      <Card className="group cursor-pointer border-stone-200 dark:border-stone-700 hover:shadow-2xl transition-all duration-500 overflow-hidden bg-white dark:bg-stone-800">
+                      <Card className="group border-stone-200 dark:border-stone-700 hover:shadow-2xl transition-all duration-500 overflow-hidden bg-white dark:bg-stone-800">
                         <CardContent className="p-0">
-                          <div className="relative overflow-hidden">
-                            <Image
-                              src={product.images[0] || "/placeholder.svg"}
-                              alt={product.name}
-                              width={300}
-                              height={300}
-                              className="w-full h-48 sm:h-56 md:h-64 object-cover transition-transform duration-700 group-hover:scale-110"
-                            />
-                            {product.featured && (
-                              <Badge className="absolute top-3 sm:top-4 left-3 sm:left-4 bg-stone-800 dark:bg-stone-100 text-white dark:text-stone-900 animate-pulse text-xs sm:text-sm">
-                                Vedette
-                              </Badge>
-                            )}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                          </div>
-                          <div className="p-4 sm:p-6">
-                            <h3 className="font-semibold text-base sm:text-lg text-stone-800 dark:text-stone-100 mb-2 group-hover:text-stone-600 dark:group-hover:text-stone-300 transition-colors leading-tight">
-                              {product.name}
-                            </h3>
-                            <p className="text-stone-600 dark:text-stone-400 text-xs sm:text-sm mb-3">
-                              Par {product.artist.name}
-                            </p>
+                          <Link href={`/products/${product.id}`} className="block">
+                            <div className="relative overflow-hidden">
+                              <Image
+                                src={product.images[0] || "/placeholder.svg"}
+                                alt={product.name}
+                                width={300}
+                                height={300}
+                                className="w-full h-48 sm:h-56 md:h-64 object-cover transition-transform duration-700 group-hover:scale-110"
+                              />
+                              {product.featured && (
+                                <Badge className="absolute top-3 sm:top-4 left-3 sm:left-4 bg-stone-800 dark:bg-stone-100 text-white dark:text-stone-900 animate-pulse text-xs sm:text-sm">
+                                  Vedette
+                                </Badge>
+                              )}
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            </div>
+                            <div className="p-4 sm:p-6">
+                              <h3 className="font-semibold text-base sm:text-lg text-stone-800 dark:text-stone-100 mb-2 group-hover:text-stone-600 dark:group-hover:text-stone-300 transition-colors leading-tight">
+                                {product.name}
+                              </h3>
+                              <p className="text-stone-600 dark:text-stone-400 text-xs sm:text-sm mb-3">Par {product.artist.name}</p>
+                            </div>
+                          </Link>
+
+                          <div className="px-4 sm:px-6 pb-4 sm:pb-6">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
-                                <p className="font-bold text-lg sm:text-xl text-stone-800 dark:text-stone-100">
-                                  {product.price}€
-                                </p>
+                                <p className="font-bold text-lg sm:text-xl text-stone-800 dark:text-stone-100">{product.price}€</p>
                                 {product.originalPrice && product.originalPrice > product.price && (
                                   <p className="text-sm text-stone-500 line-through">{product.originalPrice}€</p>
                                 )}
