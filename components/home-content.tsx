@@ -46,7 +46,7 @@ export function HomeContent() {
           <FadeIn delay={0.2}>
             <h1 className="font-playfair text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold mb-4 sm:mb-6 leading-tight">
               <span className="bg-gradient-to-r from-black via-gray-600 to-black dark:from-white dark:via-gray-300 dark:to-white bg-clip-text text-transparent drop-shadow-2xl">
-                Céramika
+                CéramiKa
               </span>
             </h1>
           </FadeIn>
