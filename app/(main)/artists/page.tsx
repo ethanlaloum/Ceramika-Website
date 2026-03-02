@@ -92,7 +92,7 @@ export default function ArtistsPage() {
                     <Card className="group cursor-pointer hover:shadow-lg transition-shadow bg-white dark:bg-stone-800 border-stone-200 dark:border-stone-700">
                       <Link href={`/artists/${artist.id}`}>
                         <CardContent className="p-0">
-                          <div className="relative h-48 sm:h-56 md:h-64">
+                          <div className="relative h-56 sm:h-64 md:h-72">
                             <Image
                               src={artist.image || "/placeholder.svg"}
                               alt={artist.name}

@@ -94,6 +94,7 @@ export function Navigation() {
               { href: "/products", label: "Produits" },
               { href: "/collections", label: "Collections" },
               { href: "/artists", label: "Artistes" },
+              { href: "/contact", label: "Contact" },
               { href: "/about", label: "À Propos" },
             ].map((item) => (
               <Link
@@ -261,6 +262,7 @@ export function Navigation() {
               { href: "/products", label: "Produits" },
               { href: "/collections", label: "Collections" },
               { href: "/artists", label: "Artistes" },
+              { href: "/contact", label: "Contact" },
               { href: "/about", label: "À Propos" },
             ].map((item) => (
               <Link
