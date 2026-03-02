@@ -10,9 +10,9 @@ export function Footer() {
     {
       title: "Informations",
       links: [
-        { href: "/mentions-legales", label: "Mentions légales" },
-        { href: "/terms", label: "Conditions générales de vente" },
-        { href: "/privacy", label: "Politique de confidentialité" },
+        { href: "/mentions-legales", label: "Mentions Légales" },
+        { href: "/terms", label: "Conditions Générales de Vente" },
+        { href: "/privacy", label: "Politique de Confidentialité" },
       ],
     },
   ]
@@ -26,11 +26,11 @@ export function Footer() {
             <div>
               <h3 className="font-playfair text-2xl font-bold text-stone-800 dark:text-stone-100 mb-4">
                 <span className="bg-gradient-to-r from-stone-800 to-stone-600 dark:from-stone-100 dark:to-stone-300 bg-clip-text text-transparent">
-                  Céramika
+                  CéramiKa
                 </span>
               </h3>
               <p className="text-stone-600 dark:text-stone-300 text-sm mb-6 max-w-md">
-                Ustensiles en céramique fabriqués à la main par des artistes renommés, apportant le talent artistique à votre expérience culinaire quotidienne.
+                Biscuits en céramique fabriqués à la main par des artistes renommés, apportant le talent artistique à votre expérience culinaire quotidienne.
               </p>
 
               {/* Contact Info */}
@@ -97,18 +97,7 @@ export function Footer() {
         <FadeIn delay={0.6}>
           <div className="border-t border-stone-200 dark:border-stone-700 mt-8 pt-8 text-center">
             <p className="text-sm text-stone-600 dark:text-stone-400">
-              &copy; 2026 CéramiKa. Tous droits réservés. |
-              <Link href="/mentions-legales" className="hover:text-stone-800 dark:hover:text-stone-200 ml-1">
-                Mentions légales
-              </Link>
-              <span className="mx-2">|</span>
-              <Link href="/terms" className="hover:text-stone-800 dark:hover:text-stone-200">
-                CGV
-              </Link>
-              <span className="mx-2">|</span>
-              <Link href="/privacy" className="hover:text-stone-800 dark:hover:text-stone-200">
-                Politique de confidentialité
-              </Link>
+              &copy; 2026 CéramiKa - Tous droits réservés
             </p>
           </div>
         </FadeIn>

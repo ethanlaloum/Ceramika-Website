@@ -59,7 +59,7 @@ export function HomeContent() {
 
           <FadeIn delay={0.6}>
             <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 mb-8 sm:mb-12 max-w-2xl mx-auto leading-relaxed">
-              Découvrez des ustensiles en céramique faits à la main qui transforment vos repas quotidiens en expérience
+              Découvrez des biscuits en céramique faits à la main qui transforment vos repas quotidiens en expérience
               artistique
             </p>
           </FadeIn>
@@ -281,18 +281,6 @@ export function HomeContent() {
                     <Link href="/artists">Découvrir les Artistes</Link>
                   </Button>
                 </Magnetic>
-              </div>
-            </FadeIn>
-
-            <FadeIn direction="right" delay={0.3}>
-              <div className="relative h-64 sm:h-80 md:h-96 overflow-hidden rounded-lg">
-                <Image
-                  src="/placeholder.svg?height=400&width=600"
-                  alt="Artiste céramiste au travail"
-                  fill
-                  className="object-cover hover:scale-105 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
               </div>
             </FadeIn>
           </div>
