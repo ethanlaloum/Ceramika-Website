@@ -1,19 +1,21 @@
-import { auth } from "@/auth"
-import { NextResponse } from "next/server"
+import { NextResponse, NextRequest } from "next/server"
 import { maintenanceMiddleware } from "@/lib/maintenance-middleware"
+import { getToken } from "next-auth/jwt"
 
-export default auth((req) => {
+export default async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
 
   // 🔧 VÉRIFIER LA MAINTENANCE EN PREMIER - PRIORITÉ ABSOLUE
   // Cela s'exécute même si l'utilisateur n'est pas connecté
-  const maintenanceResponse = maintenanceMiddleware(req)
+  const maintenanceResponse = maintenanceMiddleware(req as any)
   if (maintenanceResponse) {
     return maintenanceResponse
   }
 
-  const isLoggedIn = !!req.auth
-  const userRole = req.auth?.user?.role
+  // attach auth token manually using next-auth jwt helper
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
+  const isLoggedIn = !!token
+  const userRole = token?.role as string | undefined
 
   // Routes publiques
   const publicRoutes = [
@@ -87,7 +89,7 @@ export default auth((req) => {
   }
 
   return NextResponse.next()
-})
+}
 
 export const config = {
   matcher: [
