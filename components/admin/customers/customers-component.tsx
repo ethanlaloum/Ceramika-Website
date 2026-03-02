@@ -1,12 +1,22 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Search, Eye, Mail, Phone, MapPin, Calendar, Users } from "lucide-react"
+import { Search, Eye, Mail, Phone, MapPin, Calendar, Users, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import { useToast } from "@/hooks/use-toast"
 
 interface Customer {
@@ -46,7 +56,22 @@ export function CustomersComponent() {
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null)
+  const [deleting, setDeleting] = useState(false)
   const { toast } = useToast()
+
+  // helpers
+  const formatRoleLabel = (role: string) => {
+    switch (role) {
+      case "ADMIN":
+        return "ADMIN"
+      case "CUSTOMER":
+        return "CLIENT"
+      default:
+        return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase()
+    }
+  }
+
+  const badgeVariant = (role: string) => (role === "ADMIN" ? "default" : "secondary")
 
   useEffect(() => {
     fetchCustomers()
@@ -75,6 +100,37 @@ export function CustomersComponent() {
     const totalSpent = customer.orders.reduce((sum, order) => sum + order.total, 0)
     const avgOrderValue = totalOrders > 0 ? totalSpent / totalOrders : 0
     return { totalOrders, totalSpent, avgOrderValue }
+  }
+
+  const deleteCustomer = async (customerId: string) => {
+    setDeleting(true)
+    try {
+      const response = await fetch(`/api/admin/customers/${customerId}`, {
+        method: "DELETE",
+      })
+      if (response.ok) {
+        toast({
+          title: "Succès",
+          description: "Le client a été supprimé avec succès",
+        })
+        setSelectedCustomer(null)
+        fetchCustomers()
+      } else {
+        toast({
+          title: "Erreur",
+          description: "Impossible de supprimer le client",
+          variant: "destructive",
+        })
+      }
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de supprimer le client",
+        variant: "destructive",
+      })
+    } finally {
+      setDeleting(false)
+    }
   }
 
   const filteredCustomers = customers.filter((customer) => {
@@ -152,7 +208,7 @@ export function CustomersComponent() {
                         </div>
                       )}
                     </div>
-                    <Badge variant={customer.role === "ADMIN" ? "default" : "secondary"}>{customer.role}</Badge>
+                    <Badge variant={badgeVariant(customer.role)}>{formatRoleLabel(customer.role)}</Badge>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 text-sm">
@@ -162,7 +218,7 @@ export function CustomersComponent() {
                     </div>
                     <div className="space-y-1">
                       <p className="text-gray-600">Total dépensé</p>
-                      <p className="font-semibold">€{stats.totalSpent.toFixed(2)}</p>
+                      <p className="font-semibold">{stats.totalSpent.toFixed(2)}€</p>
                     </div>
                   </div>
 
@@ -173,19 +229,20 @@ export function CustomersComponent() {
                     </div>
                   </div>
 
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button variant="outline" className="w-full" onClick={() => setSelectedCustomer(customer)}>
-                        <Eye className="h-4 w-4 mr-2" />
-                        Voir le profil
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
-                      <DialogHeader>
-                        <DialogTitle>
-                          Profil de {selectedCustomer?.firstName} {selectedCustomer?.lastName}
-                        </DialogTitle>
-                      </DialogHeader>
+                  <div className="flex gap-2">
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" className="flex-1" onClick={() => setSelectedCustomer(customer)}>
+                          <Eye className="h-4 w-4 mr-2" />
+                          Voir le profil
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+                        <DialogHeader>
+                          <DialogTitle>
+                            Profil de {selectedCustomer?.firstName} {selectedCustomer?.lastName}
+                          </DialogTitle>
+                        </DialogHeader>
                       {selectedCustomer && (
                         <div className="space-y-6">
                           {/* Informations personnelles */}
@@ -206,8 +263,8 @@ export function CustomersComponent() {
                               </div>
                               <div>
                                 <p className="text-gray-600">Rôle</p>
-                                <Badge variant={selectedCustomer.role === "ADMIN" ? "default" : "secondary"}>
-                                  {selectedCustomer.role}
+                                <Badge variant={badgeVariant(selectedCustomer.role)}>
+                                  {formatRoleLabel(selectedCustomer.role)}
                                 </Badge>
                               </div>
                             </div>
@@ -226,7 +283,7 @@ export function CustomersComponent() {
                               <Card>
                                 <CardContent className="p-4 text-center">
                                   <p className="text-2xl font-bold">
-                                    €{getCustomerStats(selectedCustomer).totalSpent.toFixed(0)}
+                                    {getCustomerStats(selectedCustomer).totalSpent.toFixed(0)}€
                                   </p>
                                   <p className="text-sm text-gray-600">Total dépensé</p>
                                 </CardContent>
@@ -234,7 +291,7 @@ export function CustomersComponent() {
                               <Card>
                                 <CardContent className="p-4 text-center">
                                   <p className="text-2xl font-bold">
-                                    €{getCustomerStats(selectedCustomer).avgOrderValue.toFixed(0)}
+                                    {getCustomerStats(selectedCustomer).avgOrderValue.toFixed(0)}€
                                   </p>
                                   <p className="text-sm text-gray-600">Panier moyen</p>
                                 </CardContent>
@@ -285,7 +342,7 @@ export function CustomersComponent() {
                                       </p>
                                     </div>
                                     <div className="text-right">
-                                      <p className="font-semibold">€{order.total.toFixed(2)}</p>
+                                      <p className="font-semibold">{order.total.toFixed(2)}€</p>
                                       <Badge className="text-xs">{order.status}</Badge>
                                     </div>
                                   </div>
@@ -304,7 +361,7 @@ export function CustomersComponent() {
                                 {selectedCustomer.wishlistItems.map((item) => (
                                   <div key={item.id} className="flex items-center justify-between p-3 border rounded">
                                     <p className="font-medium">{item.product.name}</p>
-                                    <p className="font-semibold">€{item.product.price.toFixed(2)}</p>
+                                    <p className="font-semibold">{item.product.price.toFixed(2)}€</p>
                                   </div>
                                 ))}
                               </div>
@@ -315,7 +372,34 @@ export function CustomersComponent() {
                         </div>
                       )}
                     </DialogContent>
-                  </Dialog>
+                    </Dialog>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="destructive" className="flex-1">
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Supprimer
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Êtes-vous sûr de vouloir supprimer le profil de {customer?.firstName} {customer?.lastName} ? Cette action est irréversible.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <div className="flex gap-3 justify-end">
+                          <AlertDialogCancel>Annuler</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => deleteCustomer(customer.id)}
+                            disabled={deleting}
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                          >
+                            {deleting ? "Suppression..." : "Supprimer"}
+                          </AlertDialogAction>
+                        </div>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
                 </div>
               </CardContent>
             </Card>
