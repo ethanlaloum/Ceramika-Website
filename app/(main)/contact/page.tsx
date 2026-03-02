@@ -75,7 +75,7 @@ export default function ContactPage() {
             <Mail className="h-6 w-6 text-stone-600 dark:text-stone-300" />
             <div>
               <h3 className="font-semibold text-stone-800 dark:text-stone-100">Adresse Mail</h3>
-              <p className="text-stone-600 dark:text-stone-300 text-sm">contact@latelierbyceramika.com</p>
+              <p className="text-stone-600 dark:text-stone-300 text-sm">contact@cerami-ka.com</p>
             </div>
           </div>
         </div>
