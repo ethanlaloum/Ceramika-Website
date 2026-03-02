@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" })
 
 export const metadata: Metadata = {
-  title: "Céramika - Artisan Ceramic Utensils",
+  title: "Céramika - Biscuits artisanaux en céramique",
   description: "Discover handcrafted ceramic utensils by renowned artists",
   icons: {
     icon: [
