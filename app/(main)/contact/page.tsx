@@ -58,7 +58,7 @@ export default function ContactPage() {
             <div>
               <h3 className="font-semibold text-stone-800 dark:text-stone-100">Adresse Postale</h3>
               <p className="text-stone-600 dark:text-stone-300 text-sm">
-                16 Avenue de Cannes<br />06220 Vallauris<br />Alpes-Maritimes FRANCE
+                10 Rue Solférino<br />06220 Vallauris
               </p>
             </div>
           </div>
@@ -85,7 +85,7 @@ export default function ContactPage() {
           <div className="h-96">
             <iframe
               title="Carte"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2881.334514413629!2d7.012488315499118!3d43.6101883791211!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12cdd560a389cd1f%3A0x9c2b60b082ccaaa4!2s16%20Av.%20de%20Cannes%2C%2006220%20Vallauris!5e0!3m2!1sfr!2sfr!4v1700000000000"
+              src="https://www.google.com/maps?q=10+Rue+Solf%C3%A9rino+06220+Vallauris&output=embed"
               width="100%"
               height="100%"
               frameBorder="0"
