@@ -178,7 +178,7 @@ export function HomeContent() {
                 asChild
                 className="hover:scale-105 transition-transform duration-300 text-sm sm:text-base px-6 sm:px-8"
               >
-                <Link href="/products">Voir Tous les Produits</Link>
+                <Link href="/products">Tous nos Produits</Link>
               </Button>
             </div>
           </FadeIn>
@@ -251,7 +251,7 @@ export function HomeContent() {
                 asChild
                 className="hover:scale-105 transition-transform duration-300 text-sm sm:text-base px-6 sm:px-8"
               >
-                <Link href="/collections">Explorer Toutes les Collections</Link>
+                <Link href="/collections">Découvrez toutes nos Collections</Link>
               </Button>
             </div>
           </FadeIn>

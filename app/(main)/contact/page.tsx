@@ -173,8 +173,8 @@ export default function ContactPage() {
         </div>
 
         <div className="mt-12 text-center">
-          <Link href="/artists" className="text-stone-700 dark:text-stone-300 underline">
-            ← Retour aux artistes
+          <Link href="/" className="text-stone-700 dark:text-stone-300 underline">
+            ← Retour a l'accueil
           </Link>
         </div>
       </div>

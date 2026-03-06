@@ -219,8 +219,7 @@ export default function ProductsPage() {
               Tous nos Produits
             </h1>
             <p className="text-stone-600 dark:text-stone-300 max-w-2xl">
-              Découvrez notre collection complète de céramiques artisanales, créées avec passion par nos artistes
-              talentueux.
+              Découvrez l’ensemble de notre collection de biscuits en céramique.
             </p>
           </div>
         </FadeIn>
