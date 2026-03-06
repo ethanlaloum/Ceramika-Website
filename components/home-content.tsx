@@ -119,8 +119,8 @@ export function HomeContent() {
                                 src={product.images[0] || "/placeholder.svg"}
                                 alt={product.name}
                                 width={300}
-                                height={300}
-                                className="w-full h-48 sm:h-56 md:h-64 object-cover transition-transform duration-700 group-hover:scale-110"
+                                height={500}
+                                className="w-full h-96 sm:h-[28rem] md:h-[32rem] object-cover transition-transform duration-700 group-hover:scale-110"
                               />
                               {product.featured && (
                                 <Badge className="absolute top-3 sm:top-4 left-3 sm:left-4 bg-stone-800 dark:bg-stone-100 text-white dark:text-stone-900 animate-pulse text-xs sm:text-sm">
