@@ -30,14 +30,6 @@ export default function ArtistsPage() {
     <div className="min-h-screen bg-white dark:bg-stone-900 transition-colors duration-300">
       {/* Hero Section */}
       <section className="relative h-[50vh] sm:h-[60vh] flex items-center justify-center bg-gradient-to-br from-stone-100 to-stone-200 dark:from-stone-800 dark:to-stone-900">
-        <div className="absolute inset-0">
-          <Image
-            src="/placeholder.svg?height=600&width=1200"
-            alt="Artistes céramistes au travail"
-            fill
-            className="object-cover opacity-30 dark:opacity-20"
-          />
-        </div>
         <div className="relative text-center max-w-4xl mx-auto px-4">
           <FadeIn>
             <h1 className="font-playfair text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-stone-800 dark:text-stone-100 mb-4 sm:mb-6">
@@ -46,9 +38,9 @@ export default function ArtistsPage() {
           </FadeIn>
           <FadeIn delay={0.2}>
             <p className="text-base sm:text-lg md:text-xl text-stone-600 dark:text-stone-300 max-w-2xl mx-auto leading-relaxed">
-              {loading 
+              {loading
                 ? "Rencontrez les artisans talentueux qui donnent vie à l'argile avec leurs mains habiles et leur vision créative"
-                : artists.length === 0 
+                : artists.length === 0
                   ? "Découvrez l'art de la céramique et les talents qui le façonnent"
                   : "Rencontrez les artisans talentueux qui donnent vie à l'argile avec leurs mains habiles et leur vision créative"
               }
@@ -61,7 +53,6 @@ export default function ArtistsPage() {
       <section className="py-8 sm:py-12 md:py-16">
         <div className="container mx-auto px-4">
           <ArtistStatus count={artists.length} loading={loading} />
-          
           {loading ? (
             <div>
               <div className="text-center mb-8">
@@ -104,7 +95,6 @@ export default function ArtistsPage() {
                             <h3 className="font-playfair text-lg sm:text-xl font-bold text-stone-800 dark:text-stone-100 mb-2 leading-tight">
                               {artist.name}
                             </h3>
-                            
                             {artist.bio && (
                               <p className="text-stone-600 dark:text-stone-300 text-xs sm:text-sm leading-relaxed line-clamp-3">
                                 {artist.bio}
@@ -147,7 +137,7 @@ export default function ArtistsPage() {
             </FadeIn>
             <FadeIn delay={0.2}>
               <p className="text-stone-600 dark:text-stone-300 mb-6 sm:mb-8 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
-                Nous recherchons toujours des artistes céramistes talentueux pour rejoindre notre communauté. 
+                Nous recherchons toujours des artistes céramistes talentueux pour rejoindre notre communauté.
                 Partagez votre travail avec des passionnés de céramique du monde entier.
               </p>
             </FadeIn>
@@ -173,7 +163,7 @@ export default function ArtistsPage() {
                     Découvrez Notre Collection
                   </h2>
                   <p className="text-stone-600 dark:text-stone-300 mb-8 leading-relaxed max-w-2xl mx-auto">
-                    Même sans artistes partenaires actuellement présentés, notre boutique propose une sélection 
+                    Même sans artistes partenaires actuellement présentés, notre boutique propose une sélection
                     de magnifiques pièces céramiques créées par des artisans talentueux.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">

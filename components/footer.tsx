@@ -30,7 +30,7 @@ export function Footer() {
                 </span>
               </h3>
               <p className="text-stone-600 dark:text-stone-300 text-sm mb-6 max-w-md">
-                Biscuits en céramique fabriqués à la main par des artistes renommés, apportant le talent artistique à votre expérience culinaire quotidienne.
+                Biscuits en céramique 100% Made In France fabriqués dans notre atelier à Vallauris, au cœur d’un territoire reconnu pour son savoir-faire artisanal.
               </p>
 
               {/* Contact Info */}

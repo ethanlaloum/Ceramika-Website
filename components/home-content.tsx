@@ -53,14 +53,13 @@ export function HomeContent() {
 
           <FadeIn delay={0.4}>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-light text-gray-700 dark:text-gray-300 mb-6 sm:mb-8 leading-relaxed">
-              Céramiques Artisanales
+              Céramique Artisanale
             </h2>
           </FadeIn>
 
           <FadeIn delay={0.6}>
             <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 mb-8 sm:mb-12 max-w-2xl mx-auto leading-relaxed">
-              Découvrez des biscuits en céramique faits à la main qui transforment vos repas quotidiens en expérience
-              artistique
+              Biscuits en céramique 100% Made In France fabriqués dans notre atelier à Vallauris, au cœur d’un territoire reconnu pour son savoir-faire artisanal.
             </p>
           </FadeIn>
 
@@ -72,7 +71,7 @@ export function HomeContent() {
                   className="bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 transition-all duration-300 hover:scale-105 hover:shadow-2xl text-sm sm:text-base px-8 sm:px-10 py-3 sm:py-4"
                   asChild
                 >
-                  <Link href="/collections">Explorer les Collections</Link>
+                  <Link href="/collections">Découvrez nos Collections</Link>
                 </Button>
               </Magnetic>
               <Magnetic>
@@ -99,7 +98,7 @@ export function HomeContent() {
                 Produits Vedettes
               </h2>
               <p className="text-stone-600 dark:text-stone-300 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
-                Découvrez notre sélection de pièces exceptionnelles, créées par nos artistes les plus talentueux
+                Découvrez notre sélection de biscuits tendances !
               </p>
             </div>
           </FadeIn>
