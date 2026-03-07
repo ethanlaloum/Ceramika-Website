@@ -13,14 +13,13 @@ import { Slider } from "@/components/ui/slider"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { useProducts } from "@/hooks/use-products"
 import { useArtists } from "@/hooks/use-artists"
+import { useCategories } from "@/hooks/use-categories"
 import { ProductCardSkeleton } from "@/components/loading-states"
 import { ErrorDisplay } from "@/components/error-boundary"
 import { FadeIn, Stagger, HoverScale } from "@/components/animations"
 import Image from "next/image"
 import Link from "next/link"
 import { useCart } from "@/hooks/use-cart"
-
-const CATEGORIES = ["Bols", "Assiettes", "Vases", "Mugs", "Plateaux", "Sets", "Décoratif"]
 
 const SORT_OPTIONS = [
   { value: "name-asc", label: "Nom (A-Z)" },
@@ -44,6 +43,7 @@ export default function ProductsPage() {
   // Récupération des données
   const { products, loading: productsLoading, error: productsError, refetch } = useProducts()
   const { artists, loading: artistsLoading } = useArtists()
+  const { categories, loading: categoriesLoading } = useCategories()
 
   // Filtrage et tri des produits
   const filteredAndSortedProducts = useMemo(() => {
@@ -132,18 +132,22 @@ export default function ProductsPage() {
       <div>
         <h3 className="font-semibold mb-3">Catégories</h3>
         <div className="space-y-2">
-          {CATEGORIES.map((category) => (
-            <div key={category} className="flex items-center space-x-2">
-              <Checkbox
-                id={category}
-                checked={selectedCategories.includes(category)}
-                onCheckedChange={(checked) => handleCategoryChange(category, checked as boolean)}
-              />
-              <Label htmlFor={category} className="text-sm">
-                {category}
-              </Label>
-            </div>
-          ))}
+          {categoriesLoading ? (
+            <div className="text-sm text-gray-500">Chargement...</div>
+          ) : (
+            categories.map((category) => (
+              <div key={category} className="flex items-center space-x-2">
+                <Checkbox
+                  id={category}
+                  checked={selectedCategories.includes(category)}
+                  onCheckedChange={(checked) => handleCategoryChange(category, checked as boolean)}
+                />
+                <Label htmlFor={category} className="text-sm">
+                  {category}
+                </Label>
+              </div>
+            ))
+          )}
         </div>
       </div>
 
