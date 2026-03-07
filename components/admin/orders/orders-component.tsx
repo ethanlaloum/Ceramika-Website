@@ -136,6 +136,30 @@ export function OrdersComponent() {
     return matchesSearch && matchesStatus
   })
 
+  const exportOrders = async () => {
+    try {
+      const params = new URLSearchParams()
+      if (statusFilter && statusFilter !== "all") params.append("status", statusFilter)
+      if (searchTerm) params.append("search", searchTerm)
+
+      const response = await fetch(`/api/admin/orders/export?${params.toString()}`)
+      if (response.ok) {
+        const blob = await response.blob()
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement("a")
+        a.href = url
+        a.download = `orders-${statusFilter || 'all'}.csv`
+        a.click()
+        window.URL.revokeObjectURL(url)
+        toast({ title: "Succès", description: "Export terminé" })
+      } else {
+        throw new Error('Erreur export')
+      }
+    } catch (error) {
+      toast({ title: "Erreur", description: "Impossible d'exporter les commandes", variant: "destructive" })
+    }
+  }
+
   if (loading) {
     return (
       <div className="space-y-6">
@@ -160,7 +184,7 @@ export function OrdersComponent() {
           <h1 className="text-2xl font-bold text-gray-900">Gestion des Commandes</h1>
           <p className="text-gray-600">Suivez et gérez toutes les commandes</p>
         </div>
-        <Button variant="outline">
+        <Button variant="outline" onClick={exportOrders}>
           <Download className="h-4 w-4 mr-2" />
           Exporter
         </Button>
