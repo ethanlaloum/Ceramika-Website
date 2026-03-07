@@ -189,9 +189,9 @@ export function CustomersComponent() {
         {filteredCustomers.map((customer) => {
           const stats = getCustomerStats(customer)
           return (
-            <Card key={customer.id} className="hover:shadow-lg transition-shadow">
-              <CardContent className="p-6">
-                <div className="space-y-4">
+            <Card key={customer.id} className="hover:shadow-lg transition-shadow h-full flex flex-col">
+              <CardContent className="p-6 flex flex-col flex-1">
+                <div className="space-y-4 flex-1 flex flex-col">
                   <div className="flex items-start justify-between">
                     <div className="space-y-1">
                       <h3 className="font-semibold text-lg">
@@ -228,8 +228,8 @@ export function CustomersComponent() {
                       <span>Inscrit le {new Date(customer.createdAt).toLocaleDateString("fr-FR")}</span>
                     </div>
                   </div>
-
-                  <div className="flex gap-2">
+                  <div className="flex-1" />
+                  <div className="flex gap-2 w-full pt-2">
                     <Dialog>
                       <DialogTrigger asChild>
                         <Button variant="outline" className="flex-1" onClick={() => setSelectedCustomer(customer)}>
@@ -371,11 +371,11 @@ export function CustomersComponent() {
                           </div>
                         </div>
                       )}
-                    </DialogContent>
+                      </DialogContent>
                     </Dialog>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
-                        <Button variant="destructive" className="flex-1">
+                        <Button variant="outline" className="flex-1 border-red-500 text-red-600 hover:bg-red-50" type="button">
                           <Trash2 className="h-4 w-4 mr-2" />
                           Supprimer
                         </Button>
@@ -392,7 +392,7 @@ export function CustomersComponent() {
                           <AlertDialogAction
                             onClick={() => deleteCustomer(customer.id)}
                             disabled={deleting}
-                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            className="bg-red-600 text-white hover:bg-red-700"
                           >
                             {deleting ? "Suppression..." : "Supprimer"}
                           </AlertDialogAction>
