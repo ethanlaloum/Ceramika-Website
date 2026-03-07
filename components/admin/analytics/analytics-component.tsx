@@ -80,7 +80,7 @@ export function AnalyticsComponent() {
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement("a")
         a.href = url
-        a.download = `rapport-${timeRange}.pdf`
+        a.download = `rapport-${timeRange}.csv`
         a.click()
         window.URL.revokeObjectURL(url)
         toast({
@@ -130,7 +130,7 @@ export function AnalyticsComponent() {
       {/* Header - Responsive */}
       <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
         <div>
-          <h1 className="text-xl md:text-2xl font-bold text-gray-900">Analytics & Rapports</h1>
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900">Analyses & Rapports</h1>
           <p className="text-sm md:text-base text-gray-600">Analyses détaillées et métriques de performance</p>
         </div>
         <div className="flex flex-col space-y-2 md:flex-row md:items-center md:space-y-0 md:space-x-3">
@@ -143,6 +143,7 @@ export function AnalyticsComponent() {
               <SelectItem value="30d">30 derniers jours</SelectItem>
               <SelectItem value="90d">90 derniers jours</SelectItem>
               <SelectItem value="1y">1 an</SelectItem>
+              <SelectItem value="all">Toujours</SelectItem>
             </SelectContent>
           </Select>
           <Button variant="outline" onClick={exportReport} className="w-full md:w-auto">

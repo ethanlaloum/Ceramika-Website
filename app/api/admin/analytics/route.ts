@@ -12,9 +12,9 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const range = searchParams.get("range") || "30d"
 
-    // Calculer la date de début selon la période
+    // Calculer la date de début selon la période ("all" = toutes les données)
     const now = new Date()
-    const startDate = new Date()
+    let startDate: Date | null = new Date()
 
     switch (range) {
       case "7d":
@@ -29,6 +29,12 @@ export async function GET(request: Request) {
       case "1y":
         startDate.setFullYear(now.getFullYear() - 1)
         break
+      case "all":
+      case "toujours":
+        startDate = new Date(0)
+        break
+      default:
+        startDate.setDate(now.getDate() - 30)
     }
 
     // Récupérer les données
