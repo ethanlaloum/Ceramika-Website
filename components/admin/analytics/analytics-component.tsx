@@ -6,6 +6,27 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js'
+import { Line } from 'react-chartjs-2'
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+)
 
 interface AnalyticsData {
   revenue: {
@@ -276,13 +297,59 @@ export function AnalyticsComponent() {
           <CardDescription className="text-xs md:text-sm">Revenus mensuels sur la période sélectionnée</CardDescription>
         </CardHeader>
         <CardContent className="p-3 md:p-6 pt-0">
-          <div className="h-48 md:h-64 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg">
-            <div className="text-center">
-              <TrendingUp className="h-8 w-8 md:h-12 md:w-12 text-gray-400 mx-auto mb-2 md:mb-4" />
-              <p className="text-sm md:text-base text-gray-600">Graphique des revenus</p>
-              <p className="text-xs md:text-sm text-gray-500">Intégration Chart.js à venir</p>
+          {analytics.revenueByMonth.length > 0 ? (
+            <div className="h-48 md:h-64">
+              <Line
+                data={{
+                  labels: analytics.revenueByMonth.map(item => item.month),
+                  datasets: [
+                    {
+                      label: 'Revenus (€)',
+                      data: analytics.revenueByMonth.map(item => item.revenue),
+                      borderColor: 'rgb(59, 130, 246)',
+                      backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                      tension: 0.4,
+                      fill: true,
+                    },
+                  ],
+                }}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  plugins: {
+                    legend: {
+                      position: 'top' as const,
+                    },
+                    tooltip: {
+                      callbacks: {
+                        label: function(context) {
+                          return `Revenus: ${(context.parsed.y || 0).toLocaleString()}€`
+                        }
+                      }
+                    }
+                  },
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                      ticks: {
+                        callback: function(value) {
+                          return value.toLocaleString() + '€'
+                        }
+                      }
+                    }
+                  }
+                }}
+              />
             </div>
-          </div>
+          ) : (
+            <div className="h-48 md:h-64 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg">
+              <div className="text-center">
+                <TrendingUp className="h-8 w-8 md:h-12 md:w-12 text-gray-400 mx-auto mb-2 md:mb-4" />
+                <p className="text-sm md:text-base text-gray-600">Aucune donnée disponible</p>
+                <p className="text-xs md:text-sm text-gray-500">Les données apparaîtront une fois que des commandes seront créées</p>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

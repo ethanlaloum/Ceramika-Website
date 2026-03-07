@@ -38,7 +38,7 @@ export async function GET(request: Request) {
     }
 
     // Récupérer les données
-    const [totalRevenue, totalOrders, totalCustomers, totalProducts, topProducts, ordersByStatus] = await Promise.all([
+    const [totalRevenue, totalOrders, totalCustomers, totalProducts, topProducts, ordersByStatus, revenueByMonthRaw] = await Promise.all([
       prisma.order.aggregate({
         where: {
           createdAt: { gte: startDate },
@@ -82,6 +82,19 @@ export async function GET(request: Request) {
         },
         _count: true,
       }),
+      // Évolution du CA par mois - utilisation d'une approche différente
+      prisma.order.findMany({
+        where: {
+          createdAt: { gte: startDate },
+        },
+        select: {
+          createdAt: true,
+          total: true,
+        },
+        orderBy: {
+          createdAt: 'asc',
+        },
+      }),
     ])
 
     // Récupérer les détails des produits les plus vendus
@@ -95,6 +108,21 @@ export async function GET(request: Request) {
         name: true,
       },
     })
+
+    // Traiter les données de revenus par mois
+    const monthlyRevenueMap = new Map<string, number>()
+    revenueByMonthRaw.forEach((order: any) => {
+      const monthKey = new Date(order.createdAt).toISOString().slice(0, 7) // YYYY-MM
+      const current = monthlyRevenueMap.get(monthKey) || 0
+      monthlyRevenueMap.set(monthKey, current + order.total)
+    })
+
+    const revenueByMonth = Array.from(monthlyRevenueMap.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([month, revenue]) => ({
+        month: new Date(month + '-01').toLocaleDateString('fr-FR', { year: 'numeric', month: 'short' }),
+        revenue: revenue,
+      }))
 
     const topProductsWithDetails = topProducts.map((tp) => {
       const product = products.find((p) => p.id === tp.productId)
@@ -128,7 +156,10 @@ export async function GET(request: Request) {
         trend: "up" as const,
       },
       topProducts: topProductsWithDetails,
-      revenueByMonth: [], // À implémenter selon les besoins
+      revenueByMonth: (revenueByMonth as any[]).map((item: any) => ({
+        month: new Date(item.month).toLocaleDateString('fr-FR', { year: 'numeric', month: 'short' }),
+        revenue: Number(item.revenue),
+      })),
       ordersByStatus: ordersByStatus.map((obs) => ({
         status: obs.status,
         count: obs._count,
