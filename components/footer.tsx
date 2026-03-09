@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { Instagram, Facebook, Twitter, Mail, Phone, Smartphone, MapPin, Linkedin } from "lucide-react"
 import { FadeIn, Stagger } from "@/components/animations"
 
@@ -30,7 +31,7 @@ export function Footer() {
                 </span>
               </h3>
               <p className="text-stone-600 dark:text-stone-300 text-sm mb-6 max-w-md">
-                Biscuits en céramique 100% Made In France fabriqués dans notre atelier à Vallauris, au cœur d’un territoire reconnu pour son savoir-faire artisanal.
+                Biscuits en céramique 100% Made In France fabriqués dans notre atelier à Vallauris, au cœur d'un territoire reconnu pour son savoir-faire artisanal.
               </p>
 
               {/* Contact Info */}
@@ -71,7 +72,7 @@ export function Footer() {
             </div>
           </FadeIn>
 
-          {/* Footer Links */}
+          {/* Footer Links + Image */}
           <Stagger staggerDelay={0.1} className="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-8">
             {footerSections.map((section) => (
               <div key={section.title}>
@@ -90,6 +91,19 @@ export function Footer() {
                 </ul>
               </div>
             ))}
+
+            {/* Image Section */}
+            <div className="flex items-start md:col-span-2">
+              <div className="relative w-full max-w-xs">
+                <Image
+                  src="/ceramika_footer.png"
+                  alt="CéramiKa - Biscuits en céramique"
+                  width={300}
+                  height={200}
+                  className="object-contain opacity-90 dark:opacity-75"
+                />
+              </div>
+            </div>
           </Stagger>
         </div>
 
