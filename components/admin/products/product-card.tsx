@@ -43,7 +43,7 @@ export function ProductCard({ product, onView, onEdit, onDelete }: ProductCardPr
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <div className="flex items-center space-x-2">
-                <span className="font-bold text-lg">€{product.price}</span>
+                <span className="font-bold text-lg">{product.price} €</span>
                 {product.originalPrice && (
                   <span className="text-sm text-gray-500 line-through">€{product.originalPrice}</span>
                 )}

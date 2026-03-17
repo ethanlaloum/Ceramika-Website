@@ -68,7 +68,7 @@ interface AnalyticsData {
 export function AnalyticsComponent() {
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null)
   const [loading, setLoading] = useState(true)
-  const [timeRange, setTimeRange] = useState("30d")
+  const [timeRange, setTimeRange] = useState("all")
   const { toast } = useToast()
 
   useEffect(() => {

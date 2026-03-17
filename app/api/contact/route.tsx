@@ -11,7 +11,7 @@ export async function POST(request: Request) {
 
     // send an email to site owner with the contact details
     const { data, error } = await resend.emails.send({
-      from: "Ceramika <noreply@mail.cerami-ka.com>",
+      from: "CéramiKa <noreply@mail.cerami-ka.com>",
       to: "contact@cerami-ka.com", // replace with actual admin address
       subject: `[Contact] ${subject}`,
       react: (

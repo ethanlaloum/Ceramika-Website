@@ -38,7 +38,15 @@ export function Footer() {
               <div className="space-y-3 mb-6">
                 <div className="flex items-center space-x-3 text-sm text-stone-600 dark:text-stone-300">
                   <Mail className="h-4 w-4" />
-                  <span>contact@cerami-ka.com</span>
+                  <a
+                    href="mailto:contact@cerami-ka.com"
+                    className="hover:underline focus:underline outline-none"
+                    target="_self"
+                    rel="noopener noreferrer"
+                    aria-label="Envoyer un mail à contact@cerami-ka.com"
+                  >
+                    contact@cerami-ka.com
+                  </a>
                 </div>
                 <div className="flex items-center space-x-3 text-sm text-stone-600 dark:text-stone-300">
                   <Smartphone className="h-4 w-4" />

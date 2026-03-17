@@ -53,9 +53,9 @@ export class InvoiceEmailService {
 
       // 4. Envoyer l'email via Resend
       const result = await resend.emails.send({
-        from: 'Ceramika <noreply@mail.cerami-ka.com>',
+        from: 'CéramiKa <noreply@mail.cerami-ka.com>',
         to: [emailData.customerEmail],
-        subject: `Votre facture Ceramika ${emailData.invoiceNumber}`,
+        subject: `Votre facture CéramiKa ${emailData.invoiceNumber}`,
         react: StripeInvoiceEmail({
           customerName: emailData.customerName,
           invoiceNumber: emailData.invoiceNumber,

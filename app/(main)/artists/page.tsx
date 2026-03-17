@@ -39,10 +39,10 @@ export default function ArtistsPage() {
           <FadeIn delay={0.2}>
             <p className="text-base sm:text-lg md:text-xl text-stone-600 dark:text-stone-300 max-w-2xl mx-auto leading-relaxed">
               {loading
-                ? "Rencontrez les artisans talentueux qui donnent vie à l'argile avec leurs mains habiles et leur vision créative"
+                ? "Rencontrez les artisans talentueux qui donnent vie à chaque pièce avec passion et savoir-faire traditionnel."
                 : artists.length === 0
                   ? "Découvrez l'art de la céramique et les talents qui le façonnent"
-                  : "Rencontrez les artisans talentueux qui donnent vie à l'argile avec leurs mains habiles et leur vision créative"
+                  : "Rencontrez les artisans talentueux qui donnent vie à chaque pièce avec passion et savoir-faire traditionnel."
               }
             </p>
           </FadeIn>

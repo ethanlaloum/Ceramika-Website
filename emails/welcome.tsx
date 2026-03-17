@@ -32,13 +32,7 @@ export const CeramikaWelcomeEmail = ({ userFirstname }: WelcomeEmailProps) => (
       </Button>
     </Section>
 
-    <div className="bg-ceramika-light p-4 rounded-lg mb-6">
-      <Text className="text-sm text-ceramika-dark font-semibold mb-2">🎁 Offre de bienvenue</Text>
-      <Text className="text-sm text-gray-600">
-        Profitez de <strong>10% de réduction</strong> sur votre première commande avec le code{" "}
-        <strong>BIENVENUE10</strong>
-      </Text>
-    </div>
+
 
     <Text className="text-base leading-relaxed text-gray-700 mb-2">Avec toute notre gratitude,</Text>
     <Text className="text-base text-ceramika-primary font-semibold">L'équipe Céramique Studio</Text>

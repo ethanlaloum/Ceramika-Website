@@ -58,7 +58,7 @@ export function HomeContent() {
           </FadeIn>
 
           <FadeIn delay={0.6}>
-            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 mb-8 sm:mb-12 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 mb-8 sm:mb-12 max-w-3xl mx-auto leading-relaxed">
               Biscuits en céramique 100% Made In France fabriqués dans notre atelier à Vallauris, au cœur d’un territoire reconnu pour son savoir-faire artisanal.
             </p>
           </FadeIn>
@@ -194,8 +194,7 @@ export function HomeContent() {
                 Nos Collections
               </h2>
               <p className="text-stone-600 dark:text-stone-300 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
-                Explorez nos collections uniques, chacune racontant une histoire différente à travers l'art de la
-                céramique
+                Explorez nos collections uniques, chacune racontant une histoire différente à travers l’art de la céramique !
               </p>
             </div>
           </FadeIn>

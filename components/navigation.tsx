@@ -79,9 +79,9 @@ export function Navigation() {
               <Image
                 src="/logo-ceramika.svg"
                 alt="Ceramika Logo"
-                width={220}
-                height={270}
-                className="w-auto h-12"
+                width={260}
+                height={320}
+                className="w-auto h-16 md:h-20"
                 priority
               />
             </div>
