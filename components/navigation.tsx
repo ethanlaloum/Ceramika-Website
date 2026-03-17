@@ -93,8 +93,6 @@ export function Navigation() {
               { href: "/", label: "Accueil" },
               { href: "/products", label: "Produits" },
               { href: "/artists", label: "Artistes" },
-              { href: "/collections", label: "Collections" },
-              { href: "/about", label: "À Propos" },
               { href: "/contact", label: "Contact" },
             ].map((item) => (
               <Link

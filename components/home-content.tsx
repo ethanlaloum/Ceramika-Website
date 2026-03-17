@@ -53,7 +53,7 @@ export function HomeContent() {
 
           <FadeIn delay={0.4}>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-light text-gray-700 dark:text-gray-300 mb-6 sm:mb-8 leading-relaxed">
-              Céramique Artisanale
+              Céramiques Artisanales
             </h2>
           </FadeIn>
 
@@ -269,7 +269,7 @@ export function HomeContent() {
                 </h2>
                 <p className="text-stone-600 dark:text-stone-300 text-base sm:text-lg mb-6 leading-relaxed">
                   Rencontrez les artisans talentueux qui donnent vie à chaque pièce avec passion et savoir-faire
-                  traditionnel
+                  traditionnel.
                 </p>
                 <Magnetic>
                   <Button
