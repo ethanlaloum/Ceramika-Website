@@ -11,15 +11,20 @@ export async function POST(request: NextRequest) {
       password, 
       firstName, 
       lastName, 
-      companyName,  // Ajouter ces champs
-      vatNumber,    // Ajouter ces champs
-      siretNumber,  // Ajouter ces champs 
+      phone,
+      companyName,
+      vatNumber,
+      siretNumber,
       role = "CUSTOMER" 
     } = body
 
     // Validation des données
     if (!email || !password) {
       return NextResponse.json({ error: "Email et mot de passe requis" }, { status: 400 })
+    }
+
+    if (!phone) {
+      return NextResponse.json({ error: "Le numéro de téléphone est requis" }, { status: 400 })
     }
 
     // Validation du mot de passe
@@ -47,9 +52,10 @@ export async function POST(request: NextRequest) {
         password: hashedPassword,
         firstName,
         lastName,
-        companyName,  // Ajouter ces champs
-        vatNumber,    // Ajouter ces champs 
-        siretNumber,  // Ajouter ces champs
+        phone,
+        companyName,
+        vatNumber,
+        siretNumber,
         role: role as UserRole,
       },
       select: {

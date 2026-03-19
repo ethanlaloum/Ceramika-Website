@@ -80,15 +80,14 @@ export default function ArtistsPage() {
               <Stagger staggerDelay={0.1} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
                 {artists.map((artist) => (
                   <HoverScale key={artist.id} scale={1.02}>
-                    <Card className="group cursor-pointer hover:shadow-lg transition-shadow bg-white dark:bg-stone-800 border-stone-200 dark:border-stone-700">
-                      <Link href={`/artists/${artist.id}`}>
+                    <Card className="group bg-white dark:bg-stone-800 border-stone-200 dark:border-stone-700">
                         <CardContent className="p-0">
                           <div className="relative h-56 sm:h-64 md:h-72">
                             <Image
                               src={artist.image || "/placeholder.svg"}
                               alt={artist.name}
                               fill
-                              className="object-cover group-hover:scale-105 transition-transform duration-300"
+                              className="object-cover"
                             />
                           </div>
                           <div className="p-4 sm:p-6">
@@ -116,7 +115,6 @@ export default function ArtistsPage() {
                             )}
                           </div>
                         </CardContent>
-                      </Link>
                     </Card>
                   </HoverScale>
                 ))}

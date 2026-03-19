@@ -21,6 +21,7 @@ export function RegisterForm({ onSuccess, isAdmin = false }: RegisterFormProps) 
     firstName: "",
     lastName: "",
     email: "",
+    phone: "",
     password: "",
     confirmPassword: "",
     companyName: "",
@@ -52,6 +53,7 @@ export function RegisterForm({ onSuccess, isAdmin = false }: RegisterFormProps) 
           firstName: formData.firstName,
           lastName: formData.lastName,
           email: formData.email,
+          phone: formData.phone,
           password: formData.password,
           companyName: formData.companyName || null,
           vatNumber: formData.vatNumber || null,
@@ -138,6 +140,19 @@ export function RegisterForm({ onSuccess, isAdmin = false }: RegisterFormProps) 
           placeholder="votre@email.com"
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          required
+          className={isAdmin ? "bg-stone-700 border-stone-600 text-white placeholder:text-stone-400" : ""}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="phone">Téléphone</Label>
+        <Input
+          id="phone"
+          type="tel"
+          placeholder="06 12 34 56 78"
+          value={formData.phone}
+          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
           required
           className={isAdmin ? "bg-stone-700 border-stone-600 text-white placeholder:text-stone-400" : ""}
         />
