@@ -22,7 +22,7 @@ export function HomeContent() {
     loading: productsLoading,
     error: productsError,
     refetch: refetchProducts,
-  } = useProducts({ limit: 3 }) // ajouter featured: true plus tard
+  } = useProducts({ limit: 3, featured: true })
 
   const {
     collections,
