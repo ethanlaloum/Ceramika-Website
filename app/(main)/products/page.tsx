@@ -185,8 +185,8 @@ export default function ProductsPage() {
         <div className="px-2">
           <Slider value={priceRange} onValueChange={setPriceRange} max={500} min={0} step={10} className="mb-2" />
           <div className="flex justify-between text-sm text-gray-500">
-            <span>{priceRange[0]}€</span>
-            <span>{priceRange[1]}€</span>
+            <span>{priceRange[0]} €</span>
+            <span>{priceRange[1]} €</span>
           </div>
         </div>
       </div>
@@ -395,10 +395,10 @@ export default function ProductsPage() {
                             >
                               <div className="flex items-center gap-2">
                                 <p className="font-bold text-lg sm:text-xl text-stone-800 dark:text-stone-100">
-                                  {product.price}€
+                                  {product.price} €
                                 </p>
                                 {product.originalPrice && product.originalPrice > product.price && (
-                                  <p className="text-sm text-stone-500 line-through">{product.originalPrice}€</p>
+                                  <p className="text-sm text-stone-500 line-through">{product.originalPrice} €</p>
                                 )}
                               </div>
                               {product.inStock && (

@@ -52,7 +52,7 @@ export default function ProductDetail({ product }: ProductDetailProps) {
             <h1 className="text-3xl font-playfair mb-2">{product.name}</h1>
 
             <div className="flex items-center space-x-3 mb-4">
-              <span className="text-2xl font-semibold">{product.price.toFixed(2)}€</span>
+              <span className="text-2xl font-semibold">{product.price.toFixed(2)} €</span>
               {!product.inStock && <Badge variant="destructive">Rupture</Badge>}
             </div>
 
