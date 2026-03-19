@@ -50,9 +50,14 @@ export default function ProductsPage() {
     if (!products) return []
 
     const filtered = products.filter((product) => {
-      // Recherche par nom
-      if (searchQuery && !product.name.toLowerCase().includes(searchQuery.toLowerCase())) {
-        return false
+      // Recherche par nom ou référence (id)
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase()
+        const matchesName = product.name.toLowerCase().includes(query)
+        const matchesRef = product.id.toLowerCase().includes(query)
+        if (!matchesName && !matchesRef) {
+          return false
+        }
       }
 
       // Filtre par catégorie
@@ -235,7 +240,7 @@ export default function ProductsPage() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
-                placeholder="Rechercher des produits..."
+                placeholder="Rechercher par nom ou référence..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
