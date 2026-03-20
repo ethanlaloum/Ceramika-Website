@@ -16,6 +16,14 @@ interface NewOrderAdminEmailProps {
   subtotal: number
   shipping: number
   total: number
+  deliveryMode: 'delivery' | 'collect'
+  shippingAddress: {
+    name: string
+    address: string
+    city: string
+    zipCode: string
+    country: string
+  }
 }
 
 export const NewOrderAdminEmail = ({
@@ -27,6 +35,8 @@ export const NewOrderAdminEmail = ({
   subtotal,
   shipping,
   total,
+  deliveryMode,
+  shippingAddress,
 }: NewOrderAdminEmailProps) => (
   <CeramikaLayout preview={`Nouvelle commande #${orderNumber} - ${customerName}`}>
     <Text className="text-2xl font-bold text-ceramika-primary mb-6 text-center">
@@ -110,6 +120,27 @@ export const NewOrderAdminEmail = ({
       </Row>
     </div>
 
+    {/* Adresse de livraison / Retrait */}
+    <Text className="text-lg font-semibold text-ceramika-dark mb-2">
+      {deliveryMode === 'collect' ? 'Mode de retrait' : 'Adresse de livraison'}
+    </Text>
+    <div className="bg-ceramika-light p-4 rounded-lg mb-6">
+      {deliveryMode === 'collect' ? (
+        <>
+          <Text className="text-sm font-semibold text-gray-700 m-0 mb-1">Click & Collect — Retrait à l'atelier</Text>
+          <Text className="text-sm text-gray-700 m-0">10 rue Solférino, 06220 Vallauris</Text>
+        </>
+      ) : (
+        <>
+          <Text className="text-sm text-gray-700 m-0 mb-1">{shippingAddress.name}</Text>
+          <Text className="text-sm text-gray-700 m-0 mb-1">{shippingAddress.address}</Text>
+          <Text className="text-sm text-gray-700 m-0">
+            {shippingAddress.zipCode} {shippingAddress.city}, {shippingAddress.country}
+          </Text>
+        </>
+      )}
+    </div>
+
     <Section className="text-center mb-6">
       <Button
         className="bg-ceramika-primary hover:bg-ceramika-dark rounded-lg text-white text-base font-semibold no-underline px-8 py-4 inline-block"
@@ -133,6 +164,14 @@ NewOrderAdminEmail.PreviewProps = {
   subtotal: 246.8,
   shipping: 1.2,
   total: 248.0,
+  deliveryMode: 'delivery',
+  shippingAddress: {
+    name: "Marie Darriet",
+    address: "45 Avenue des Arts",
+    city: "Vallauris",
+    zipCode: "06220",
+    country: "France",
+  },
 } as NewOrderAdminEmailProps
 
 export default NewOrderAdminEmail

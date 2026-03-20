@@ -133,15 +133,26 @@ export async function POST(request: NextRequest) {
       price: item.price,
     }))
 
-    // Adresse de livraison depuis Stripe
+    // Mode de livraison depuis les métadonnées
+    const deliveryMode = (stripeSession.metadata?.delivery_mode || 'delivery') as 'delivery' | 'collect'
+
+    // Adresse de livraison depuis les métadonnées ou Stripe
     const shippingDetails = stripeSession.shipping_details || stripeSession.customer_details
-    const shippingAddress = {
-      name: shippingDetails?.name || customerName,
-      address: shippingDetails?.address?.line1 || '',
-      city: shippingDetails?.address?.city || '',
-      zipCode: shippingDetails?.address?.postal_code || '',
-      country: shippingDetails?.address?.country || 'France',
-    }
+    const shippingAddress = stripeSession.metadata?.shipping_address
+      ? {
+          name: stripeSession.metadata.shipping_name || customerName,
+          address: stripeSession.metadata.shipping_address || '',
+          city: stripeSession.metadata.shipping_city || '',
+          zipCode: stripeSession.metadata.shipping_zip || '',
+          country: stripeSession.metadata.shipping_country || 'France',
+        }
+      : {
+          name: shippingDetails?.name || customerName,
+          address: shippingDetails?.address?.line1 || '',
+          city: shippingDetails?.address?.city || '',
+          zipCode: shippingDetails?.address?.postal_code || '',
+          country: shippingDetails?.address?.country || 'France',
+        }
 
     // Envoyer les emails en parallèle (sans bloquer la réponse)
     if (customerEmail) {
@@ -168,6 +179,8 @@ export async function POST(request: NextRequest) {
       subtotal: order!.subtotal,
       shipping: order!.shipping,
       total: order!.total,
+      deliveryMode,
+      shippingAddress,
     }).catch(err => console.error('❌ Erreur email admin:', err))
 
     return NextResponse.json({

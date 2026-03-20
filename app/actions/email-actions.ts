@@ -45,6 +45,14 @@ interface NewOrderAdminEmailParams {
   subtotal: number
   shipping: number
   total: number
+  deliveryMode: 'delivery' | 'collect'
+  shippingAddress: {
+    name: string
+    address: string
+    city: string
+    zipCode: string
+    country: string
+  }
 }
 
 export async function sendWelcomeEmail({ email, userFirstname }: WelcomeEmailParams) {
@@ -112,6 +120,8 @@ export async function sendNewOrderAdminEmail(params: NewOrderAdminEmailParams) {
         subtotal: params.subtotal,
         shipping: params.shipping,
         total: params.total,
+        deliveryMode: params.deliveryMode,
+        shippingAddress: params.shippingAddress,
       }),
     })
 

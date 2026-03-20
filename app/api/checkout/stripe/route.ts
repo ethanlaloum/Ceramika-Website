@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 401 })
     }
 
-    const { successUrl, cancelUrl } = await request.json()
+    const { successUrl, cancelUrl, deliveryMode, shippingAddress } = await request.json()
     
     // Récupérer les articles du panier et calculer le total
     const cartItems = await CartService.getCart(session.user.id)
@@ -34,9 +34,12 @@ export async function POST(request: NextRequest) {
       successUrl: successUrl || `${process.env.NEXT_PUBLIC_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancelUrl: cancelUrl || `${process.env.NEXT_PUBLIC_URL}/checkout/cancel`,
       customerEmail: session.user.email || undefined,
+      deliveryMode: deliveryMode || 'delivery',
+      shippingAddress,
       metadata: {
         user_id: session.user.id,
         source: 'cart_checkout',
+        delivery_mode: deliveryMode || 'delivery',
       },
     })
 

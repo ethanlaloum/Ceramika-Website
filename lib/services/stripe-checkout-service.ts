@@ -7,6 +7,16 @@ export interface StripeCheckoutParams {
   successUrl: string
   cancelUrl: string
   customerEmail?: string
+  deliveryMode?: 'delivery' | 'collect'
+  shippingAddress?: {
+    firstName: string
+    lastName: string
+    addressLine1: string
+    addressLine2?: string
+    city: string
+    zipCode: string
+    country: string
+  }
   metadata?: Record<string, string>
 }
 
@@ -20,7 +30,7 @@ export class StripeCheckoutService {
    * Crée une session de checkout Stripe avec validation stricte
    */
   static async createCheckoutSession(params: StripeCheckoutParams): Promise<StripeCheckoutResult> {
-    const { items, successUrl, cancelUrl, customerEmail, metadata = {} } = params
+    const { items, successUrl, cancelUrl, customerEmail, deliveryMode = 'delivery', shippingAddress, metadata = {} } = params
 
     // Validation des paramètres
     if (!items || items.length === 0) {
@@ -70,7 +80,7 @@ export class StripeCheckoutService {
     // Calcul des totaux pour les métadonnées avec validation
     const subtotal = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0)
     const itemCount = items.reduce((sum, item) => sum + item.quantity, 0)
-    const shipping = itemCount * 0.40 // 40 centimes par article
+    const shipping = deliveryMode === 'collect' ? 0 : itemCount * 0.40 // Gratuit en click & collect
     const total = subtotal + shipping
 
     // Validation des montants
@@ -85,16 +95,13 @@ export class StripeCheckoutService {
       total: total.toFixed(2)
     })
 
-    const session = await stripe.checkout.sessions.create({
+    const sessionConfig: any = {
       mode: 'payment',
       payment_method_types: ['card'],
       line_items: lineItems,
       success_url: successUrl,
       cancel_url: cancelUrl,
       customer_email: customerEmail,
-      shipping_address_collection: {
-        allowed_countries: ['FR', 'BE', 'LU', 'DE', 'IT', 'ES', 'NL'],
-      },
       billing_address_collection: 'auto',
       automatic_tax: {
         enabled: false, // TVA à 0 comme demandé
@@ -104,32 +111,57 @@ export class StripeCheckoutService {
         cart_subtotal: subtotal.toFixed(2),
         cart_shipping: shipping.toFixed(2),
         cart_total: total.toFixed(2),
+        delivery_mode: deliveryMode,
+        ...(shippingAddress ? {
+          shipping_name: `${shippingAddress.firstName} ${shippingAddress.lastName}`,
+          shipping_address: shippingAddress.addressLine1,
+          shipping_address2: shippingAddress.addressLine2 || '',
+          shipping_city: shippingAddress.city,
+          shipping_zip: shippingAddress.zipCode,
+          shipping_country: shippingAddress.country,
+        } : {}),
         ...metadata,
       },
-      // Configuration pour les frais de livraison
-      shipping_options: [
+    }
+
+    // Ajouter la collecte d'adresse et les frais de livraison seulement pour la livraison
+    if (deliveryMode === 'delivery') {
+      sessionConfig.shipping_address_collection = {
+        allowed_countries: ['FR', 'BE', 'LU', 'DE', 'IT', 'ES', 'NL'],
+      }
+      sessionConfig.shipping_options = [
         {
           shipping_rate_data: {
             type: 'fixed_amount',
             fixed_amount: {
-              amount: PRICE_UTILS.euroToStripeCents(shipping), // Frais de livraison en centimes
+              amount: PRICE_UTILS.euroToStripeCents(shipping),
               currency: 'eur',
             },
             display_name: 'Livraison standard',
             delivery_estimate: {
-              minimum: {
-                unit: 'business_day',
-                value: 3,
-              },
-              maximum: {
-                unit: 'business_day',
-                value: 7,
-              },
+              minimum: { unit: 'business_day', value: 3 },
+              maximum: { unit: 'business_day', value: 7 },
             },
           },
         },
-      ],
-    })
+      ]
+    } else {
+      // Click & collect : pas de frais de livraison
+      sessionConfig.shipping_options = [
+        {
+          shipping_rate_data: {
+            type: 'fixed_amount',
+            fixed_amount: {
+              amount: 0,
+              currency: 'eur',
+            },
+            display_name: 'Click & Collect — Retrait à l\'atelier',
+          },
+        },
+      ]
+    }
+
+    const session = await stripe.checkout.sessions.create(sessionConfig)
 
     // Vérification que la session a une URL
     if (!session.url) {

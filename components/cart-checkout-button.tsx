@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Loader2, ShoppingCart } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
@@ -24,71 +25,32 @@ export default function CartCheckoutButton({
   className,
   children 
 }: CartCheckoutButtonProps) {
-  const [isLoading, setIsLoading] = useState(false)
   const [showMinOrderAlert, setShowMinOrderAlert] = useState(false)
   const { toast } = useToast()
+  const router = useRouter()
 
-  const handleCheckout = async () => {
+  const handleCheckout = () => {
     // Vérification du montant minimum
     if (total < ORDER_CONFIG.MINIMUM_AMOUNT) {
       setShowMinOrderAlert(true)
       return
     }
     
-    setIsLoading(true)
-    
-    try {
-      const response = await fetch('/api/checkout/stripe', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          successUrl: `${window.location.origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-          cancelUrl: `${window.location.origin}/checkout/cancel`,
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error('Erreur lors de la création du checkout')
-      }
-
-      const { url } = await response.json()
-      
-      // Redirection vers la page de paiement Stripe
-      window.location.href = url
-      
-    } catch (error) {
-      toast({
-        title: "Erreur",
-        description: "Impossible de procéder au paiement. Veuillez réessayer.",
-        variant: "destructive",
-      })
-    } finally {
-      setIsLoading(false)
-    }
+    router.push('/checkout')
   }
 
   return (
     <>
       <Button 
         onClick={handleCheckout}
-        disabled={isLoading}
         className={className}
         size="lg"
       >
-        {isLoading ? (
+        {children || (
           <>
-            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-            Redirection...
+            <ShoppingCart className="w-4 h-4 mr-2" />
+            Passer la commande - {total.toFixed(2)} €
           </>
-        ) : (
-          children || (
-            <>
-              <ShoppingCart className="w-4 h-4 mr-2" />
-              Passer la commande - {total.toFixed(2)}€
-            </>
-          )
         )}
       </Button>
 
