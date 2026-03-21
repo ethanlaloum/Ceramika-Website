@@ -8,10 +8,15 @@ export function MaintenanceClientRedirect() {
   const pathname = usePathname()
 
   useEffect(() => {
+    const allowedPaths = ["/maintenance", "/customer/login", "/customer/forgot-password", "/admin"]
+    const isAllowed = allowedPaths.some(p => pathname === p || pathname.startsWith(p + "/"))
+
+    if (isAllowed) return
+
     fetch("/api/maintenance/status")
       .then(res => res.json())
       .then(data => {
-        if (data.maintenance && pathname !== "/maintenance") {
+        if (data.maintenance) {
           router.replace("/maintenance")
         }
       })

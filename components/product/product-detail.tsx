@@ -49,7 +49,7 @@ export default function ProductDetail({ product }: ProductDetailProps) {
 
           {/* Details */}
           <div className="prose max-w-none">
-            <h1 className="text-3xl font-playfair mb-2">{product.name}</h1>
+            <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
 
             <div className="flex items-center space-x-3 mb-4">
               <span className="text-2xl font-semibold">{product.price.toFixed(2)} €</span>
