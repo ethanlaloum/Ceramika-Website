@@ -218,7 +218,7 @@ export function CustomersComponent() {
                     </div>
                     <div className="space-y-1">
                       <p className="text-gray-600">Total dépensé</p>
-                      <p className="font-semibold">{stats.totalSpent.toFixed(2)}€</p>
+                      <p className="font-semibold">{stats.totalSpent.toFixed(2)} €</p>
                     </div>
                   </div>
 
@@ -283,7 +283,7 @@ export function CustomersComponent() {
                               <Card>
                                 <CardContent className="p-4 text-center">
                                   <p className="text-2xl font-bold">
-                                    {getCustomerStats(selectedCustomer).totalSpent.toFixed(0)}€
+                                    {getCustomerStats(selectedCustomer).totalSpent.toFixed(0)} €
                                   </p>
                                   <p className="text-sm text-gray-600">Total dépensé</p>
                                 </CardContent>
@@ -291,7 +291,7 @@ export function CustomersComponent() {
                               <Card>
                                 <CardContent className="p-4 text-center">
                                   <p className="text-2xl font-bold">
-                                    {getCustomerStats(selectedCustomer).avgOrderValue.toFixed(0)}€
+                                    {getCustomerStats(selectedCustomer).avgOrderValue.toFixed(0)} €
                                   </p>
                                   <p className="text-sm text-gray-600">Panier moyen</p>
                                 </CardContent>
@@ -342,7 +342,7 @@ export function CustomersComponent() {
                                       </p>
                                     </div>
                                     <div className="text-right">
-                                      <p className="font-semibold">{order.total.toFixed(2)}€</p>
+                                      <p className="font-semibold">{order.total.toFixed(2)} €</p>
                                       <Badge className="text-xs">{order.status}</Badge>
                                     </div>
                                   </div>
@@ -361,7 +361,7 @@ export function CustomersComponent() {
                                 {selectedCustomer.wishlistItems.map((item) => (
                                   <div key={item.id} className="flex items-center justify-between p-3 border rounded">
                                     <p className="font-medium">{item.product.name}</p>
-                                    <p className="font-semibold">{item.product.price.toFixed(2)}€</p>
+                                    <p className="font-semibold">{item.product.price.toFixed(2)} €</p>
                                   </div>
                                 ))}
                               </div>

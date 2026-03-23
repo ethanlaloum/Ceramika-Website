@@ -91,6 +91,18 @@ export function OrdersComponent() {
     }
   }
 
+  const getStatusLabel = (status: string) => {
+    switch (status.toLowerCase()) {
+      case "pending": return "En attente"
+      case "processing": return "En traitement"
+      case "shipped": return "Expédiée"
+      case "delivered": return "Livrée"
+      case "cancelled": return "Annulée"
+      case "completed": return "Livrée"
+      default: return status
+    }
+  }
+
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case "pending":
@@ -228,7 +240,7 @@ export function OrdersComponent() {
                     <Badge className={getStatusColor(order.status)}>
                       <div className="flex items-center space-x-1">
                         {getStatusIcon(order.status)}
-                        <span className="capitalize">{order.status}</span>
+                        <span>{getStatusLabel(order.status)}</span>
                       </div>
                     </Badge>
                   </div>
@@ -241,7 +253,7 @@ export function OrdersComponent() {
                   </div>
                 </div>
                 <div className="text-right space-y-2">
-                  <p className="text-2xl font-bold">€{order.total.toFixed(2)}</p>
+                  <p className="text-2xl font-bold">{order.total.toFixed(2)} €</p>
                   <div className="flex items-center space-x-2">
                     <Select value={order.status} onValueChange={(value) => updateOrderStatus(order.id, value)}>
                       <SelectTrigger className="w-32">
@@ -281,7 +293,7 @@ export function OrdersComponent() {
                                 <p>Date: {new Date(selectedOrder.createdAt).toLocaleDateString("fr-FR")}</p>
                                 <p>
                                   Statut:{" "}
-                                  <Badge className={getStatusColor(selectedOrder.status)}>{selectedOrder.status}</Badge>
+                                  <Badge className={getStatusColor(selectedOrder.status)}>{getStatusLabel(selectedOrder.status)}</Badge>
                                 </p>
                               </div>
                             </div>
@@ -297,7 +309,7 @@ export function OrdersComponent() {
                                         <p className="text-sm text-gray-600">Quantité: {item.quantity}</p>
                                       </div>
                                     </div>
-                                    <p className="font-semibold">€{(item.price * item.quantity).toFixed(2)}</p>
+                                    <p className="font-semibold">{(item.price * item.quantity).toFixed(2)} €</p>
                                   </div>
                                 ))}
                               </div>
@@ -305,7 +317,7 @@ export function OrdersComponent() {
                             <div className="border-t pt-4">
                               <div className="flex justify-between items-center">
                                 <span className="text-lg font-semibold">Total:</span>
-                                <span className="text-2xl font-bold">€{selectedOrder.total.toFixed(2)}</span>
+                                <span className="text-2xl font-bold">{selectedOrder.total.toFixed(2)} €</span>
                               </div>
                             </div>
                           </div>
