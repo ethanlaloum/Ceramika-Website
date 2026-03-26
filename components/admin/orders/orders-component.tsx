@@ -228,7 +228,7 @@ export function OrdersComponent() {
         </Select>
       </div>
 
-      {/* Orders List */
+      {/* Orders List */}
       <div className="space-y-4">
         {filteredOrders.map((order) => (
           <Card key={order.id}>
