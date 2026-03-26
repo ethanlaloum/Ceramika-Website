@@ -58,7 +58,7 @@ export default function ContactPage() {
             <div>
               <h3 className="font-semibold text-stone-800 dark:text-stone-100">Adresse Postale</h3>
               <p className="text-stone-600 dark:text-stone-300 text-sm">
-                10 Rue Solférino<br />06220 Vallauris
+                10 Rue Solférino, 06220 Vallauris
               </p>
             </div>
           </div>
