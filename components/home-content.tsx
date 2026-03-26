@@ -8,8 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { FadeIn, Stagger, HoverScale, Magnetic, Reveal } from "@/components/animations"
 import { Particles } from "@/components/magicui/particles"
 import { useProducts } from "@/hooks/use-products"
-import { useCollections } from "@/hooks/use-collections"
-import { ProductCardSkeleton, CollectionCardSkeleton } from "@/components/loading-states"
+import { ProductCardSkeleton } from "@/components/loading-states"
 import { ErrorDisplay } from "@/components/error-boundary"
 import { useCart } from "@/hooks/use-cart"
 
@@ -23,13 +22,6 @@ export function HomeContent() {
     error: productsError,
     refetch: refetchProducts,
   } = useProducts({ limit: 3, featured: true })
-
-  const {
-    collections,
-    loading: collectionsLoading,
-    error: collectionsError,
-    refetch: refetchCollections,
-  } = useCollections({ featured: true, limit: 3 })
 
   return (
     <div className="min-h-screen">
@@ -179,78 +171,6 @@ export function HomeContent() {
                 className="hover:scale-105 transition-transform duration-300 text-sm sm:text-base px-6 sm:px-8"
               >
                 <Link href="/products">Tous nos Produits</Link>
-              </Button>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* Collections Preview */}
-      <section className="py-12 sm:py-16 bg-stone-50 dark:bg-stone-800">
-        <div className="container mx-auto px-4">
-          <FadeIn>
-            <div className="text-center mb-8 sm:mb-12">
-              <h2 className="font-playfair text-3xl sm:text-4xl font-bold text-stone-800 dark:text-stone-100 mb-3 sm:mb-4">
-                Nos Collections
-              </h2>
-              <p className="text-stone-600 dark:text-stone-300 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
-                Explorez nos collections uniques, chacune racontant une histoire différente à travers l’art de la céramique !
-              </p>
-            </div>
-          </FadeIn>
-
-          {collectionsError ? (
-            <ErrorDisplay message={collectionsError} onRetry={refetchCollections} />
-          ) : (
-            <Stagger staggerDelay={0.3} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-              {collectionsLoading
-                ? Array.from({ length: 3 }).map((_, index) => <CollectionCardSkeleton key={index} />)
-                : collections.map((collection) => (
-                    <Reveal key={collection.id}>
-                      <HoverScale scale={1.02}>
-                        <Card className="group cursor-pointer overflow-hidden hover:shadow-2xl transition-all duration-500 bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-700">
-                          <Link href={`/collections/${collection.id}`}>
-                            <CardContent className="p-0">
-                              <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden">
-                                <Image
-                                  src={collection.image || "/placeholder.svg"}
-                                  alt={collection.name}
-                                  fill
-                                  className="object-cover group-hover:scale-110 transition-transform duration-700"
-                                />
-                                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
-                                <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                                  <h3 className="font-playfair text-lg sm:text-xl md:text-2xl font-bold mb-1 leading-tight">
-                                    {collection.name}
-                                  </h3>
-                                  <p className="text-xs sm:text-sm opacity-90">
-                                    {collection.products?.length || 0} pièces
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="p-4 sm:p-6">
-                                <p className="text-stone-600 dark:text-stone-300 text-sm sm:text-base leading-relaxed">
-                                  {collection.description}
-                                </p>
-                              </div>
-                            </CardContent>
-                          </Link>
-                        </Card>
-                      </HoverScale>
-                    </Reveal>
-                  ))}
-            </Stagger>
-          )}
-
-          <FadeIn delay={1}>
-            <div className="text-center mt-8 sm:mt-12">
-              <Button
-                variant="outline"
-                size="lg"
-                asChild
-                className="hover:scale-105 transition-transform duration-300 text-sm sm:text-base px-6 sm:px-8"
-              >
-                <Link href="/collections">Découvrez toutes nos Collections</Link>
               </Button>
             </div>
           </FadeIn>

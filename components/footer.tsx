@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { Instagram, Facebook, Twitter, Mail, Phone, Smartphone, MapPin, Linkedin } from "lucide-react"
+import { Instagram, Facebook, Twitter, Mail, Phone, MapPin, Linkedin } from "lucide-react"
 import { FadeIn, Stagger } from "@/components/animations"
 
 export function Footer() {
@@ -47,10 +47,6 @@ export function Footer() {
                   >
                     contact@cerami-ka.com
                   </a>
-                </div>
-                <div className="flex items-center space-x-3 text-sm text-stone-600 dark:text-stone-300">
-                  <Smartphone className="h-4 w-4" />
-                  <span>07 78 57 38 46</span>
                 </div>
                 <div className="flex items-center space-x-3 text-sm text-stone-600 dark:text-stone-300">
                   <Phone className="h-4 w-4" />

@@ -221,14 +221,14 @@ export function OrdersComponent() {
             <SelectItem value="all">Tous les statuts</SelectItem>
             <SelectItem value="pending">En attente</SelectItem>
             <SelectItem value="processing">En traitement</SelectItem>
-            <SelectItem value="shipped">Expédié</SelectItem>
-            <SelectItem value="delivered">Livré</SelectItem>
-            <SelectItem value="cancelled">Annulé</SelectItem>
+            <SelectItem value="shipped">Expédiée</SelectItem>
+            <SelectItem value="delivered">Livrée</SelectItem>
+            <SelectItem value="cancelled">Annulée</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
-      {/* Orders List */}
+      {/* Orders List */
       <div className="space-y-4">
         {filteredOrders.map((order) => (
           <Card key={order.id}>
@@ -249,7 +249,7 @@ export function OrdersComponent() {
                       Client: {order.user.firstName} {order.user.lastName} ({order.user.email})
                     </p>
                     <p>Date: {new Date(order.createdAt).toLocaleDateString("fr-FR")}</p>
-                    <p>Articles: {order.orderItems.length} produit(s)</p>
+                    <p>Articles : {order.orderItems.length} Produits</p>
                   </div>
                 </div>
                 <div className="text-right space-y-2">
@@ -262,9 +262,9 @@ export function OrdersComponent() {
                       <SelectContent>
                         <SelectItem value="pending">En attente</SelectItem>
                         <SelectItem value="processing">En traitement</SelectItem>
-                        <SelectItem value="shipped">Expédié</SelectItem>
-                        <SelectItem value="delivered">Livré</SelectItem>
-                        <SelectItem value="cancelled">Annulé</SelectItem>
+                        <SelectItem value="shipped">Expédiée</SelectItem>
+                        <SelectItem value="delivered">Livrée</SelectItem>
+                        <SelectItem value="cancelled">Annulée</SelectItem>
                       </SelectContent>
                     </Select>
                     <Dialog>

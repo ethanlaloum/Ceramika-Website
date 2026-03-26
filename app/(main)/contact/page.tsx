@@ -67,7 +67,7 @@ export default function ContactPage() {
             <div>
               <h3 className="font-semibold text-stone-800 dark:text-stone-100">Numéro de Téléphone</h3>
               <p className="text-stone-600 dark:text-stone-300 text-sm">
-                04 93 64 48 94<br />07 78 57 38 46
+                04 93 64 48 94
               </p>
             </div>
           </div>
