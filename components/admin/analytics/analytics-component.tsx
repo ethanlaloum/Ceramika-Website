@@ -181,7 +181,7 @@ export function AnalyticsComponent() {
             <div className="flex items-center justify-between">
               <div className="space-y-1 md:space-y-2 min-w-0 flex-1">
                 <p className="text-xs md:text-sm font-medium text-gray-600 truncate">Revenus</p>
-                <p className="text-lg md:text-2xl font-bold truncate">{analytics.revenue.total.toLocaleString()}€</p>
+                <p className="text-lg md:text-2xl font-bold truncate">{analytics.revenue.total.toLocaleString()} €</p>
               </div>
               <div className="p-2 md:p-3 bg-green-100 rounded-full flex-shrink-0">
                 <Euro className="h-4 w-4 md:h-6 md:w-6 text-green-600" />
@@ -256,14 +256,14 @@ export function AnalyticsComponent() {
                       <p className="text-xs md:text-sm text-gray-600">{product.sales} ventes</p>
                     </div>
                   </div>
-                  <p className="text-sm md:text-base font-bold flex-shrink-0">€{product.revenue.toLocaleString()}</p>
+                  <p className="text-sm md:text-base font-bold flex-shrink-0">{product.revenue.toLocaleString()} €</p>
                 </div>
               ))}
             </div>
           </CardContent>
         </Card>
 
-        {/* Orders by Status */}
+        {/* Répartition par statut */}
         <Card>
           <CardHeader className="pb-3 md:pb-6">
             <CardTitle className="text-base md:text-lg">Répartition des commandes</CardTitle>
@@ -271,11 +271,22 @@ export function AnalyticsComponent() {
           </CardHeader>
           <CardContent className="p-3 md:p-6 pt-0">
             <div className="space-y-3 md:space-y-4">
-              {analytics.ordersByStatus.map((item) => (
+              {analytics.ordersByStatus.map((item) => {
+                const statusLabels: Record<string, string> = {
+                  pending: 'En attente',
+                  processing: 'En traitement',
+                  shipped: 'Expédiée',
+                  delivered: 'Livrée',
+                  cancelled: 'Annulée',
+                  refunded: 'Remboursée',
+                  confirmed: 'Confirmée',
+                  paid: 'Payée',
+                };
+                return (
                 <div key={item.status} className="flex items-center justify-between">
                   <div className="flex items-center space-x-2 md:space-x-3 min-w-0 flex-1">
                     <div className="w-3 h-3 md:w-4 md:h-4 bg-blue-500 rounded-full flex-shrink-0"></div>
-                    <span className="text-sm md:text-base capitalize truncate">{item.status}</span>
+                    <span className="text-sm md:text-base truncate">{statusLabels[item.status] || item.status}</span>
                   </div>
                   <div className="text-right flex-shrink-0">
                     <p className="text-sm md:text-base font-bold">{item.count}</p>
@@ -284,7 +295,8 @@ export function AnalyticsComponent() {
                     </p>
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
           </CardContent>
         </Card>
@@ -323,7 +335,7 @@ export function AnalyticsComponent() {
                     tooltip: {
                       callbacks: {
                         label: function(context) {
-                          return `Revenus: ${(context.parsed.y || 0).toLocaleString()}€`
+                          return `Revenus: ${(context.parsed.y || 0).toLocaleString()} €`
                         }
                       }
                     }
@@ -333,7 +345,7 @@ export function AnalyticsComponent() {
                       beginAtZero: true,
                       ticks: {
                         callback: function(value) {
-                          return value.toLocaleString() + '€'
+                          return value.toLocaleString() + ' €'
                         }
                       }
                     }
