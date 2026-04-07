@@ -4,7 +4,7 @@
 
 // Configuration des commandes
 export const ORDER_CONFIG = {
-  MINIMUM_AMOUNT: 200, // Montant minimum de commande en euros
+  MINIMUM_AMOUNT: 500, // Montant minimum de commande en euros
 } as const
 
 // Configuration des paiements
