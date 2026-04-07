@@ -3,6 +3,7 @@ import { stripe } from '@/lib/stripe'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { sendOrderConfirmationEmail, sendNewOrderAdminEmail } from '@/app/actions/email-actions'
+import { syncOrderToIabako, syncCustomerToIabako } from '@/lib/services/iabako-sync-service'
 
 export async function POST(request: NextRequest) {
   try {
@@ -182,6 +183,34 @@ export async function POST(request: NextRequest) {
       deliveryMode,
       shippingAddress,
     }).catch(err => console.error('❌ Erreur email admin:', err))
+
+    // Synchroniser avec l'ERP Iabako (sans bloquer la réponse)
+    if (user) {
+      syncCustomerToIabako(user).catch(err => console.error('❌ Erreur sync client Iabako:', err))
+    }
+    syncOrderToIabako({
+      id: order!.id,
+      createdAt: order!.createdAt,
+      total: order!.total,
+      shipping: order!.shipping,
+      userId: session?.user?.id || 'guest',
+      customerName: customerName,
+      companyName: user?.companyName,
+      orderItems: order!.orderItems.map((item: any) => ({
+        quantity: item.quantity,
+        price: item.price,
+        product: {
+          id: item.product.id,
+          name: item.product.name,
+          price: item.product.price,
+        },
+      })),
+    }, shippingAddress ? {
+      address: shippingAddress.address,
+      city: shippingAddress.city,
+      zipCode: shippingAddress.zipCode,
+      country: shippingAddress.country,
+    } : undefined).catch(err => console.error('❌ Erreur sync commande Iabako:', err))
 
     return NextResponse.json({
       success: true,

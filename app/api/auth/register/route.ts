@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { hashPassword, validatePassword } from "@/lib/auth-utils"
 import type { UserRole } from "@prisma/client"
+import { syncCustomerToIabako } from "@/lib/services/iabako-sync-service"
 
 export async function POST(request: NextRequest) {
   try {
@@ -70,6 +71,18 @@ export async function POST(request: NextRequest) {
         createdAt: true,
       },
     })
+
+    // Synchroniser le nouveau client avec l'ERP Iabako (sans bloquer la réponse)
+    syncCustomerToIabako({
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      phone: body.phone,
+      companyName: user.companyName,
+      siretNumber: user.siretNumber,
+      vatNumber: user.vatNumber,
+    }).catch(err => console.error('❌ Erreur sync Iabako:', err))
 
     return NextResponse.json({ message: "Utilisateur créé avec succès", user }, { status: 201 })
   } catch (error) {

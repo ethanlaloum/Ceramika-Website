@@ -21,6 +21,10 @@ interface EnvironmentConfig {
   
   // Application
   NEXT_PUBLIC_URL: string
+
+  // ERP Iabako
+  IABAKO_USERNAME: string
+  IABAKO_PASSWORD: string
 }
 
 /**
@@ -36,6 +40,8 @@ function validateEnvironment(): EnvironmentConfig {
     STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
+    IABAKO_USERNAME: process.env.IABAKO_USERNAME,
+    IABAKO_PASSWORD: process.env.IABAKO_PASSWORD,
   }
 
   const missingVars: string[] = []

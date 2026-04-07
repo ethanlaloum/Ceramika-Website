@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
+import { syncProductToIabako } from "@/lib/services/iabako-sync-service"
 
 // Correction pour Next.js 15 : params est maintenant une Promise
 export async function PUT(request: Request, context: { params: Promise<{ id: string }> }) {
@@ -116,6 +117,17 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
         },
       },
     })
+
+    // Synchroniser le produit avec l'ERP Iabako (sans bloquer la réponse)
+    syncProductToIabako({
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      stock: body.stock,
+      category: product.category,
+      artist: product.artist,
+    }).catch(err => console.error('❌ Erreur sync produit Iabako:', err))
 
     return NextResponse.json(product)
   } catch (error) {

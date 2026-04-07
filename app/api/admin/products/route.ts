@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { auth } from "@/auth" // Modifié: importer auth au lieu de authOptions et getServerSession
 import { prisma } from "@/lib/prisma"
+import { syncProductToIabako } from "@/lib/services/iabako-sync-service"
 
 export async function GET(request: NextRequest) {
   try {
@@ -137,6 +138,17 @@ export async function POST(request: NextRequest) {
         },
       },
     })
+
+    // Synchroniser le produit avec l'ERP Iabako (sans bloquer la réponse)
+    syncProductToIabako({
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      stock: body.stock,
+      category: product.category,
+      artist: product.artist,
+    }).catch(err => console.error('❌ Erreur sync produit Iabako:', err))
 
     return NextResponse.json(product, { status: 201 })
   } catch (error) {
