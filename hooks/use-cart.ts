@@ -123,6 +123,13 @@ export function useCart() {
           title: "Produit ajouté",
           description: "Le produit a été ajouté à votre panier",
         })
+      } else {
+        const data = await response.json()
+        toast({
+          title: "Stock insuffisant",
+          description: data.error || "Impossible d'ajouter le produit",
+          variant: "destructive",
+        })
       }
     } catch (error) {
       toast({
@@ -144,6 +151,13 @@ export function useCart() {
 
       if (response.ok) {
         await fetchCart()
+      } else {
+        const data = await response.json()
+        toast({
+          title: "Stock insuffisant",
+          description: data.error || "Impossible de mettre à jour la quantité",
+          variant: "destructive",
+        })
       }
     } catch (error) {
       toast({

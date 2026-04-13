@@ -26,6 +26,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Produit non trouvé" }, { status: 404 })
     }
 
+    // Vérification du stock
+    if (!product.inStock || product.stock <= 0) {
+      return NextResponse.json({ error: `"${product.name}" est en rupture de stock` }, { status: 400 })
+    }
+
+    if (quantity > product.stock) {
+      return NextResponse.json({ 
+        error: `Stock insuffisant pour "${product.name}" (${product.stock} disponible${product.stock > 1 ? 's' : ''})` 
+      }, { status: 400 })
+    }
+
     // Vérification du montant minimum
     const total = product.price * quantity + (quantity * 0.40) // prix + frais de livraison
     if (total < ORDER_CONFIG.MINIMUM_AMOUNT) {

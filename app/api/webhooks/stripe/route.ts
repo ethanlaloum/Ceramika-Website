@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
+import { prisma } from '@/lib/prisma'
 import { CartService } from '@/lib/services/cart-service'
 import { headers } from 'next/headers'
 import Stripe from 'stripe'
@@ -98,11 +99,38 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       console.log('✅ Panier vidé pour l\'utilisateur:', userId)
     }
     
-    // TODO: Ajouter d'autres logiques comme :
-    // - Créer une commande dans votre base de données
-    // - Envoyer un email de confirmation
-    // - Mettre à jour l'inventaire
-    // - Déclencher l'expédition
+    // Décrémenter le stock pour chaque article acheté
+    const lineItems = await stripe.checkout.sessions.listLineItems(session.id, { expand: ['data.price.product'] })
+    
+    for (const item of lineItems.data) {
+      const productMetadata = (item.price?.product as Stripe.Product)?.metadata
+      const productId = productMetadata?.product_id
+      const quantity = item.quantity || 1
+
+      if (productId) {
+        await prisma.product.update({
+          where: { id: productId },
+          data: {
+            stock: { decrement: quantity },
+          },
+        })
+
+        // Mettre à jour inStock si le stock tombe à 0
+        const updatedProduct = await prisma.product.findUnique({
+          where: { id: productId },
+          select: { stock: true },
+        })
+
+        if (updatedProduct && updatedProduct.stock <= 0) {
+          await prisma.product.update({
+            where: { id: productId },
+            data: { inStock: false, stock: 0 },
+          })
+        }
+
+        console.log(`📦 Stock décrémenté pour produit ${productId}: -${quantity}`)
+      }
+    }
     
     console.log('✅ Checkout complété traité avec succès')
   } catch (error) {

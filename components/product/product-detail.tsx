@@ -78,15 +78,21 @@ export default function ProductDetail({ product }: ProductDetailProps) {
             )}
 
             <div className="flex items-center space-x-4">
-              <div className="flex items-center border rounded overflow-hidden">
-                <button className="px-3 py-2" onClick={() => setQty(Math.max(1, qty - 1))}>-</button>
-                <div className="px-4 py-2">{qty}</div>
-                <button className="px-3 py-2" onClick={() => setQty(qty + 1)}>+</button>
-              </div>
+              {product.inStock ? (
+                <>
+                  <div className="flex items-center border rounded overflow-hidden">
+                    <button className="px-3 py-2" onClick={() => setQty(Math.max(1, qty - 1))}>-</button>
+                    <div className="px-4 py-2">{qty}</div>
+                    <button className="px-3 py-2" onClick={() => setQty(Math.min(product.stock || 99, qty + 1))}>+</button>
+                  </div>
 
-              <Button onClick={() => addToCart({ id: product.id, name: product.name, artist: product.artist?.name || "", price: product.price, image: product.images?.[0] || "", quantity: qty })}>
-                Ajouter au panier
-              </Button>
+                  <Button onClick={() => addToCart({ id: product.id, name: product.name, artist: product.artist?.name || "", price: product.price, image: product.images?.[0] || "", quantity: qty })}>
+                    Ajouter au panier
+                  </Button>
+                </>
+              ) : (
+                <p className="text-red-600 font-medium">Ce produit est actuellement indisponible</p>
+              )}
             </div>
           </div>
         </div>

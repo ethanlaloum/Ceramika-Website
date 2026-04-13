@@ -34,7 +34,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(cartItem)
   } catch (error) {
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
+    const message = error instanceof Error ? error.message : "Erreur serveur"
+    return NextResponse.json({ error: message }, { status: 400 })
   }
 }
 
