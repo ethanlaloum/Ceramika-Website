@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from "next/server"
+import { NextResponse } from "next/server"
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { importProductsFromIabako } from "@/lib/services/iabako-sync-service"
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const session = await auth()
 
@@ -11,17 +11,26 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Accès non autorisé" }, { status: 401 })
     }
 
-    const body = await request.json()
-    const { numbers } = body
+    // Récupérer tous les produits qui ont un numéro Iabako
+    const productsWithIabako = await prisma.product.findMany({
+      where: { iabakoNumber: { not: null } },
+      select: { iabakoNumber: true },
+    })
 
-    if (!numbers || !Array.isArray(numbers) || numbers.length === 0) {
-      return NextResponse.json(
-        { error: "Veuillez fournir au moins un numéro de produit Iabako" },
-        { status: 400 }
-      )
+    const numbers = productsWithIabako
+      .map((p) => p.iabakoNumber)
+      .filter((n): n is string => n !== null)
+
+    if (numbers.length === 0) {
+      return NextResponse.json({
+        success: true,
+        message: "Aucun produit avec numéro Iabako à synchroniser",
+        created: 0,
+        updated: 0,
+        errors: [],
+      })
     }
 
-    // Récupérer le premier artiste comme artiste par défaut
     const defaultArtist = await prisma.artist.findFirst({
       orderBy: { name: "asc" },
     })
