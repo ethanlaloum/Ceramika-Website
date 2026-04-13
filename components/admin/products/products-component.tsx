@@ -11,6 +11,7 @@ import { AddProductDialog } from "./add-product-dialog"
 import { EditProductDialog } from "./edit-product-dialog"
 import { ViewProductDialog } from "./view-product-dialog"
 import { DeleteProductDialog } from "./delete-product-dialog"
+import { SyncIabakoDialog } from "./sync-iabako-dialog"
 import type { Product, Artist, Collection } from "@prisma/client"
 
 interface ProductWithRelations extends Product {
@@ -39,6 +40,7 @@ export function ProductsComponent() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [productToDelete, setProductToDelete] = useState<Product | null>(null)
   const [isSyncing, setIsSyncing] = useState(false)
+  const [isSyncDialogOpen, setIsSyncDialogOpen] = useState(false)
 
   const { toast } = useToast()
 
@@ -117,11 +119,13 @@ export function ProductsComponent() {
     setIsDeleteDialogOpen(true)
   }
 
-  const handleSyncIabako = async () => {
+  const handleSyncIabako = async (numbers: string[]) => {
     setIsSyncing(true)
     try {
       const response = await fetch("/api/admin/products/sync-iabako", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ numbers }),
       })
       const data = await response.json()
 
@@ -167,7 +171,7 @@ export function ProductsComponent() {
     <div className="space-y-6">
       <ProductsHeader
         onAddProduct={() => setIsAddDialogOpen(true)}
-        onSyncIabako={handleSyncIabako}
+        onSyncIabako={() => setIsSyncDialogOpen(true)}
         isSyncing={isSyncing}
       />
 
@@ -218,6 +222,13 @@ export function ProductsComponent() {
         onClose={() => setIsDeleteDialogOpen(false)}
         product={productToDelete as any}
         onSuccess={fetchProducts}
+      />
+
+      <SyncIabakoDialog
+        isOpen={isSyncDialogOpen}
+        onClose={() => setIsSyncDialogOpen(false)}
+        onSync={handleSyncIabako}
+        isSyncing={isSyncing}
       />
     </div>
   )

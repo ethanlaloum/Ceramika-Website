@@ -1,14 +1,24 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { importProductsFromIabako } from "@/lib/services/iabako-sync-service"
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
     const session = await auth()
 
     if (!session || session.user?.role !== "ADMIN") {
       return NextResponse.json({ error: "Accès non autorisé" }, { status: 401 })
+    }
+
+    const body = await request.json()
+    const { numbers } = body
+
+    if (!numbers || !Array.isArray(numbers) || numbers.length === 0) {
+      return NextResponse.json(
+        { error: "Veuillez fournir au moins un numéro de produit Iabako" },
+        { status: 400 }
+      )
     }
 
     // Récupérer le premier artiste comme artiste par défaut
@@ -23,11 +33,11 @@ export async function POST() {
       )
     }
 
-    const result = await importProductsFromIabako(defaultArtist.id)
+    const result = await importProductsFromIabako(numbers, defaultArtist.id)
 
     return NextResponse.json({
       success: true,
-      message: `Synchronisation terminée : ${result.created} créé(s), ${result.updated} mis à jour`,
+      message: `Synchronisation terminée : ${result.created} créé(s), ${result.updated} mis à jour, ${result.errors.length} erreur(s)`,
       ...result,
     })
   } catch (error) {

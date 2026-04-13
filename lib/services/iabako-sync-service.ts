@@ -306,28 +306,6 @@ interface ImportResult {
 }
 
 /**
- * Récupère tous les produits depuis Iabako (GET /products)
- */
-export async function fetchIabakoProducts(): Promise<IabakoProduct[]> {
-  const response = await iabakoFetch('/products')
-
-  if (!response.ok) {
-    const errorText = await response.text()
-    throw new Error(`Erreur récupération produits Iabako (${response.status}): ${errorText}`)
-  }
-
-  const data = await response.json()
-
-  // L'API peut renvoyer un tableau ou un objet avec une clé data/items/products
-  if (Array.isArray(data)) return data
-  if (data.data && Array.isArray(data.data)) return data.data
-  if (data.items && Array.isArray(data.items)) return data.items
-  if (data.products && Array.isArray(data.products)) return data.products
-
-  throw new Error('Format de réponse Iabako inattendu: impossible de trouver la liste de produits')
-}
-
-/**
  * Récupère un produit Iabako par son numéro
  */
 export async function fetchIabakoProductByNumber(number: string): Promise<IabakoProduct | null> {
@@ -336,30 +314,36 @@ export async function fetchIabakoProductByNumber(number: string): Promise<Iabako
   if (response.status === 404) return null
   if (!response.ok) {
     const errorText = await response.text()
-    throw new Error(`Erreur récupération produit ${number}: ${errorText}`)
+    throw new Error(`Erreur récupération produit ${number} (${response.status}): ${errorText}`)
   }
 
   return response.json()
 }
 
 /**
- * Importe tous les produits depuis Iabako vers la base de données locale.
+ * Importe des produits depuis Iabako par leurs numéros.
  * Crée les nouveaux produits et met à jour les existants.
+ * @param numbers - Liste de numéros de produits Iabako à importer
  * @param defaultArtistId - L'ID de l'artiste à utiliser pour les nouveaux produits
  */
-export async function importProductsFromIabako(defaultArtistId: string): Promise<ImportResult> {
+export async function importProductsFromIabako(numbers: string[], defaultArtistId: string): Promise<ImportResult> {
   const result: ImportResult = { created: 0, updated: 0, errors: [], products: [] }
 
-  const iabakoProducts = await fetchIabakoProducts()
-
-  for (const iProduct of iabakoProducts) {
-    const iabakoNumber = iProduct.number || iProduct.externalId
-    if (!iabakoNumber || !iProduct.name) {
-      result.errors.push(`Produit ignoré: numéro ou nom manquant (${JSON.stringify({ number: iProduct.number, name: iProduct.name })})`)
-      continue
-    }
+  for (const number of numbers) {
+    const trimmed = number.trim()
+    if (!trimmed) continue
 
     try {
+      const iProduct = await fetchIabakoProductByNumber(trimmed)
+
+      if (!iProduct) {
+        result.errors.push(`Produit "${trimmed}" non trouvé dans Iabako`)
+        result.products.push({ name: trimmed, number: trimmed, action: 'error', error: 'Non trouvé dans Iabako' })
+        continue
+      }
+
+      const iabakoNumber = iProduct.number || trimmed
+
       // Chercher un produit local qui a déjà ce numéro Iabako
       const existingProduct = await prisma.product.findUnique({
         where: { iabakoNumber },
@@ -407,9 +391,9 @@ export async function importProductsFromIabako(defaultArtistId: string): Promise
         result.products.push({ name: iProduct.name, number: iabakoNumber, action: 'created' })
       }
     } catch (error) {
-      const errMsg = `Erreur pour "${iProduct.name}" (${iabakoNumber}): ${String(error)}`
+      const errMsg = `Erreur pour "${trimmed}": ${String(error)}`
       result.errors.push(errMsg)
-      result.products.push({ name: iProduct.name, number: iabakoNumber, action: 'error', error: String(error) })
+      result.products.push({ name: trimmed, number: trimmed, action: 'error', error: String(error) })
     }
   }
 
