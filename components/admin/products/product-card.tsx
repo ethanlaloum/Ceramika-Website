@@ -39,7 +39,7 @@ export function ProductCard({ product, onView, onEdit, onDelete }: ProductCardPr
       <CardContent className="p-4">
         <div className="space-y-2">
           <h3 className="font-semibold text-lg line-clamp-1">{product.name}</h3>
-          <p className="text-sm text-gray-600 line-clamp-2">{product.description}</p>
+          <p className="text-sm text-gray-600">Référence : {product.id}</p>
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <div className="flex items-center space-x-2">

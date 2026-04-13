@@ -90,6 +90,7 @@ model Product {
   featured      Boolean        @default(false)
   features      String[]       @default([])
   originalPrice Float?
+  iabakoNumber  String?        @unique
   orderItems    OrderItem[]
   artist        Artist         @relation(fields: [artistId], references: [id])
   collection    Collection?    @relation(fields: [collectionId], references: [id])

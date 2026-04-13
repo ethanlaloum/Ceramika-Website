@@ -1,23 +1,33 @@
 "use client"
 
-import { Plus } from "lucide-react"
+import { Plus, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 interface ProductsHeaderProps {
   onAddProduct: () => void
+  onSyncIabako?: () => void
+  isSyncing?: boolean
 }
 
-export function ProductsHeader({ onAddProduct }: ProductsHeaderProps) {
+export function ProductsHeader({ onAddProduct, onSyncIabako, isSyncing }: ProductsHeaderProps) {
   return (
     <div className="flex items-center justify-between">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Gestion des Produits</h1>
         <p className="text-gray-600">Gérez votre catalogue de produits céramiques</p>
       </div>
-      <Button className="bg-black hover:bg-gray-800" onClick={onAddProduct}>
-        <Plus className="h-4 w-4 mr-2" />
-        Ajouter un Produit
-      </Button>
+      <div className="flex items-center gap-3">
+        {onSyncIabako && (
+          <Button variant="outline" onClick={onSyncIabako} disabled={isSyncing}>
+            <RefreshCw className={`h-4 w-4 mr-2 ${isSyncing ? "animate-spin" : ""}`} />
+            {isSyncing ? "Synchronisation..." : "Sync Iabako"}
+          </Button>
+        )}
+        <Button className="bg-black hover:bg-gray-800" onClick={onAddProduct}>
+          <Plus className="h-4 w-4 mr-2" />
+          Ajouter un Produit
+        </Button>
+      </div>
     </div>
   )
 }

@@ -4,6 +4,7 @@
  */
 
 import { iabakoFetch } from '@/lib/iabako'
+import { prisma } from '@/lib/prisma'
 
 // ==================== TYPES ====================
 
@@ -280,4 +281,138 @@ export async function syncOrderToIabako(order: {
     console.error('❌ Iabako: Erreur sync commande:', error)
     return { success: false, error: String(error) }
   }
+}
+
+// ==================== IMPORT DEPUIS IABAKO ====================
+
+interface IabakoProduct {
+  externalId?: string
+  number?: string
+  name: string
+  description?: string
+  stockQuantity?: number
+  priceUnit?: string
+  taxRate?: number
+  priceBeforeTax?: number
+  priceAfterTax?: number
+  tags?: string[]
+}
+
+interface ImportResult {
+  created: number
+  updated: number
+  errors: string[]
+  products: Array<{ name: string; number?: string; action: 'created' | 'updated' | 'error'; error?: string }>
+}
+
+/**
+ * Récupère tous les produits depuis Iabako (GET /products)
+ */
+export async function fetchIabakoProducts(): Promise<IabakoProduct[]> {
+  const response = await iabakoFetch('/products')
+
+  if (!response.ok) {
+    const errorText = await response.text()
+    throw new Error(`Erreur récupération produits Iabako (${response.status}): ${errorText}`)
+  }
+
+  const data = await response.json()
+
+  // L'API peut renvoyer un tableau ou un objet avec une clé data/items/products
+  if (Array.isArray(data)) return data
+  if (data.data && Array.isArray(data.data)) return data.data
+  if (data.items && Array.isArray(data.items)) return data.items
+  if (data.products && Array.isArray(data.products)) return data.products
+
+  throw new Error('Format de réponse Iabako inattendu: impossible de trouver la liste de produits')
+}
+
+/**
+ * Récupère un produit Iabako par son numéro
+ */
+export async function fetchIabakoProductByNumber(number: string): Promise<IabakoProduct | null> {
+  const response = await iabakoFetch(`/products/number/${encodeURIComponent(number)}`)
+
+  if (response.status === 404) return null
+  if (!response.ok) {
+    const errorText = await response.text()
+    throw new Error(`Erreur récupération produit ${number}: ${errorText}`)
+  }
+
+  return response.json()
+}
+
+/**
+ * Importe tous les produits depuis Iabako vers la base de données locale.
+ * Crée les nouveaux produits et met à jour les existants.
+ * @param defaultArtistId - L'ID de l'artiste à utiliser pour les nouveaux produits
+ */
+export async function importProductsFromIabako(defaultArtistId: string): Promise<ImportResult> {
+  const result: ImportResult = { created: 0, updated: 0, errors: [], products: [] }
+
+  const iabakoProducts = await fetchIabakoProducts()
+
+  for (const iProduct of iabakoProducts) {
+    const iabakoNumber = iProduct.number || iProduct.externalId
+    if (!iabakoNumber || !iProduct.name) {
+      result.errors.push(`Produit ignoré: numéro ou nom manquant (${JSON.stringify({ number: iProduct.number, name: iProduct.name })})`)
+      continue
+    }
+
+    try {
+      // Chercher un produit local qui a déjà ce numéro Iabako
+      const existingProduct = await prisma.product.findUnique({
+        where: { iabakoNumber },
+      })
+
+      const price = iProduct.priceAfterTax ?? iProduct.priceBeforeTax ?? 0
+      const stock = iProduct.stockQuantity ?? 0
+      const category = iProduct.tags?.find(t => t !== 'ceramika' && t !== 'e-commerce') || null
+
+      if (existingProduct) {
+        // Mise à jour du produit existant
+        await prisma.product.update({
+          where: { id: existingProduct.id },
+          data: {
+            name: iProduct.name,
+            description: iProduct.description || existingProduct.description,
+            price,
+            stock,
+            inStock: stock > 0,
+            category: category || existingProduct.category,
+          },
+        })
+
+        result.updated++
+        result.products.push({ name: iProduct.name, number: iabakoNumber, action: 'updated' })
+      } else {
+        // Création d'un nouveau produit
+        await prisma.product.create({
+          data: {
+            name: iProduct.name,
+            description: iProduct.description || null,
+            price,
+            stock,
+            inStock: stock > 0,
+            category,
+            artistId: defaultArtistId,
+            iabakoNumber,
+            images: [],
+            features: [],
+            featured: false,
+          },
+        })
+
+        result.created++
+        result.products.push({ name: iProduct.name, number: iabakoNumber, action: 'created' })
+      }
+    } catch (error) {
+      const errMsg = `Erreur pour "${iProduct.name}" (${iabakoNumber}): ${String(error)}`
+      result.errors.push(errMsg)
+      result.products.push({ name: iProduct.name, number: iabakoNumber, action: 'error', error: String(error) })
+    }
+  }
+
+  console.log(`✅ Import Iabako terminé: ${result.created} créés, ${result.updated} mis à jour, ${result.errors.length} erreurs`)
+  return result
 }
