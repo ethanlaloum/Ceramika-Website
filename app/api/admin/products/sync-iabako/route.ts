@@ -13,7 +13,7 @@ export async function POST() {
 
     // Récupérer le premier artiste comme artiste par défaut
     const defaultArtist = await prisma.artist.findFirst({
-      orderBy: { createdAt: "asc" },
+      orderBy: { name: "asc" },
     })
 
     if (!defaultArtist) {
