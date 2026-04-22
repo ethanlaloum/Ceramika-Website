@@ -41,7 +41,7 @@ export default function ProductsPage() {
   const [sortBy, setSortBy] = useState("newest")
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 12
+  const itemsPerPage = 24
 
   // Récupération des données
   const { products, loading: productsLoading, error: productsError, refetch } = useProducts()
@@ -432,58 +432,69 @@ export default function ProductsPage() {
 
             {/* Pagination */}
             {!productsLoading && filteredAndSortedProducts.length > itemsPerPage && (
-              <Pagination className="mt-8">
-                <PaginationContent className="flex-wrap gap-2">
-                  <PaginationItem>
-                    <PaginationPrevious
-                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                      disabled={currentPage === 1}
-                      className={currentPage === 1 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
-                    />
-                  </PaginationItem>
+              <div className="mt-12 flex flex-col items-center gap-4">
+                <Pagination className="mb-4">
+                  <PaginationContent className="flex-wrap justify-center gap-2">
+                    <PaginationItem>
+                      <PaginationPrevious
+                        onClick={() => {
+                          setCurrentPage((p) => Math.max(1, p - 1))
+                          window.scrollTo({ top: 0, behavior: "smooth" })
+                        }}
+                        disabled={currentPage === 1}
+                        className={currentPage === 1 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
+                      />
+                    </PaginationItem>
 
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => {
-                    if (
-                      pageNum === 1 ||
-                      pageNum === totalPages ||
-                      (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
-                    ) {
-                      return (
-                        <PaginationItem key={pageNum}>
-                          <PaginationLink
-                            onClick={() => {
-                              setCurrentPage(pageNum)
-                              window.scrollTo({ top: 0, behavior: "smooth" })
-                            }}
-                            isActive={currentPage === pageNum}
-                            className="cursor-pointer"
-                          >
-                            {pageNum}
-                          </PaginationLink>
-                        </PaginationItem>
-                      )
-                    }
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => {
+                      if (
+                        pageNum === 1 ||
+                        pageNum === totalPages ||
+                        (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+                      ) {
+                        return (
+                          <PaginationItem key={pageNum}>
+                            <PaginationLink
+                              onClick={() => {
+                                setCurrentPage(pageNum)
+                                window.scrollTo({ top: 0, behavior: "smooth" })
+                              }}
+                              isActive={currentPage === pageNum}
+                              className="cursor-pointer"
+                            >
+                              {pageNum}
+                            </PaginationLink>
+                          </PaginationItem>
+                        )
+                      }
 
-                    if (pageNum === currentPage - 2 || pageNum === currentPage + 2) {
-                      return (
-                        <PaginationItem key={`ellipsis-${pageNum}`}>
-                          <span className="px-2">...</span>
-                        </PaginationItem>
-                      )
-                    }
+                      if (pageNum === currentPage - 2 || pageNum === currentPage + 2) {
+                        return (
+                          <PaginationItem key={`ellipsis-${pageNum}`}>
+                            <span className="px-2 py-2">...</span>
+                          </PaginationItem>
+                        )
+                      }
 
-                    return null
-                  })}
+                      return null
+                    })}
 
-                  <PaginationItem>
-                    <PaginationNext
-                      onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                      disabled={currentPage === totalPages}
-                      className={currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
+                    <PaginationItem>
+                      <PaginationNext
+                        onClick={() => {
+                          setCurrentPage((p) => Math.min(totalPages, p + 1))
+                          window.scrollTo({ top: 0, behavior: "smooth" })
+                        }}
+                        disabled={currentPage === totalPages}
+                        className={currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Page <span className="font-semibold">{currentPage}</span> sur <span className="font-semibold">{totalPages}</span>
+                </p>
+              </div>
             )}
 
             {!productsLoading && filteredAndSortedProducts.length === 0 && (
