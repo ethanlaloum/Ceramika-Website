@@ -435,17 +435,27 @@ export default function ProductsPage() {
               <div className="mt-12 flex flex-col items-center gap-4">
                 <Pagination className="mb-4">
                   <PaginationContent className="flex-wrap justify-center gap-2">
+
+                    {/* Précédent */}
                     <PaginationItem>
-                      <PaginationPrevious
+                      <button
                         onClick={() => {
-                          setCurrentPage((p) => Math.max(1, p - 1))
+                          if (currentPage === 1) return
+                          setCurrentPage((p) => p - 1)
                           window.scrollTo({ top: 0, behavior: "smooth" })
                         }}
                         disabled={currentPage === 1}
-                        className={currentPage === 1 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
-                      />
+                        className={`flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors
+                          ${currentPage === 1
+                            ? "opacity-50 cursor-not-allowed text-gray-400"
+                            : "cursor-pointer hover:bg-accent hover:text-accent-foreground"
+                          }`}
+                      >
+                        ← Précédent
+                      </button>
                     </PaginationItem>
 
+                    {/* Pages */}
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => {
                       const isFirst = pageNum === 1
                       const isLast = pageNum === totalPages
@@ -468,20 +478,18 @@ export default function ProductsPage() {
                         )
                       }
 
-                      // Ellipsis gauche : juste après la page 1, si le gap existe
                       if (pageNum === 2 && currentPage > 3) {
                         return (
                           <PaginationItem key="ellipsis-left">
-                            <span className="px-2 py-2">...</span>
+                            <span className="px-2 py-2 text-sm">...</span>
                           </PaginationItem>
                         )
                       }
 
-                      // Ellipsis droite : juste avant la dernière page, si le gap existe
                       if (pageNum === totalPages - 1 && currentPage < totalPages - 2) {
                         return (
                           <PaginationItem key="ellipsis-right">
-                            <span className="px-2 py-2">...</span>
+                            <span className="px-2 py-2 text-sm">...</span>
                           </PaginationItem>
                         )
                       }
@@ -489,20 +497,31 @@ export default function ProductsPage() {
                       return null
                     })}
 
+                    {/* Suivant */}
                     <PaginationItem>
-                      <PaginationNext
+                      <button
                         onClick={() => {
-                          setCurrentPage((p) => Math.min(totalPages, p + 1))
+                          if (currentPage === totalPages) return
+                          setCurrentPage((p) => p + 1)
                           window.scrollTo({ top: 0, behavior: "smooth" })
                         }}
                         disabled={currentPage === totalPages}
-                        className={currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
-                      />
+                        className={`flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors
+                          ${currentPage === totalPages
+                            ? "opacity-50 cursor-not-allowed text-gray-400"
+                            : "cursor-pointer hover:bg-accent hover:text-accent-foreground"
+                          }`}
+                      >
+                        Suivant →
+                      </button>
                     </PaginationItem>
+
                   </PaginationContent>
                 </Pagination>
+
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Page <span className="font-semibold">{currentPage}</span> sur <span className="font-semibold">{totalPages}</span>
+                  Page <span className="font-semibold">{currentPage}</span> sur{" "}
+                  <span className="font-semibold">{totalPages}</span>
                 </p>
               </div>
             )}
