@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/cron/sync-iabako",
-      "schedule": "*/10 * * * *"
+      "schedule": "0 2 * * *"
     }
   ]
 }
