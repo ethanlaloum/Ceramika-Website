@@ -11,6 +11,7 @@ import { Loader2, Image as ImageIcon, Plus, Search, User, Eye, Pencil, Trash2, P
 import Image from "next/image"
 import { ImageUpload } from "@/components/admin/products/image-upload"
 import { useToast } from "@/hooks/use-toast"
+import { formatPrice } from "@/lib/utils"
 import { DeleteArtistDialog } from "./delete-artist-dialog"
 
 interface Artist {
@@ -335,7 +336,7 @@ export function ArtistsComponent() {
                           </div>
                           <div className="min-w-0">
                             <p className="font-medium truncate">{p.name}</p>
-                            <p className="text-sm text-gray-600">{p.price} €</p>
+                            <p className="text-sm text-gray-600">{formatPrice(p.price)} €</p>
                           </div>
                         </CardContent>
                       </Card>

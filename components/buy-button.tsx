@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Loader2, ShoppingCart } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { ORDER_CONFIG } from '@/lib/constants'
+import { formatPrice } from '@/lib/utils'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -90,7 +91,7 @@ export default function BuyButton({
           children || (
             <>
               <ShoppingCart className="w-4 h-4 mr-2" />
-              Acheter - {price}€
+              Acheter - {formatPrice(price)}€
             </>
           )
         )}
@@ -103,7 +104,7 @@ export default function BuyButton({
             <AlertDialogDescription>
               Le montant minimum de commande est de <strong>{ORDER_CONFIG.MINIMUM_AMOUNT}€</strong>.
               <br />
-              Ce produit coûte <strong>{price}€</strong>.
+              Ce produit coûte <strong>{formatPrice(price)}€</strong>.
               <br />
               <br />
               Veuillez ajouter ce produit à votre panier et compléter avec d'autres articles pour atteindre le montant minimum de commande.

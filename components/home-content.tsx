@@ -11,6 +11,7 @@ import { useProducts } from "@/hooks/use-products"
 import { ProductCardSkeleton } from "@/components/loading-states"
 import { ErrorDisplay } from "@/components/error-boundary"
 import { useCart } from "@/hooks/use-cart"
+import { formatPrice } from "@/lib/utils"
 
 export function HomeContent() {
   const { addToCart } = useCart()
@@ -132,9 +133,9 @@ export function HomeContent() {
                           <div className="px-4 sm:px-6 pb-4 sm:pb-6">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
-                                <p className="font-bold text-lg sm:text-xl text-stone-800 dark:text-stone-100">{product.price}€</p>
+                                <p className="font-bold text-lg sm:text-xl text-stone-800 dark:text-stone-100">{formatPrice(product.price)}€</p>
                                 {product.originalPrice && product.originalPrice > product.price && (
-                                  <p className="text-sm text-stone-500 line-through">{product.originalPrice}€</p>
+                                  <p className="text-sm text-stone-500 line-through">{formatPrice(product.originalPrice)}€</p>
                                 )}
                               </div>
                               <Button

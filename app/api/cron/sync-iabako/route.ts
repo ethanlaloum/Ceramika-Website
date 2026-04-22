@@ -1,62 +1,75 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
-import { importProductsFromIabako } from "@/lib/services/iabako-sync-service"
+import { importAllProductsFromIabako } from "@/lib/services/iabako-sync-service"
 
 /**
- * Cron job pour resynchroniser les produits déjà importés depuis Iabako.
- * Met à jour les prix et stocks des produits ayant un iabakoNumber.
+ * Cron job pour synchroniser tous les produits depuis Iabako.
+ * S'exécute toutes les 10 minutes pour garder les produits à jour.
+ * Scanne tous les numéros séquentiels pour découvrir et mettre à jour les produits.
  */
 export async function GET(request: Request) {
   const authHeader = request.headers.get("authorization")
   const cronSecret = process.env.CRON_SECRET
 
+  // Vérifier que c'est une vraie requête Vercel Cron
   if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: "Non autorisé" }, { status: 401 })
   }
 
+  const startTime = Date.now()
+  console.log("🔄 [CRON] Début de la synchronisation Iabako")
+
   try {
-    // Récupérer les produits qui ont un iabakoNumber
-    const productsWithIabako = await prisma.product.findMany({
-      where: { iabakoNumber: { not: null } },
-      select: { iabakoNumber: true },
-    })
-
-    const numbers = productsWithIabako
-      .map((p) => p.iabakoNumber)
-      .filter((n): n is string => n !== null)
-
-    if (numbers.length === 0) {
-      return NextResponse.json({
-        success: true,
-        message: "Aucun produit avec numéro Iabako à synchroniser",
-        created: 0,
-        updated: 0,
-        errors: [],
-      })
-    }
-
+    // Récupérer l'artiste par défaut
     const defaultArtist = await prisma.artist.findFirst({
       orderBy: { name: "asc" },
     })
 
     if (!defaultArtist) {
+      console.error("❌ [CRON] Aucun artiste trouvé pour la sync")
       return NextResponse.json(
-        { error: "Aucun artiste trouvé" },
+        { error: "Aucun artiste trouvé", success: false },
         { status: 400 }
       )
     }
 
-    const result = await importProductsFromIabako(numbers, defaultArtist.id)
+    console.log(`📦 [CRON] Synchronisation en cours (artiste: ${defaultArtist.name})...`)
+
+    // Lancer la synchronisation
+    const result = await importAllProductsFromIabako(defaultArtist.id)
+
+    const duration = Date.now() - startTime
+    const message = `✅ Sync complétée en ${duration}ms: ${result.scanned} produit(s) scanné(s), ${result.created} créé(s), ${result.updated} mis à jour`
+
+    console.log(message)
+    if (result.errors.length > 0) {
+      console.warn(`⚠️ ${result.errors.length} erreur(s) pendant la sync:`, result.errors.slice(0, 3))
+    }
 
     return NextResponse.json({
       success: true,
-      message: `Sync: ${result.created} créé(s), ${result.updated} mis à jour, ${result.errors.length} erreur(s)`,
-      ...result,
+      message,
+      duration: `${duration}ms`,
+      summary: {
+        scanned: result.scanned,
+        created: result.created,
+        updated: result.updated,
+        errors: result.errors.length,
+      },
+      // Limiter les détails pour la réponse
+      recentProducts: result.products.slice(0, 10),
     })
   } catch (error) {
-    console.error("❌ Cron sync Iabako:", error)
+    const duration = Date.now() - startTime
+    const errorMsg = error instanceof Error ? error.message : String(error)
+    console.error(`❌ [CRON] Erreur lors de la sync Iabako (${duration}ms):`, errorMsg)
+
     return NextResponse.json(
-      { error: `Erreur: ${error instanceof Error ? error.message : String(error)}` },
+      {
+        success: false,
+        error: errorMsg,
+        duration: `${duration}ms`,
+      },
       { status: 500 }
     )
   }

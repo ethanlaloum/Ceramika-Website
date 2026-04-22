@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
-import { importProductsFromIabako } from "@/lib/services/iabako-sync-service"
+import { importAllProductsFromIabako } from "@/lib/services/iabako-sync-service"
 
 export async function POST() {
   try {
@@ -9,26 +9,6 @@ export async function POST() {
 
     if (!session || session.user?.role !== "ADMIN") {
       return NextResponse.json({ error: "Accès non autorisé" }, { status: 401 })
-    }
-
-    // Récupérer tous les produits qui ont un numéro Iabako
-    const productsWithIabako = await prisma.product.findMany({
-      where: { iabakoNumber: { not: null } },
-      select: { iabakoNumber: true },
-    })
-
-    const numbers = productsWithIabako
-      .map((p) => p.iabakoNumber)
-      .filter((n): n is string => n !== null)
-
-    if (numbers.length === 0) {
-      return NextResponse.json({
-        success: true,
-        message: "Aucun produit avec numéro Iabako à synchroniser",
-        created: 0,
-        updated: 0,
-        errors: [],
-      })
     }
 
     const defaultArtist = await prisma.artist.findFirst({
@@ -42,11 +22,11 @@ export async function POST() {
       )
     }
 
-    const result = await importProductsFromIabako(numbers, defaultArtist.id)
+    const result = await importAllProductsFromIabako(defaultArtist.id)
 
     return NextResponse.json({
       success: true,
-      message: `Synchronisation terminée : ${result.created} créé(s), ${result.updated} mis à jour, ${result.errors.length} erreur(s)`,
+      message: `Synchronisation terminée : ${result.scanned} trouvé(s), ${result.created} créé(s), ${result.updated} mis à jour, ${result.errors.length} erreur(s)`,
       ...result,
     })
   } catch (error) {
