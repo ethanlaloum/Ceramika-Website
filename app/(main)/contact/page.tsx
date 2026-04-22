@@ -133,12 +133,13 @@ export default function ContactPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone">Numéro de Téléphone</Label>
+                <Label htmlFor="phone">Numéro de Téléphone *</Label>
                 <Input
                   id="phone"
                   name="phone"
                   value={form.phone}
                   onChange={handleChange}
+                  required
                 />
               </div>
             </div>
