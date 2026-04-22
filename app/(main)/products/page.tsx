@@ -44,7 +44,7 @@ export default function ProductsPage() {
   const itemsPerPage = 24
 
   // Récupération des données
-  const { products, loading: productsLoading, error: productsError, refetch } = useProducts()
+  const { products, loading: productsLoading, error: productsError, refetch } = useProducts({ fetchAll: true })
   const { artists, loading: artistsLoading } = useArtists()
   const { categories, loading: categoriesLoading } = useCategories()
 
@@ -334,6 +334,8 @@ export default function ProductsPage() {
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 {productsLoading
                   ? "Chargement..."
+                  : filteredAndSortedProducts.length === 0
+                  ? "Aucun produit trouvé"
                   : `${startIndex + 1}–${Math.min(startIndex + itemsPerPage, filteredAndSortedProducts.length)} de ${filteredAndSortedProducts.length} produit(s)`}
               </p>
             </div>

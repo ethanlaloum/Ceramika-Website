@@ -40,6 +40,7 @@ export function EditProductDialog({
         artistId: product.artist.id,
         collectionId: product.collection?.id || "",
         images: product.images,
+        featured: product.featured ?? false,
       })
     }
   }, [product])

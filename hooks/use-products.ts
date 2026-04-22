@@ -10,6 +10,7 @@ interface UseProductsOptions {
   collectionId?: string
   limit?: number
   page?: number
+  fetchAll?: boolean
 }
 
 interface UseProductsReturn {
@@ -30,8 +31,8 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsReturn
   const [currentPage, setCurrentPage] = useState(options.page || 1)
   const [totalProducts, setTotalProducts] = useState(0)
   
-  const limit = options.limit || 12
-  const totalPages = Math.ceil(totalProducts / limit)
+  const limit = options.fetchAll ? 0 : (options.limit || 12)
+  const totalPages = Math.ceil(totalProducts / (limit || 1))
 
   const fetchProducts = async () => {
     try {
@@ -43,8 +44,10 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsReturn
       if (options.category) params.append("category", options.category)
       if (options.artistId) params.append("artistId", options.artistId)
       if (options.collectionId) params.append("collectionId", options.collectionId)
-      params.append("limit", limit.toString())
-      params.append("page", currentPage.toString())
+      if (!options.fetchAll) {
+        params.append("limit", limit.toString())
+        params.append("page", currentPage.toString())
+      }
 
       const response = await fetch(`/api/products?${params}`)
       if (!response.ok) {

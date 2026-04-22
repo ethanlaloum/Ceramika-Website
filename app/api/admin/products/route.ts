@@ -57,6 +57,7 @@ export async function POST(request: NextRequest) {
       artistId,
       collectionId,
       images = [],
+      featured = false,
     } = body
 
     // Validation
@@ -121,7 +122,7 @@ export async function POST(request: NextRequest) {
         images: images || [],
         artistId,
         collectionId: collectionId || null,
-        featured: false,
+        featured,
       },
       include: {
         artist: {

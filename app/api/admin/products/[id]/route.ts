@@ -27,6 +27,7 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
       artistId,
       collectionId,
       images = [],
+      featured = false,
     } = body
 
     // Validation
@@ -99,6 +100,7 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
         category: category || null,
         features: features || [],
         images: images || [],
+        featured,
         artistId,
         collectionId: collectionId || null,
       },

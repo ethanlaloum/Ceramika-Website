@@ -23,6 +23,7 @@ export interface Product {
   category?: string
   features: string[]
   images: string[]
+  featured: boolean
   artist: Artist
   collection?: Collection
 }
@@ -38,4 +39,5 @@ export interface ProductFormData {
   collectionId: string
   features: string
   images: string[]
+  featured: boolean
 }

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Switch } from "@/components/ui/switch"
 import { ImageUpload } from "./image-upload"
 import type { Artist, Collection, ProductFormData } from "./types"
 
@@ -160,6 +161,15 @@ export function ProductForm({
             </SelectContent>
           </Select>
         </div>
+      </div>
+
+      <div className="flex items-center gap-3 py-2">
+        <Switch
+          id="featured"
+          checked={formData.featured}
+          onCheckedChange={(checked) => setFormData({ ...formData, featured: checked })}
+        />
+        <Label htmlFor="featured" className="text-sm font-medium cursor-pointer">Produit Vedette</Label>
       </div>
 
       <div className="space-y-2">

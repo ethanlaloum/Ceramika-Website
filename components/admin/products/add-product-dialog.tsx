@@ -29,6 +29,7 @@ export function AddProductDialog({ isOpen, onClose, artists, collections, onSucc
     artistId: "",
     collectionId: "",
     images: [],
+    featured: false,
   }
 
   const handleSubmit = async (formData: ProductFormData) => {

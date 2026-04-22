@@ -4,13 +4,12 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   serverExternalPackages: ["bcryptjs"],
   typescript: {
-    // ⚠️ Cela ignorera toutes les erreurs de type lors du build
     ignoreBuildErrors: true,
   },
-  eslint: {
-    // Désactiver ESLint pendant le build
-    ignoreDuringBuilds: true,
+  turbopack: {
+    root: __dirname,
   },
+
   // Configuration pour les images avec Vercel Blob Storage
   images: {
     unoptimized: true,
