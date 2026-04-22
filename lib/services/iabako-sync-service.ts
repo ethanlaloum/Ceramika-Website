@@ -338,9 +338,6 @@ export async function importAllProductsFromIabako(defaultArtistId: string): Prom
   while (consecutive404 < MAX_CONSECUTIVE_404) {
     const numberStr = String(currentNumber).padStart(6, '0')
 
-  while (consecutive404 < MAX_CONSECUTIVE_404) {
-    const numberStr = String(currentNumber).padStart(6, '0')
-
     try {
       const iProduct = await fetchIabakoProductByNumber(numberStr)
 
