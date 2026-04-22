@@ -9,6 +9,7 @@ interface UseProductsOptions {
   artistId?: string
   collectionId?: string
   limit?: number
+  page?: number
 }
 
 interface UseProductsReturn {
@@ -16,12 +17,21 @@ interface UseProductsReturn {
   loading: boolean
   error: string | null
   refetch: () => void
+  currentPage: number
+  setPage: (page: number) => void
+  totalProducts: number
+  totalPages: number
 }
 
 export function useProducts(options: UseProductsOptions = {}): UseProductsReturn {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [currentPage, setCurrentPage] = useState(options.page || 1)
+  const [totalProducts, setTotalProducts] = useState(0)
+  
+  const limit = options.limit || 12
+  const totalPages = Math.ceil(totalProducts / limit)
 
   const fetchProducts = async () => {
     try {
@@ -33,7 +43,8 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsReturn
       if (options.category) params.append("category", options.category)
       if (options.artistId) params.append("artistId", options.artistId)
       if (options.collectionId) params.append("collectionId", options.collectionId)
-      if (options.limit) params.append("limit", options.limit.toString())
+      params.append("limit", limit.toString())
+      params.append("page", currentPage.toString())
 
       const response = await fetch(`/api/products?${params}`)
       if (!response.ok) {
@@ -41,7 +52,8 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsReturn
       }
 
       const data = await response.json()
-      setProducts(data)
+      setProducts(data.products || data)
+      setTotalProducts(data.total || data.length)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Une erreur est survenue")
     } finally {
@@ -51,13 +63,17 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsReturn
 
   useEffect(() => {
     fetchProducts()
-  }, [options.featured, options.category, options.artistId, options.collectionId, options.limit])
+  }, [currentPage, options.featured, options.category, options.artistId, options.collectionId])
 
   return {
     products,
     loading,
     error,
     refetch: fetchProducts,
+    currentPage,
+    setPage: setCurrentPage,
+    totalProducts,
+    totalPages,
   }
 }
 

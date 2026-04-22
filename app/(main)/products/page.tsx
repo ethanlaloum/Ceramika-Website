@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { Search, Filter, Grid, List, SlidersHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -16,7 +16,8 @@ import { useArtists } from "@/hooks/use-artists"
 import { useCategories } from "@/hooks/use-categories"
 import { ProductCardSkeleton } from "@/components/loading-states"
 import { ErrorDisplay } from "@/components/error-boundary"
-import { FadeIn, Stagger, HoverScale } from "@/components/animations"
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
+import { formatPrice } from "@/lib/utils"
 import Image from "next/image"
 import Link from "next/link"
 import { useCart } from "@/hooks/use-cart"
@@ -39,6 +40,8 @@ export default function ProductsPage() {
   const [inStockOnly, setInStockOnly] = useState(false)
   const [sortBy, setSortBy] = useState("newest")
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 12
 
   // Récupération des données
   const { products, loading: productsLoading, error: productsError, refetch } = useProducts()
@@ -106,7 +109,18 @@ export default function ProductsPage() {
     return filtered
   }, [products, searchQuery, selectedCategories, selectedArtists, priceRange, inStockOnly, sortBy])
 
+  // Pagination
+  const totalPages = Math.ceil(filteredAndSortedProducts.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const paginatedProducts = filteredAndSortedProducts.slice(startIndex, startIndex + itemsPerPage)
+
+  // Reset pagination quand les filtres de recherche/tri changent
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchQuery, priceRange, inStockOnly, sortBy])
+
   const handleCategoryChange = (category: string, checked: boolean) => {
+    setCurrentPage(1)
     if (checked) {
       setSelectedCategories([...selectedCategories, category])
     } else {
@@ -115,6 +129,7 @@ export default function ProductsPage() {
   }
 
   const handleArtistChange = (artistId: string, checked: boolean) => {
+    setCurrentPage(1)
     if (checked) {
       setSelectedArtists([...selectedArtists, artistId])
     } else {
@@ -129,6 +144,7 @@ export default function ProductsPage() {
     setPriceRange([0, 500])
     setInStockOnly(false)
     setSortBy("newest")
+    setCurrentPage(1)
   }
 
   const FiltersContent = () => (
@@ -222,20 +238,17 @@ export default function ProductsPage() {
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <FadeIn>
-          <div className="mb-8">
-            <h1 className="font-playfair text-3xl sm:text-4xl font-bold text-stone-800 dark:text-stone-100 mb-4">
-              Tous nos Produits
-            </h1>
-            <p className="text-stone-600 dark:text-stone-300 max-w-2xl">
-              Découvrez l’ensemble de notre collection de biscuits en céramique.
-            </p>
-          </div>
-        </FadeIn>
+        <div className="mb-8">
+          <h1 className="font-playfair text-3xl sm:text-4xl font-bold text-stone-800 dark:text-stone-100 mb-4">
+            Tous nos Produits
+          </h1>
+          <p className="text-stone-600 dark:text-stone-300 max-w-2xl">
+            Découvrez l'ensemble de notre collection de biscuits en céramique.
+          </p>
+        </div>
 
         {/* Barre de recherche et contrôles */}
-        <FadeIn delay={0.2}>
-          <div className="flex flex-col lg:flex-row gap-4 mb-6">
+        <div className="flex flex-col lg:flex-row gap-4 mb-6">
             {/* Recherche */}
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -300,55 +313,50 @@ export default function ProductsPage() {
               </SheetContent>
             </Sheet>
           </div>
-        </FadeIn>
 
         <div className="flex gap-8">
           {/* Filtres desktop */}
           <div className="hidden lg:block w-64 flex-shrink-0">
-            <FadeIn delay={0.3}>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Filter className="h-4 w-4" />
-                    <h2 className="font-semibold">Filtres</h2>
-                  </div>
-                  <FiltersContent />
-                </CardContent>
-              </Card>
-            </FadeIn>
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Filter className="h-4 w-4" />
+                  <h2 className="font-semibold">Filtres</h2>
+                </div>
+                <FiltersContent />
+              </CardContent>
+            </Card>
           </div>
 
           {/* Grille de produits */}
           <div className="flex-1">
-            <FadeIn delay={0.4}>
-              <div className="mb-4 flex justify-between items-center">
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {productsLoading ? "Chargement..." : `${filteredAndSortedProducts.length} produit(s) trouvé(s)`}
-                </p>
-              </div>
-            </FadeIn>
+            <div className="mb-4 flex justify-between items-center">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                {productsLoading
+                  ? "Chargement..."
+                  : `${startIndex + 1}–${Math.min(startIndex + itemsPerPage, filteredAndSortedProducts.length)} de ${filteredAndSortedProducts.length} produit(s)`}
+              </p>
+            </div>
 
             {productsLoading ? (
-              <Stagger
-                staggerDelay={0.1}
+              <div
                 className={`grid gap-6 ${
                   viewMode === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"
                 }`}
               >
-                {Array.from({ length: 9 }).map((_, index) => (
+                {Array.from({ length: itemsPerPage }).map((_, index) => (
                   <ProductCardSkeleton key={index} />
                 ))}
-              </Stagger>
+              </div>
             ) : (
-              <Stagger
-                staggerDelay={0.1}
+              <div
                 className={`grid gap-6 ${
                   viewMode === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"
                 }`}
               >
-                {filteredAndSortedProducts.map((product) => (
-                  <HoverScale key={product.id} scale={1.02}>
+                {paginatedProducts.map((product) => (
                     <Card
+                      key={product.id}
                       className={`group cursor-pointer border-stone-200 dark:border-stone-700 hover:shadow-xl transition-all duration-300 overflow-hidden bg-white dark:bg-stone-800 ${
                         viewMode === "list" ? "flex" : ""
                       }`}
@@ -395,10 +403,10 @@ export default function ProductsPage() {
                             >
                               <div className="flex items-center gap-2">
                                 <p className="font-bold text-lg sm:text-xl text-stone-800 dark:text-stone-100">
-                                  {product.price} €
+                                  {formatPrice(product.price)}€
                                 </p>
                                 {product.originalPrice && product.originalPrice > product.price && (
-                                  <p className="text-sm text-stone-500 line-through">{product.originalPrice} €</p>
+                                  <p className="text-sm text-stone-500 line-through">{formatPrice(product.originalPrice)}€</p>
                                 )}
                               </div>
                               {product.inStock && (
@@ -418,13 +426,67 @@ export default function ProductsPage() {
                         </CardContent>
                       </Link>
                     </Card>
-                  </HoverScale>
                 ))}
-              </Stagger>
+              </div>
+            )}
+
+            {/* Pagination */}
+            {!productsLoading && filteredAndSortedProducts.length > itemsPerPage && (
+              <Pagination className="mt-8">
+                <PaginationContent className="flex-wrap gap-2">
+                  <PaginationItem>
+                    <PaginationPrevious
+                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                      disabled={currentPage === 1}
+                      className={currentPage === 1 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
+                    />
+                  </PaginationItem>
+
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => {
+                    if (
+                      pageNum === 1 ||
+                      pageNum === totalPages ||
+                      (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+                    ) {
+                      return (
+                        <PaginationItem key={pageNum}>
+                          <PaginationLink
+                            onClick={() => {
+                              setCurrentPage(pageNum)
+                              window.scrollTo({ top: 0, behavior: "smooth" })
+                            }}
+                            isActive={currentPage === pageNum}
+                            className="cursor-pointer"
+                          >
+                            {pageNum}
+                          </PaginationLink>
+                        </PaginationItem>
+                      )
+                    }
+
+                    if (pageNum === currentPage - 2 || pageNum === currentPage + 2) {
+                      return (
+                        <PaginationItem key={`ellipsis-${pageNum}`}>
+                          <span className="px-2">...</span>
+                        </PaginationItem>
+                      )
+                    }
+
+                    return null
+                  })}
+
+                  <PaginationItem>
+                    <PaginationNext
+                      onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                      disabled={currentPage === totalPages}
+                      className={currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
             )}
 
             {!productsLoading && filteredAndSortedProducts.length === 0 && (
-              <FadeIn>
                 <div className="text-center py-12">
                   <div className="text-gray-400 mb-4">
                     <Search className="h-12 w-12 mx-auto" />
@@ -437,7 +499,6 @@ export default function ProductsPage() {
                     Réinitialiser les filtres
                   </Button>
                 </div>
-              </FadeIn>
             )}
           </div>
         </div>
