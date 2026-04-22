@@ -447,11 +447,11 @@ export default function ProductsPage() {
                     </PaginationItem>
 
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => {
-                      if (
-                        pageNum === 1 ||
-                        pageNum === totalPages ||
-                        (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
-                      ) {
+                      const isFirst = pageNum === 1
+                      const isLast = pageNum === totalPages
+                      const isNearCurrent = pageNum >= currentPage - 1 && pageNum <= currentPage + 1
+
+                      if (isFirst || isLast || isNearCurrent) {
                         return (
                           <PaginationItem key={pageNum}>
                             <PaginationLink
@@ -468,9 +468,19 @@ export default function ProductsPage() {
                         )
                       }
 
-                      if (pageNum === currentPage - 2 || pageNum === currentPage + 2) {
+                      // Ellipsis gauche : juste après la page 1, si le gap existe
+                      if (pageNum === 2 && currentPage > 3) {
                         return (
-                          <PaginationItem key={`ellipsis-${pageNum}`}>
+                          <PaginationItem key="ellipsis-left">
+                            <span className="px-2 py-2">...</span>
+                          </PaginationItem>
+                        )
+                      }
+
+                      // Ellipsis droite : juste avant la dernière page, si le gap existe
+                      if (pageNum === totalPages - 1 && currentPage < totalPages - 2) {
+                        return (
+                          <PaginationItem key="ellipsis-right">
                             <span className="px-2 py-2">...</span>
                           </PaginationItem>
                         )
