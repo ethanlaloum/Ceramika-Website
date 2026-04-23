@@ -258,10 +258,8 @@ export function Navigation() {
             {[
               { href: "/", label: "Accueil" },
               { href: "/products", label: "Produits" },
-              { href: "/collections", label: "Collections" },
               { href: "/artists", label: "Artistes" },
               { href: "/contact", label: "Contact" },
-              { href: "/about", label: "À Propos" },
             ].map((item) => (
               <Link
                 key={item.href}

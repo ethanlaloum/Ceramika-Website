@@ -2,8 +2,8 @@ import { prisma } from "@/lib/prisma"
 import ProductDetail from "@/components/product/product-detail"
 import { notFound } from "next/navigation"
 
-export default async function ProductIdPage({ params }: { params: { id: string } }) {
-  const id = params.id
+export default async function ProductIdPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
 
   const product = await prisma.product.findUnique({
     where: { id },

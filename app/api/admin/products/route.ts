@@ -113,8 +113,8 @@ export async function POST(request: NextRequest) {
       data: {
         name,
         description: description || null,
-        price,
-        originalPrice: originalPrice || null,
+        price: Math.round(price * 100) / 100,
+        originalPrice: originalPrice ? Math.round(originalPrice * 100) / 100 : null,
         stock,
         inStock: stock > 0,
         category: category || null,

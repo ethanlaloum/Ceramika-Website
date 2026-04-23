@@ -161,9 +161,9 @@ export function ViewProductDialog({ isOpen, onClose, product }: ViewProductDialo
               </div>
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
-                  <span className="font-bold text-2xl">{product.price} €</span>
+                  <span className="font-bold text-2xl">{product.price.toFixed(2)} €</span>
                   {product.originalPrice && (
-                    <span className="text-lg text-gray-500 line-through">{product.originalPrice} €</span>
+                    <span className="text-lg text-gray-500 line-through">{product.originalPrice.toFixed(2)} €</span>
                   )}
                 </div>
                 <p className="text-sm text-gray-600">Stock: {product.stock} unités</p>
