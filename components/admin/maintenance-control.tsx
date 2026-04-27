@@ -88,7 +88,7 @@ export function MaintenanceControl({ initialMaintenanceMode }: MaintenanceContro
           </div>
           <AlertDescription className={maintenanceMode ? 'text-red-800' : 'text-green-800'}>
             {maintenanceMode 
-              ? 'Le site est actuellement en maintenance. Seuls les administrateurs peuvent y accéder.'
+              ? 'Le site est actuellement en maintenance.'
               : 'Le site est en ligne et accessible à tous les visiteurs.'
             }
           </AlertDescription>

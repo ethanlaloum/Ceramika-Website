@@ -9,7 +9,6 @@ import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
-import { Slider } from "@/components/ui/slider"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { useProducts } from "@/hooks/use-products"
 import { useArtists } from "@/hooks/use-artists"
@@ -36,7 +35,7 @@ export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [selectedArtists, setSelectedArtists] = useState<string[]>([])
-  const [priceRange, setPriceRange] = useState([0, 500])
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 0])
   const [inStockOnly, setInStockOnly] = useState(false)
   const [sortBy, setSortBy] = useState("newest")
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
@@ -45,6 +44,15 @@ export default function ProductsPage() {
 
   // Récupération des données
   const { products, loading: productsLoading, error: productsError, refetch } = useProducts({ fetchAll: true })
+
+  const maxProductPrice = useMemo(() => {
+    if (!products || products.length === 0) return 0
+    return Math.ceil(Math.max(...products.map(p => p.price)) / 10) * 10
+  }, [products])
+
+  useEffect(() => {
+    if (maxProductPrice > 0) setPriceRange([0, maxProductPrice])
+  }, [maxProductPrice])
   const { artists, loading: artistsLoading } = useArtists()
   const { categories, loading: categoriesLoading } = useCategories()
 
@@ -141,7 +149,7 @@ export default function ProductsPage() {
     setSearchQuery("")
     setSelectedCategories([])
     setSelectedArtists([])
-    setPriceRange([0, 500])
+    setPriceRange([0, maxProductPrice])
     setInStockOnly(false)
     setSortBy("newest")
     setCurrentPage(1)
@@ -198,11 +206,41 @@ export default function ProductsPage() {
       {/* Prix */}
       <div>
         <h3 className="font-semibold mb-3">Prix</h3>
-        <div className="px-2">
-          <Slider value={priceRange} onValueChange={setPriceRange} max={500} min={0} step={10} className="mb-2" />
-          <div className="flex justify-between text-sm text-gray-500">
-            <span>{priceRange[0]} €</span>
-            <span>{priceRange[1]} €</span>
+        <div className="flex items-center gap-2">
+          <div className="flex-1">
+            <Label className="text-xs text-gray-500 mb-1 block">Min</Label>
+            <div className="relative">
+              <Input
+                type="number"
+                min={0}
+                max={priceRange[1]}
+                value={priceRange[0]}
+                onChange={(e) => {
+                  const val = Math.min(Number(e.target.value), priceRange[1])
+                  setPriceRange([Math.max(0, val), priceRange[1]])
+                }}
+                className="pr-6 text-sm"
+              />
+              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">€</span>
+            </div>
+          </div>
+          <span className="text-gray-400 mt-5">—</span>
+          <div className="flex-1">
+            <Label className="text-xs text-gray-500 mb-1 block">Max</Label>
+            <div className="relative">
+              <Input
+                type="number"
+                min={priceRange[0]}
+                max={maxProductPrice}
+                value={priceRange[1]}
+                onChange={(e) => {
+                  const val = Math.max(Number(e.target.value), priceRange[0])
+                  setPriceRange([priceRange[0], Math.min(val, maxProductPrice)])
+                }}
+                className="pr-6 text-sm"
+              />
+              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">€</span>
+            </div>
           </div>
         </div>
       </div>

@@ -13,7 +13,7 @@ export default function CustomerLoginPage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/" className="font-playfair text-3xl font-bold text-stone-800">
-            Céramika
+            CéramiKa
           </Link>
           <p className="text-stone-600 mt-2">Bienvenue</p>
         </div>

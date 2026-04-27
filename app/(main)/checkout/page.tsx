@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -28,8 +28,8 @@ const COLLECT_ADDRESS = "10 rue Solférino, 06220 Vallauris"
 
 export default function CheckoutPage() {
   const router = useRouter()
-  const { user } = useAuth()
-  const { items, subtotal, shipping, total, itemCount } = useCart()
+  const { user, isLoading: authLoading } = useAuth()
+  const { items, subtotal, shipping, itemCount, loading: cartLoading } = useCart()
   const { toast } = useToast()
 
   const [isLoading, setIsLoading] = useState(false)
@@ -48,15 +48,15 @@ export default function CheckoutPage() {
   const effectiveShipping = deliveryMode === 'collect' ? 0 : shipping
   const effectiveTotal = subtotal + effectiveShipping
 
-  if (!user) {
-    router.push('/customer')
-    return null
-  }
+  useEffect(() => {
+    if (!authLoading && !user) router.push('/customer/login')
+  }, [authLoading, user, router])
 
-  if (items.length === 0) {
-    router.push('/cart')
-    return null
-  }
+  useEffect(() => {
+    if (!authLoading && !cartLoading && user && items.length === 0) router.push('/cart')
+  }, [authLoading, cartLoading, user, items, router])
+
+  if (authLoading || cartLoading || !user || items.length === 0) return null
 
   const isAddressValid = deliveryMode === 'collect' || (
     address.firstName.trim() &&

@@ -49,7 +49,7 @@ export default function CartCheckoutButton({
         {children || (
           <>
             <ShoppingCart className="w-4 h-4 mr-2" />
-            Passer la commande - {total.toFixed(2)} €
+            Passer la commande {total.toFixed(2)} €
           </>
         )}
       </Button>

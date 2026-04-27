@@ -48,12 +48,15 @@ export function useCart() {
     total: 0,
     itemCount: 0,
   })
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [isOpen, setIsOpen] = useState(false)
 
   // Charger le panier
   const fetchCart = async () => {
-    if (!session?.user?.id) return
+    if (!session?.user?.id) {
+      setLoading(false)
+      return
+    }
 
     try {
       setLoading(true)

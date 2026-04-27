@@ -55,14 +55,6 @@ export function HomeContent() {
               className="bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 transition-all duration-300 hover:scale-105 hover:shadow-2xl text-sm sm:text-base px-8 sm:px-10 py-3 sm:py-4"
               asChild
             >
-              <Link href="/collections">Découvrez nos Collections</Link>
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-2 border-gray-800 dark:border-gray-200 text-gray-800 dark:text-gray-200 hover:bg-gray-800 dark:hover:bg-gray-200 hover:text-white dark:hover:text-black transition-all duration-300 hover:scale-105 hover:shadow-2xl text-sm sm:text-base px-8 sm:px-10 py-3 sm:py-4"
-              asChild
-            >
               <Link href="/artists">Rencontrer nos Artistes</Link>
             </Button>
           </div>

@@ -38,8 +38,6 @@ export function ProductsComponent() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [productToDelete, setProductToDelete] = useState<Product | null>(null)
-  const [isSyncing, setIsSyncing] = useState(false)
-
   const { toast } = useToast()
 
   useEffect(() => {
@@ -117,38 +115,6 @@ export function ProductsComponent() {
     setIsDeleteDialogOpen(true)
   }
 
-  const handleSyncIabako = async () => {
-    setIsSyncing(true)
-    try {
-      const response = await fetch("/api/admin/products/sync-iabako", {
-        method: "POST",
-      })
-      const data = await response.json()
-
-      if (response.ok) {
-        toast({
-          title: "Synchronisation réussie",
-          description: data.message,
-        })
-        fetchProducts()
-      } else {
-        toast({
-          title: "Erreur",
-          description: data.error || "Erreur lors de la synchronisation",
-          variant: "destructive",
-        })
-      }
-    } catch (error) {
-      toast({
-        title: "Erreur",
-        description: "Impossible de contacter le serveur",
-        variant: "destructive",
-      })
-    } finally {
-      setIsSyncing(false)
-    }
-  }
-
   const filteredProducts = products.filter((product) => {
     const term = searchTerm.toLowerCase()
     const matchesSearch = product.name.toLowerCase().includes(term) ||
@@ -167,8 +133,6 @@ export function ProductsComponent() {
     <div className="space-y-6">
       <ProductsHeader
         onAddProduct={() => setIsAddDialogOpen(true)}
-        onSyncIabako={handleSyncIabako}
-        isSyncing={isSyncing}
       />
 
       <ProductFilters

@@ -90,7 +90,7 @@ export default function CartPage() {
                 Découvrez nos magnifiques collections de céramiques et ajoutez une touche artistique à votre intérieur.
               </p>
               <Button asChild size="lg" className="hover:scale-105 transition-transform duration-300">
-                <Link href="/">Continuer les Achats</Link>
+                <Link href="/products">Continuer les Achats</Link>
               </Button>
             </div>
           </FadeIn>
@@ -114,7 +114,7 @@ export default function CartPage() {
               </p>
             </div>
             <Button variant="outline" asChild className="hover:scale-105 transition-transform duration-300">
-              <Link href="/">
+              <Link href="/products">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Continuer les Achats
               </Link>
